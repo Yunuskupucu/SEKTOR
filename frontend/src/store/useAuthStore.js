@@ -21,3 +21,5 @@ export const useAuthStore = create((set) => ({
     }
   },
 }));
+
+// auth işlemleri backend ile yapılacak
