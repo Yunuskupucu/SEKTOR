@@ -1,0 +1,97 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  height: 100vh;
+  width: 100%;
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(../assets/background-image.avif);
+  background-size: cover;
+  background-position: center; */
+  background-color: lightgray;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.logo {
+  color: white;
+  font-size: 2.8rem;
+}
+
+span {
+  color: #00a1ff;
+}
+
+nav ul li {
+  list-style-type: none;
+  display: inline-block;
+  padding: 20px 50px;
+  font-size: 1.2rem;
+}
+
+nav ul li a:hover {
+  color: #00a1ff;
+  transition: 0.3s;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  position: relative; /* ::after ile animasyonu eklemek için gerekli */
+}
+
+nav ul li a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.5s ease, left 0.5s ease;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.header-buttons button {
+  margin-right: 30px;
+  border: none;
+  background-color: #00a1ff;
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: 0.4s;
+}
+
+.header-buttons button:last-child {
+  margin-right: 0;
+  background-color: #fff;
+  color: #00a1ff;
+}
+
+.header-buttons button:last-child:hover {
+  color: #fff;
+  background-color: #00a1ff;
+}
+
+.header-buttons button:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+  color: #00a1ff;
+  background-color: #fff;
+}
