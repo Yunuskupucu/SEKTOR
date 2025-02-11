@@ -8,8 +8,11 @@ import {
   Link,
   Input,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -38,6 +41,7 @@ function Login() {
           flexDirection: 'column',
           alignItems: 'center',
           borderRadius: 3,
+          width: '400px',
         }}
       >
         <Typography
@@ -96,6 +100,9 @@ function Login() {
         <Typography variant="body1" sx={{ mt: 2 }}>
           Hesabınız yok mu?
           <Link
+            onClick={() => {
+              navigate('/register');
+            }}
             component="button"
             sx={{ ml: 1, color: '#1495e0', fontWeight: 'bold' }}
           >
