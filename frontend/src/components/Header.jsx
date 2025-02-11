@@ -36,8 +36,16 @@ function Header() {
   return (
     <AppBar position="static" sx={{ backgroundColor: '#1976d2' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        {/* Ortadaki Yazı */}
-        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
+        <Typography
+          variant="h6"
+          sx={{
+            flexGrow: 1,
+            textAlign: 'center',
+            fontFamily: '"Newsreader" ,serif',
+            fontWeight: '500',
+            fontSize: '40px',
+          }}
+        >
           SEKTÖR
         </Typography>
 
