@@ -16,6 +16,11 @@ import {
 import { useState } from 'react';
 
 const Profile = () => {
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [github, setGithub] = useState('');
+
   const [bio, setBio] = useState('');
   return (
     <Container maxWidth="sm" sx={{ paddingTop: 8 }}>
@@ -83,8 +88,9 @@ const Profile = () => {
             <TextField
               variant="standard"
               placeholder="Yunus Emre KÜPÜCÜ"
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
               sx={{ flexGrow: 1 }}
-              disabled
             />
           </Box>
 
@@ -101,9 +107,10 @@ const Profile = () => {
             <TextField
               fullWidth
               variant="standard"
-              disabled
-              sx={{ flexGrow: 1, marginLeft: 2 }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
+              sx={{ flexGrow: 1, marginLeft: 2 }}
             />
           </Box>
           {/* LinkedIn Account */}
@@ -118,8 +125,10 @@ const Profile = () => {
             </Typography>
             <TextField
               fullWidth
-              placeholder="LinkedIn"
               variant="standard"
+              value={linkedin}
+              onChange={(e) => setLinkedin(e.target.value)}
+              placeholder="LinkedIn"
               sx={{ flexGrow: 1, marginLeft: 2 }}
             />
           </Box>
@@ -135,6 +144,8 @@ const Profile = () => {
             </Typography>
             <TextField
               fullWidth
+              value={github}
+              onChange={(e) => setGithub(e.target.value)}
               placeholder="GitHub"
               variant="standard"
               sx={{ flexGrow: 1, marginLeft: 2 }}
