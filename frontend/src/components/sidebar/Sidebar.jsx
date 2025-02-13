@@ -16,13 +16,13 @@ import SearchInput from './SearchInput';
 const channelsData = [
   {
     id: 1,
-    name: 'Genel',
-    channelPic: HomePng,
+    name: 'JavaScript',
+    channelPic: JSPng,
   },
   {
     id: 2,
-    name: 'JavaScript',
-    channelPic: JSPng,
+    name: 'HTML/CSS',
+    channelPic: CodePng,
   },
   {
     id: 3,
@@ -51,13 +51,13 @@ const channelsData = [
   },
   {
     id: 8,
-    name: 'HTML/CSS',
-    channelPic: CodePng,
+    name: 'SQL',
+    channelPic: SqlPng,
   },
   {
     id: 9,
-    name: 'SQL',
-    channelPic: SqlPng,
+    name: 'Genel',
+    channelPic: HomePng,
   },
 ];
 const Sidebar = () => {
@@ -65,6 +65,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <SearchInput />
+      <div className="divider"></div>
       <Channels
         channels={channelsData}
         selectedChannel={selectedChannel}

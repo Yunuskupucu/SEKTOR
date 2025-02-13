@@ -1,5 +1,11 @@
 .sidebar {
-  background: aqua;
-  margin: 10px;
+  background: rgb(79, 167, 226);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
   width: 250px;
+
+  .divider {
+    height: 2px;
+    background: #444;
+  }
 }
