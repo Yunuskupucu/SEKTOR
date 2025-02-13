@@ -1,4 +1,4 @@
-import '../../styles/Channels.scss';
+import '../../styles/Sidebar.scss';
 
 const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
   return (
@@ -12,7 +12,7 @@ const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
             onClick={() => setSelectedChannel(channel.id)}
           >
             <div className="avatar">
-              <img src={channel.channelPic} alt="user avatar" />
+              <img src={channel.channelPic} alt="channel avatar" />
             </div>
             <div className="channel-info">
               <p className="channel-name">{channel.name}</p>

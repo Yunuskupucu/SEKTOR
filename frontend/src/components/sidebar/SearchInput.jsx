@@ -21,7 +21,7 @@ const SearchInput = ({ conversations, setSelectedConversation }) => {
       setSelectedConversation(conversation);
       setSearch('');
     } else {
-      alert('No such user found!');
+      alert('No such channel found!');
     }
   };
 

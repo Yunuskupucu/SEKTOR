@@ -3,9 +3,83 @@
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   width: 250px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .divider {
     height: 2px;
     background: #444;
+  }
+
+  .channels-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    overflow-y: auto; // Kaydırma çubuğu eklendi
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 5px;
+    }
+
+    .channel-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      background-color: white;
+
+      &:hover {
+        background-color: #3a82f6;
+      }
+
+      &.selected {
+        background: linear-gradient(
+          135deg,
+          rgba(132, 192, 230, 1) 0%,
+          rgba(41, 109, 219, 1) 100%
+        );
+      }
+
+      .avatar {
+        width: 48px;
+        height: 48px;
+        overflow: hidden;
+        position: relative;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .channel-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 1;
+
+        .channel-name {
+          font-weight: bold;
+          color: black;
+        }
+      }
+    }
+
+    .divider {
+      height: 1px;
+      background: #444;
+      margin: 4px 0;
+    }
   }
 }
