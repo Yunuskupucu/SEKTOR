@@ -11,6 +11,7 @@ import SqlPng from '../../assets/sql.png';
 import CppPng from '../../assets/cpp.png';
 import CsPng from '../../assets/cs.png';
 import CodePng from '../../assets/code.png';
+import JobPng from '../../assets/job.png';
 import SearchInput from './SearchInput';
 
 const channelsData = [
@@ -56,6 +57,11 @@ const channelsData = [
   },
   {
     id: 9,
+    name: 'İş İlanları',
+    channelPic: JobPng,
+  },
+  {
+    id: 10,
     name: 'Genel',
     channelPic: HomePng,
   },
