@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import '../../styles/Sidebar.scss';
 
 const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
@@ -22,6 +23,18 @@ const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
       ))}
     </div>
   );
+};
+
+Channels.propTypes = {
+  channels: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      channelPic: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  selectedChannel: PropTypes.number,
+  setSelectedChannel: PropTypes.func.isRequired,
 };
 
 export default Channels;
