@@ -7,7 +7,9 @@ function ChatLayout() {
       <div>
         <Sidebar />
       </div>
-      <div>SOHBET BİLEŞENLERİ</div>
+      <div>
+        <div>SOHBET BİLEŞENLERİ</div>
+      </div>
     </div>
   );
 }
