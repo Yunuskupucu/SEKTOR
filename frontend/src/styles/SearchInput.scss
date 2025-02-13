@@ -1,0 +1,41 @@
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-container {
+  position: relative;
+  width: 200px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 0px 10px 0px;
+  margin: 10px 10px 10px 0px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #3a82f6;
+  }
+}
+
+.search-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.search-icon {
+  color: #888;
+  font-size: 20px; // İkon boyutunu ayarlayabilirsiniz
+}
