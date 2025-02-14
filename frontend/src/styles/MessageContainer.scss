@@ -1,0 +1,13 @@
+.messageContainer {
+  width: 100%;
+  background: wheat;
+
+  .chatHeader {
+    background: #4fa7e2;
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: 10px;
+  }
+}
