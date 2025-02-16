@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Channels from './Channels';
 import '../../styles/SearchInput.scss';
 import '../../styles/Sidebar.scss';
@@ -39,6 +40,10 @@ const Sidebar = ({ setSelectedChannel }) => {
       />
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  setSelectedChannel: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

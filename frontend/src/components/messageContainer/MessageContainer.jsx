@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
 
@@ -9,6 +10,11 @@ const MessageContainer = ({ selectedChannel }) => {
       <MessageInput />
     </div>
   );
+};
+
+MessageContainer.propTypes = {
+  selectedChannel: PropTypes.object.isRequired,
+  setSelectedChannel: PropTypes.func.isRequired,
 };
 
 export default MessageContainer;

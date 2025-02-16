@@ -4,15 +4,13 @@ import Sidebar from '../components/sidebar/Sidebar';
 import '../styles/Home.scss';
 import '../styles/MessageContainer.scss';
 
-function ChatLayout() {
-  const [selectedChannel, setSelectedChannel] = useState({
-    id: 1,
-    name: 'JavaScript',
-  });
-
+function Home() {
+  const [selectedChannel, setSelectedChannel] = useState('null');
   return (
     <div className="container">
-      <Sidebar setSelectedChannel={setSelectedChannel} />
+      <div>
+        <Sidebar setSelectedChannel={setSelectedChannel} />
+      </div>
       <div className="messageContainer">
         <MessageContainer selectedChannel={selectedChannel} />
       </div>
@@ -20,4 +18,4 @@ function ChatLayout() {
   );
 }
 
-export default ChatLayout;
+export default Home;
