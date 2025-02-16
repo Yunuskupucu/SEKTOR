@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Channels from './Channels';
 import '../../styles/SearchInput.scss';
 import '../../styles/Sidebar.scss';
@@ -15,132 +14,31 @@ import JobPng from '../../assets/job.png';
 import SearchInput from './SearchInput';
 
 const channelsData = [
-  {
-    id: 1,
-    name: 'JavaScript',
-    channelPic: JSPng,
-  },
-  {
-    id: 2,
-    name: 'HTML/CSS',
-    channelPic: CodePng,
-  },
-  {
-    id: 3,
-    name: 'Python',
-    channelPic: PythonPng,
-  },
-  {
-    id: 4,
-    name: 'Java',
-    channelPic: JavaPng,
-  },
-  {
-    id: 5,
-    name: 'Swift',
-    channelPic: SwiftPng,
-  },
-  {
-    id: 6,
-    name: 'C#',
-    channelPic: CsPng,
-  },
-  {
-    id: 7,
-    name: 'C++',
-    channelPic: CppPng,
-  },
-  {
-    id: 8,
-    name: 'SQL',
-    channelPic: SqlPng,
-  },
-  {
-    id: 9,
-    name: 'İş İlanları',
-    channelPic: JobPng,
-  },
-  {
-    id: 10,
-    name: 'Genel',
-    channelPic: HomePng,
-  },
+  { id: 1, name: 'JavaScript', channelPic: JSPng },
+  { id: 2, name: 'HTML/CSS', channelPic: CodePng },
+  { id: 3, name: 'Python', channelPic: PythonPng },
+  { id: 4, name: 'Java', channelPic: JavaPng },
+  { id: 5, name: 'Swift', channelPic: SwiftPng },
+  { id: 6, name: 'C#', channelPic: CsPng },
+  { id: 7, name: 'C++', channelPic: CppPng },
+  { id: 8, name: 'SQL', channelPic: SqlPng },
+  { id: 9, name: 'İş İlanları', channelPic: JobPng },
+  { id: 10, name: 'Genel', channelPic: HomePng },
 ];
-const Sidebar = () => {
-  const [selectedChannel, setSelectedChannel] = useState(null);
+
+const Sidebar = ({ setSelectedChannel }) => {
   return (
     <div className="sidebar">
       <SearchInput />
-      <div className="divider"></div>
       <Channels
         channels={channelsData}
-        selectedChannel={selectedChannel}
-        setSelectedChannel={setSelectedChannel}
+        setSelectedChannel={(id) => {
+          const channel = channelsData.find((ch) => ch.id === id);
+          setSelectedChannel(channel); // Seçilen kanalı nesne olarak güncelle
+        }}
       />
     </div>
   );
 };
 
 export default Sidebar;
-
-//MUI Sidebar
-// import {
-//   Drawer,
-//   List,
-//   ListItem,
-//   ListItemButton,
-//   ListItemText,
-//   Toolbar,
-//   Typography,
-//   Box,
-// } from '@mui/material';
-
-// const channels = [
-//   'Genel',
-//   'JavaScript',
-//   'Python',
-//   'C#',
-//   'Java',
-//   'Swift',
-//   'SQL',
-//   'C',
-//   'C++',
-// ];
-
-// function Sidebar() {
-//   return (
-//     <Drawer
-//       variant="permanent"
-//       sx={{
-//         width: 240,
-//         flexShrink: 0,
-//         position: 'relative',
-//         [`& .MuiDrawer-paper`]: {
-//           width: 240,
-//           boxSizing: 'border-box',
-//           bgcolor: '#1876D1',
-//           color: '#fff',
-//         },
-//       }}
-//     >
-//       <Toolbar>
-//         <Typography variant="h6" sx={{ fontWeight: 'bold', mx: 'auto' }}>
-//           Sohbet Kanalları
-//         </Typography>
-//       </Toolbar>
-//       <Box sx={{ overflow: 'auto' }}>
-//         <List>
-//           {channels.map((channel, index) => (
-//             <ListItem key={index} disablePadding>
-//               <ListItemButton sx={{ color: '#fff' }}>
-//                 <ListItemText primary={channel} />
-//               </ListItemButton>
-//             </ListItem>
-//           ))}
-//         </List>
-//       </Box>
-//     </Drawer>
-//   );
-// }
-
-// export default Sidebar;

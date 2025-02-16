@@ -1,23 +1,20 @@
 import PropTypes from 'prop-types';
 import '../../styles/Sidebar.scss';
 
-const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
+const Channels = ({ channels, setSelectedChannel }) => {
   return (
     <div className="channels-container">
       {channels.map((channel) => (
-        <div key={channel.id}>
-          <div
-            className={`channel-item ${
-              selectedChannel === channel.id ? 'selected' : ''
-            }`}
-            onClick={() => setSelectedChannel(channel.id)}
-          >
-            <div className="avatar">
-              <img src={channel.channelPic} alt="channel avatar" />
-            </div>
-            <div className="channel-info">
-              <p className="channel-name">{channel.name}</p>
-            </div>
+        <div
+          key={channel.id}
+          className="channel-item"
+          onClick={() => setSelectedChannel(channel.id)}
+        >
+          <div className="avatar">
+            <img src={channel.channelPic} alt={`${channel.name} avatar`} />
+          </div>
+          <div className="channel-info">
+            <p className="channel-name">{channel.name}</p>
           </div>
         </div>
       ))}
@@ -25,15 +22,9 @@ const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
   );
 };
 
+// PropTypes güncellendi
 Channels.propTypes = {
-  channels: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      channelPic: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  selectedChannel: PropTypes.number,
+  channels: PropTypes.array.isRequired,
   setSelectedChannel: PropTypes.func.isRequired,
 };
 

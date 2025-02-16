@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import MessageContainer from '../components/messageContainer/MessageContainer';
 import Sidebar from '../components/sidebar/Sidebar';
 import '../styles/Home.scss';
 import '../styles/MessageContainer.scss';
 
 function ChatLayout() {
+  const [selectedChannel, setSelectedChannel] = useState({
+    id: 1,
+    name: 'JavaScript',
+  });
+
   return (
     <div className="container">
-      <div>
-        <Sidebar />
-      </div>
+      <Sidebar setSelectedChannel={setSelectedChannel} />
       <div className="messageContainer">
-        <MessageContainer />
+        <MessageContainer selectedChannel={selectedChannel} />
       </div>
     </div>
   );

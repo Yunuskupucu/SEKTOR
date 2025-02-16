@@ -1,9 +1,9 @@
 import '../../styles/MessageContainer.scss';
 
-const ChatHeader = () => {
+const ChatHeader = ({ selectedChannel }) => {
   return (
     <div className="chatHeader">
-      <h1>Channel Name</h1>
+      <h1>{selectedChannel?.name || 'Kanal Seçilmedi'}</h1>
     </div>
   );
 };
