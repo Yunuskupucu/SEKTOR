@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import '../../styles/SearchInput.scss';
 import SearchIcon from '@mui/icons-material/Search';
@@ -41,6 +42,11 @@ const SearchInput = ({ conversations, setSelectedConversation }) => {
       </div>
     </form>
   );
+};
+
+SearchInput.propTypes = {
+  conversations: PropTypes.array.isRequired,
+  setSelectedConversation: PropTypes.func.isRequired,
 };
 
 export default SearchInput;
