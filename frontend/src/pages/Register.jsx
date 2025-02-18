@@ -16,6 +16,8 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [github, setGithub] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ function Register() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        height: '90vh',
       }}
     >
       <Paper
@@ -50,27 +52,27 @@ function Register() {
           component="h1"
           gutterBottom
           sx={{
-            mb: 5,
+            mb: 3,
             fontFamily: '"Newsreader" ,serif',
             fontWeight: '500',
-            fontSize: '40px',
+            fontSize: '35px',
           }}
         >
           SEKTÖR
         </Typography>
 
         <Box component="form" sx={{ width: '100%' }} onSubmit={handleSubmit}>
-          <label style={{ fontSize: '24px' }}>Ad Soyad</label>
+          <label style={{ fontSize: '20px' }}>AD SOYAD</label>
           <Input
             fullWidth
             margin="normal"
             value={fullname}
             onChange={(e) => setFullname(e.target.value)}
             required
-            placeholder="ad soyad"
-            sx={{ mb: 5, mt: 2 }}
+            placeholder="Ad Soyad"
+            sx={{ mb: 2, mt: 1 }}
           />
-          <label style={{ fontSize: '24px' }}>E-POSTA</label>
+          <label style={{ fontSize: '20px' }}>E-POSTA</label>
           <Input
             fullWidth
             margin="normal"
@@ -78,25 +80,42 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="you@example.com"
-            sx={{ mb: 5, mt: 2 }}
+            sx={{ mb: 2, mt: 1 }}
+          />{' '}
+          <label style={{ fontSize: '20px' }}>LINKEDIN</label>
+          <Input
+            fullWidth
+            margin="normal"
+            value={linkedin}
+            onChange={(e) => setLinkedin(e.target.value)}
+            placeholder="LinkedIn"
+            sx={{ mb: 2, mt: 1 }}
           />
-          <label style={{ fontSize: '24px' }}>PAROLA</label>
+          <label style={{ fontSize: '20px' }}>GITHUB</label>
+          <Input
+            fullWidth
+            margin="normal"
+            value={github}
+            onChange={(e) => setGithub(e.target.value)}
+            placeholder="GitHub"
+            sx={{ mb: 2, mt: 1 }}
+          />
+          <label style={{ fontSize: '20px' }}>PAROLA</label>
           <Input
             fullWidth
             margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
             placeholder="******"
             type="password"
-            sx={{ mb: 2, mt: 2 }}
+            sx={{ mb: 2, mt: 1 }}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{
-              mt: 2,
+              mt: 1,
               backgroundColor: '#00a1ff',
               fontSize: '18px',
               padding: '10px 0',
