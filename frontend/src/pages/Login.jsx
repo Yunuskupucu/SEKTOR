@@ -30,7 +30,7 @@ function Login() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        height: '90vh',
       }}
     >
       <Paper
@@ -49,17 +49,17 @@ function Login() {
           component="h1"
           gutterBottom
           sx={{
-            mb: 5,
+            mb: 3,
             fontFamily: '"Newsreader" ,serif',
             fontWeight: '500',
-            fontSize: '40px',
+            fontSize: '35px',
           }}
         >
           SEKTÖR
         </Typography>
 
         <Box component="form" sx={{ width: '100%' }} onSubmit={handleSubmit}>
-          <label style={{ fontSize: '24px' }}>E-POSTA</label>
+          <label style={{ fontSize: '20px' }}>E-POSTA</label>
           <Input
             fullWidth
             margin="normal"
@@ -67,9 +67,9 @@ function Login() {
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="you@example.com"
-            sx={{ mb: 5, mt: 2 }}
+            sx={{ mb: 3, mt: 1 }}
           />
-          <label style={{ fontSize: '24px' }}>PAROLA</label>
+          <label style={{ fontSize: '20px' }}>PAROLA</label>
           <Input
             fullWidth
             margin="normal"
@@ -78,7 +78,7 @@ function Login() {
             required
             placeholder="******"
             type="password"
-            sx={{ mb: 2, mt: 2 }}
+            sx={{ mb: 3, mt: 1 }}
           />
           <Button
             type="submit"
