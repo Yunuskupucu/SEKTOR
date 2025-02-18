@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import Channels from './Channels';
+import SearchInput from './SearchInput';
 import '../../styles/SearchInput.scss';
 import '../../styles/Sidebar.scss';
 import JSPng from '../../assets/javascript.png';
@@ -12,11 +13,10 @@ import CppPng from '../../assets/cpp.png';
 import CsPng from '../../assets/cs.png';
 import CodePng from '../../assets/code.png';
 import JobPng from '../../assets/job.png';
-import SearchInput from './SearchInput';
 
 const channelsData = [
   { id: 1, name: 'JavaScript', channelPic: JSPng },
-  { id: 2, name: 'HTML/CSS', channelPic: CodePng },
+  { id: 2, name: 'HTML / CSS', channelPic: CodePng },
   { id: 3, name: 'Python', channelPic: PythonPng },
   { id: 4, name: 'Java', channelPic: JavaPng },
   { id: 5, name: 'Swift', channelPic: SwiftPng },
@@ -34,8 +34,8 @@ const Sidebar = ({ setSelectedChannel }) => {
       <Channels
         channels={channelsData}
         setSelectedChannel={(id) => {
-          const channel = channelsData.find((ch) => ch.id === id);
-          setSelectedChannel(channel); // Seçilen kanalı nesne olarak güncelle
+          const channel = channelsData.find((channel) => channel.id === id);
+          setSelectedChannel(channel); // Seçilen kanalı nesne olarak güncelledik
         }}
       />
     </div>
