@@ -34,16 +34,20 @@ function Header() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#1976d2' }}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: '#2C3E50',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      }}
+    >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography
           variant="h6"
           sx={{
-            flexGrow: 1,
-            textAlign: 'center',
-            fontFamily: '"Newsreader" ,serif',
-            fontWeight: '500',
-            fontSize: '40px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: '0.5rem 2rem',
           }}
         >
           SEKTÖR
