@@ -1,7 +1,15 @@
 .container {
-  background: darkgray;
-  height: 600px;
+  background: #f0f2f5;
+  height: 90vh;
   display: flex;
-  margin: 4% 10%;
-  border-radius: 10px;
+  margin: 20px 5%;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.messageContainer {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 0 16px 16px 0;
 }
