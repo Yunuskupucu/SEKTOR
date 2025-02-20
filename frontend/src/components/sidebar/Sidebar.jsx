@@ -27,12 +27,13 @@ const channelsData = [
   { id: 10, name: 'Genel', channelPic: HomePng },
 ];
 
-const Sidebar = ({ setSelectedChannel }) => {
+const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   return (
     <div className="sidebar">
       <SearchInput />
       <Channels
         channels={channelsData}
+        selectedChannel={selectedChannel}
         setSelectedChannel={(id) => {
           const channel = channelsData.find((channel) => channel.id === id);
           setSelectedChannel(channel); // Seçilen kanalı nesne olarak güncelledik
@@ -44,6 +45,7 @@ const Sidebar = ({ setSelectedChannel }) => {
 
 Sidebar.propTypes = {
   setSelectedChannel: PropTypes.func.isRequired,
+  selectedChannel: PropTypes.object,
 };
 
 export default Sidebar;

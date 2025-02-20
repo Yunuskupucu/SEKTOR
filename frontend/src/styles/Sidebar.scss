@@ -37,28 +37,30 @@
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
-      background: linear-gradient(145deg, #ffffff, #f0f2f5);
+      background: linear-gradient(145deg, #f9fafb, #f3f4f6);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
       &:hover {
         transform: translateX(5px);
-        background: linear-gradient(145deg, #e3e6ec, #ffffff);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(145deg, #e2e8f0, #cbd5e0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
       &.selected {
-        background: linear-gradient(145deg, #2193b0, #6dd5ed);
+        background: linear-gradient(to right, #3182ce, #4299e1);
+        box-shadow: 0 4px 15px rgba(49, 130, 206, 0.3);
+        transform: translateX(5px);
 
         .channel-name {
           color: white;
+          font-weight: 600;
         }
       }
 
       .avatar {
         width: 48px;
         height: 48px;
-        overflow: hidden;
-        position: relative;
+        border-radius: 8px;
 
         img {
           width: 100%;
@@ -70,15 +72,9 @@
       .channel-info {
         .channel-name {
           font-weight: 600;
-          color: #2c3e50;
+          color: #2d3748;
         }
       }
-    }
-
-    .divider {
-      height: 1px;
-      background: #444;
-      margin: 4px 0;
     }
   }
 }
