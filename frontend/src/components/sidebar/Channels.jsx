@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import '../../styles/Sidebar.scss';
 
-const Channels = ({ channels, setSelectedChannel }) => {
+const Channels = ({ channels, setSelectedChannel, selectedChannel }) => {
   return (
     <div className="channels-container">
       {channels.map((channel) => (
         <div
           key={channel.id}
-          className="channel-item"
+          className={`channel-item ${
+            selectedChannel?.id === channel.id ? 'selected' : ''
+          }`}
           onClick={() => setSelectedChannel(channel.id)}
         >
           <div className="avatar">
@@ -26,6 +28,7 @@ const Channels = ({ channels, setSelectedChannel }) => {
 Channels.propTypes = {
   channels: PropTypes.array.isRequired,
   setSelectedChannel: PropTypes.func.isRequired,
+  selectedChannel: PropTypes.object,
 };
 
 export default Channels;

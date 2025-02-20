@@ -6,13 +6,16 @@ import '../styles/MessageContainer.scss';
 import Header from '../components/Header';
 
 function Home() {
-  const [selectedChannel, setSelectedChannel] = useState('null');
+  const [selectedChannel, setSelectedChannel] = useState(null);
   return (
     <>
       <Header />
       <div className="container">
         <div>
-          <Sidebar setSelectedChannel={setSelectedChannel} />
+          <Sidebar
+            selectedChannel={selectedChannel}
+            setSelectedChannel={setSelectedChannel}
+          />
         </div>
         <div className="messageContainer">
           <MessageContainer selectedChannel={selectedChannel} />
