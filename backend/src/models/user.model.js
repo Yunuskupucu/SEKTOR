@@ -50,7 +50,7 @@ const User = sequelize.define('User', {
     tableName: 'users',
     timestamps: false,
 });
-//* bio,github,linkedin */
+
 // Kullanıcı güncelleme zamanı için hook (trigger yerine geçer)
 User.beforeUpdate((user) => {
     user.updated_at = new Date();
