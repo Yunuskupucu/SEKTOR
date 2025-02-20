@@ -3,16 +3,16 @@ import Channels from './Channels';
 import SearchInput from './SearchInput';
 import '../../styles/SearchInput.scss';
 import '../../styles/Sidebar.scss';
-import JSPng from '../../assets/javascript.png';
-import PythonPng from '../../assets/python.png';
-import JavaPng from '../../assets/java.png';
-import HomePng from '../../assets/home.png';
-import SwiftPng from '../../assets/swift.png';
-import SqlPng from '../../assets/sql.png';
-import CppPng from '../../assets/cpp.png';
-import CsPng from '../../assets/cs.png';
-import CodePng from '../../assets/code.png';
-import JobPng from '../../assets/job.png';
+import JSPng from '../../assets/channels/javascript.png';
+import PythonPng from '../../assets/channels/python.png';
+import JavaPng from '../../assets/channels/java.png';
+import HomePng from '../../assets/channels/home.png';
+import SwiftPng from '../../assets/channels/swift.png';
+import SqlPng from '../../assets/channels/sql.png';
+import CppPng from '../../assets/channels/cpp.png';
+import CsPng from '../../assets/channels/cs.png';
+import CodePng from '../../assets/channels/code.png';
+import JobPng from '../../assets/channels/job.png';
 
 const channelsData = [
   { id: 1, name: 'JavaScript', channelPic: JSPng },
