@@ -1,0 +1,72 @@
+NPM START  ile backendi çalıştır.
+npm i yapmayı unutma.
+database de aşağıda 
+CREATE DATABASE SEKTOR;
+\c SEKTOR;
+-- Kullanıcılar Tablosu
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    fullname VARCHAR(200) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    profile_picture_url TEXT,
+    github TEXT,
+    linkedin TEXT,
+    bio TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Kanallar Tablosu
+CREATE TABLE channels (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Mesajlar Tablosu
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    channel_id INTEGER NOT NULL REFERENCES channels(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    attachment TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- İş İlanları Tablosu
+CREATE TABLE job_posts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    salary VARCHAR(50),
+    location VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    contact VARCHAR(50)
+);
+
+-- Filtre Logları Tablosu
+CREATE TABLE filter_logs (
+    id SERIAL PRIMARY KEY,
+    message_id INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    flagged_reason VARCHAR(100) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Kullanıcı Güncellenme Zamanı İçin Trigger
+CREATE OR REPLACE FUNCTION update_user_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_user_timestamp
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION update_user_timestamp();
+SELECT tablename FROM pg_tables WHERE schemaname = 'public';
