@@ -1,25 +1,18 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-} from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { FiSettings, FiUser, FiLogOut } from 'react-icons/fi';
+import styles from '../styles/Header.module.scss';
 
 function Header() {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
   const navigate = useNavigate();
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenuOpen = () => {
+    setAnchorEl(!anchorEl);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setAnchorEl(false);
   };
 
   const handleProfile = () => {
@@ -34,41 +27,26 @@ function Header() {
   };
 
   return (
-    <AppBar
-      position="static"
-      sx={{
-        backgroundColor: '#2C3E50',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      }}
-    >
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography
-          variant="h6"
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: '0.5rem 2rem',
-          }}
-        >
-          SEKTÖR
-        </Typography>
+    <header className={styles.header}>
+      <div className={styles.title}>Logo</div>
 
-        <IconButton color="inherit" onClick={handleMenuOpen}>
-          <SettingsIcon />
-        </IconButton>
+      <div className={styles.settings}>
+        <div className={styles.settingsIcon} onClick={handleMenuOpen}>
+          <FiSettings size={24} />
+        </div>
 
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          <MenuItem onClick={handleProfile}>Profil</MenuItem>
-          <MenuItem onClick={handleLogout}>Çıkış Yap</MenuItem>
-        </Menu>
-      </Toolbar>
-    </AppBar>
+        <div className={`${styles.dropdown} ${anchorEl ? styles.active : ''}`}>
+          <div className={styles.menuItem} onClick={handleProfile}>
+            <FiUser size={18} />
+            Profil
+          </div>
+          <div className={styles.menuItem} onClick={handleLogout}>
+            <FiLogOut size={18} />
+            Çıkış
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }
 
