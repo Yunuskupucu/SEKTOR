@@ -1,4 +1,4 @@
-.search-form {
+.form {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,15 +6,15 @@
   border-right: 2px solid rgb(85, 85, 85);
 }
 
-.search-container {
+.container {
   position: relative;
-  width: 200px;
+  width: 100%;
 }
 
-.search-input {
-  width: 100%;
+.input {
+  width: 75%;
   padding: 10px 35px 10px 10px;
-  margin: 10px 10px 10px 0px;
+  margin: 10px 10px 10px 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
   outline: none;
@@ -26,9 +26,9 @@
   }
 }
 
-.search-button {
+.button {
   position: absolute;
-  right: 15px;
+  right: 25px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -37,7 +37,7 @@
   cursor: pointer;
 }
 
-.search-icon {
+.icon {
   color: #888;
   font-size: 20px;
 }

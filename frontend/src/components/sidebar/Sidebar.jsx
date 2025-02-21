@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import Channels from './Channels';
 import SearchInput from './SearchInput';
-import '../../styles/SearchInput.scss';
+import '../../styles/SearchInput.module.scss';
 import styles from '../../styles/Sidebar.module.scss';
 import JSPng from '../../assets/channels/javascript.png';
 import PythonPng from '../../assets/channels/python.png';

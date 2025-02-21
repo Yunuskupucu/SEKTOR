@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import '../../styles/SearchInput.scss';
+import styles from '../../styles/SearchInput.module.scss';
 import { FaSearch } from 'react-icons/fa';
 
 const SearchInput = ({ conversations, setSelectedConversation }) => {
@@ -27,17 +27,17 @@ const SearchInput = ({ conversations, setSelectedConversation }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-form">
-      <div className="search-container">
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.container}>
         <input
           type="text"
           placeholder="Search..."
-          className="search-input"
+          className={styles.input}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button type="submit" className="search-button">
-          <FaSearch className="search-icon" />
+        <button type="submit" className={styles.button}>
+          <FaSearch className={styles.icon} />
         </button>
       </div>
     </form>
