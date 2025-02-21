@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types';
-import '../../styles/Sidebar.scss';
+import styles from '../../styles/Sidebar.module.scss';
 
-const Channels = ({ channels, setSelectedChannel, selectedChannel }) => {
+const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
   return (
-    <div className="channels-container">
+    <div className={styles.channelsContainer}>
       {channels.map((channel) => (
         <div
           key={channel.id}
-          className={`channel-item ${
-            selectedChannel?.id === channel.id ? 'selected' : ''
+          className={`${styles.channelItem} ${
+            selectedChannel?.id === channel.id ? styles.selected : ''
           }`}
           onClick={() => setSelectedChannel(channel.id)}
         >
-          <div className="avatar">
-            <img src={channel.channelPic} alt={`${channel.name} avatar`} />
+          <div className={styles.avatar}>
+            <img src={channel.channelPic} alt={channel.name} />
           </div>
-          <div className="channel-info">
-            <p className="channel-name">{channel.name}</p>
+          <div className={styles.channelInfo}>
+            <div className={styles.channelName}>{channel.name}</div>
           </div>
         </div>
       ))}
@@ -24,11 +24,10 @@ const Channels = ({ channels, setSelectedChannel, selectedChannel }) => {
   );
 };
 
-// PropTypes güncellendi
 Channels.propTypes = {
   channels: PropTypes.array.isRequired,
-  setSelectedChannel: PropTypes.func.isRequired,
   selectedChannel: PropTypes.object,
+  setSelectedChannel: PropTypes.func.isRequired,
 };
 
 export default Channels;

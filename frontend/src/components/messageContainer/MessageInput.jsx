@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
-import '../../styles/MessageInput.scss';
+import styles from '../../styles/MessageInput.module.scss';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -15,16 +15,16 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="message-input-container">
-      <form onSubmit={handleSubmit} className="input-wrapper">
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.inputWrapper}>
         <input
           type="text"
-          className="message-input"
+          className={styles.input}
           placeholder="Mesajınızı yazın..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button type="submit" className="send-button">
+        <button type="submit" className={styles.sendButton}>
           <SendIcon />
         </button>
       </form>

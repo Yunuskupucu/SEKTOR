@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Channels from './Channels';
 import SearchInput from './SearchInput';
 import '../../styles/SearchInput.scss';
-import '../../styles/Sidebar.scss';
+import styles from '../../styles/Sidebar.module.scss';
 import JSPng from '../../assets/channels/javascript.png';
 import PythonPng from '../../assets/channels/python.png';
 import JavaPng from '../../assets/channels/java.png';
@@ -29,14 +29,14 @@ const channelsData = [
 
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   return (
-    <div className="sidebar">
+    <div className={styles.sidebar}>
       <SearchInput />
       <Channels
         channels={channelsData}
         selectedChannel={selectedChannel}
         setSelectedChannel={(id) => {
           const channel = channelsData.find((channel) => channel.id === id);
-          setSelectedChannel(channel); // Seçilen kanalı nesne olarak güncelledik
+          setSelectedChannel(channel);
         }}
       />
     </div>

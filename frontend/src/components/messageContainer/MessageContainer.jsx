@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
-import '../../styles/MessageContainer.scss';
+import styles from '../../styles/MessageContainer.module.scss';
 
 const MessageContainer = ({ selectedChannel }) => {
   return (
-    <div className="messageContainer">
+    <div className={styles.container}>
       <ChatHeader selectedChannel={selectedChannel} />
-      <div className="messages-area">{/* Mesajlar buraya gelecek */}</div>
+      <div className={styles.messagesArea}>{/* Mesajlar buraya gelecek */}</div>
       <MessageInput />
     </div>
   );

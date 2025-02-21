@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import '../../styles/SearchInput.scss';
-import SearchIcon from '@mui/icons-material/Search';
+import { FaSearch } from 'react-icons/fa';
 
 const SearchInput = ({ conversations, setSelectedConversation }) => {
   const [search, setSearch] = useState('');
@@ -37,7 +37,7 @@ const SearchInput = ({ conversations, setSelectedConversation }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <button type="submit" className="search-button">
-          <SearchIcon className="search-icon" />
+          <FaSearch className="search-icon" />
         </button>
       </div>
     </form>

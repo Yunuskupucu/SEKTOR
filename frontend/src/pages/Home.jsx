@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import MessageContainer from '../components/messageContainer/MessageContainer';
 import Sidebar from '../components/sidebar/Sidebar';
-import '../styles/Home.scss';
-import '../styles/MessageContainer.scss';
+import styles from '../styles/Home.module.scss';
 import Header from '../components/Header';
 
 function Home() {
@@ -10,14 +9,14 @@ function Home() {
   return (
     <>
       <Header />
-      <div className="container">
+      <div className={styles.container}>
         <div>
           <Sidebar
             selectedChannel={selectedChannel}
             setSelectedChannel={setSelectedChannel}
           />
         </div>
-        <div className="messageContainer">
+        <div className={styles.messageContainer}>
           <MessageContainer selectedChannel={selectedChannel} />
         </div>
       </div>

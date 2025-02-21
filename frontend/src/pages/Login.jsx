@@ -1,6 +1,6 @@
 import { useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
-import '../styles/Login.scss';
+import styles from '../styles/Login.module.scss';
 
 function Login() {
   // const navigate = useNavigate();
@@ -8,13 +8,11 @@ function Login() {
   const [password, setPassword] = useState('');
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h1 className="title">SEKTÖR</h1>
-        <div>
-          <div>
-            <label>E-POSTA</label>
-          </div>
+    <div className={styles.container}>
+      <div className={styles.form}>
+        <h1 className={styles.title}>SEKTÖR</h1>
+        <div className={styles.inputGroup}>
+          <label>E-POSTA</label>
           <input
             type="email"
             placeholder="you@example.com"
@@ -22,21 +20,19 @@ function Login() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
-          <div>
-            <label>PAROLA</label>
-          </div>
+        <div className={styles.inputGroup}>
+          <label>PAROLA</label>
           <input
-            type="email"
+            type="password"
             placeholder="******"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button>Giriş Yap</button>
-        <span className="navigate-div">
+        <button className={styles.button}>Giriş Yap</button>
+        <span className={styles.navigateDiv}>
           Hesabınız yok mu?{' '}
-          <a className="navigate-link" href="/register">
+          <a className={styles.navigateLink} href="/register">
             Kaydol
           </a>
         </span>

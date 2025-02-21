@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import '../../styles/MessageContainer.scss';
+import styles from '../../styles/MessageContainer.module.scss';
+
 const ChatHeader = ({ selectedChannel }) => {
   return (
-    <div className="chatHeader">
+    <div className={styles.chatHeader}>
       <h1>{selectedChannel?.name || 'Kanal Seçilmedi'}</h1>
     </div>
   );
