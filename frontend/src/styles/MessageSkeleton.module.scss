@@ -1,0 +1,57 @@
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.skeletonContainer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+.avatarSkeleton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e2e2e2;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.contentWrapper {
+  flex: 1;
+}
+
+.nameSkeleton {
+  height: 16px;
+  width: 100px;
+  background-color: #e2e2e2;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.messageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.messageLine {
+  height: 16px;
+  width: 75%;
+  background-color: #e2e2e2;
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.shortLine {
+  width: 50%;
+}
