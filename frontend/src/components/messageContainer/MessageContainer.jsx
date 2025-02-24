@@ -39,6 +39,12 @@ const MessageContainer = ({ selectedChannel }) => {
         sender: 'Ali',
         timestamp: new Date().toISOString(),
       },
+      {
+        id: 5,
+        content: 'Test message',
+        sender: 'Ali',
+        timestamp: new Date().toISOString(),
+      },
     ];
 
     // Mesajları temizle ve yeni mesajları yükle
