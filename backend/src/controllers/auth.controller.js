@@ -104,7 +104,7 @@ export const updateProfile = async (req, res) => {
         }
 
         const uploadResponse = await cloudinary.uploader.upload(profile_picture_url);
-        const updatedUser = await User.findByPk(id);
+        const updatedUser = await User.findByIdAndUpdate(id,{profile_picture_url: uploadResponse.secure_url},{new: true});
 
         if (!updatedUser) {
             return res.status(404).json({ message: "Kullanıcı bulunamadı" });
