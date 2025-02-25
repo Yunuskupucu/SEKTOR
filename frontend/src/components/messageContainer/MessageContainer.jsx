@@ -1,9 +1,9 @@
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
 import styles from '../../styles/MessageContainer.module.scss';
 import MessageSkeleton from './MessageSkeleton';
-import { useState, useEffect } from 'react';
 import Message from './Message';
 
 const MessageContainer = ({ selectedChannel }) => {
@@ -17,7 +17,7 @@ const MessageContainer = ({ selectedChannel }) => {
     const mockMessages = [
       {
         id: 1,
-        content: `${selectedChannel?.name || 'Genel'} kanalına hoş geldiniz!`,
+        content: `${selectedChannel?.name} kanalına hoş geldiniz!`,
         sender: 'Ahmet',
         timestamp: new Date().toISOString(),
       },

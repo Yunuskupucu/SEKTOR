@@ -3,7 +3,6 @@ import { useState } from 'react';
 import styles from '../styles/Login.module.scss';
 
 function Login() {
-  // const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
