@@ -18,8 +18,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
+app.use(cors({
+    origin: 'http://localhost:5173', // Frontend'in çalıştığı URL
+    credentials: true, // Cookie'lerin gönderilmesine izin verir
+  }));
 app.use("/api/auth", authRoutes);
 // app.use("/api/channels", channelsRoutes);
 // app.use("/api/messages", messageRoutes);
