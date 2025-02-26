@@ -100,18 +100,23 @@ export const updateProfile = async (req, res) => {
         const id = req.user.id;
 
         if (!profile_picture_url) {
-            return res.status(400).json("Profil resmi ekleyiniz");
+            return res.status(400).json({ message: "Profil resmi ekleyiniz" });
         }
 
         const uploadResponse = await cloudinary.uploader.upload(profile_picture_url);
-        const updatedUser = await User.findByIdAndUpdate(id,{profile_picture_url: uploadResponse.secure_url},{new: true});
+        if (!uploadResponse || !uploadResponse.secure_url) {
+            return res.status(500).json({ message: "Profil resmi yüklenirken hata oluştu" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { profile_picture_url: uploadResponse.secure_url },
+            { new: true }
+        );
 
         if (!updatedUser) {
             return res.status(404).json({ message: "Kullanıcı bulunamadı" });
         }
-
-        updatedUser.profile_picture_url = uploadResponse.secure_url;
-        await updatedUser.save();
 
         res.status(200).json(updatedUser);
     } catch (error) {
