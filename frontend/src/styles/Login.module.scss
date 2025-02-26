@@ -41,7 +41,7 @@
 
 .inputGroup {
   label {
-    font-size: 15px;
+    font-size: 16px;
     color: #c1c1c1;
   }
 
@@ -78,14 +78,15 @@
   border-radius: 10px;
   border: none;
   margin-top: 15px;
-  background: rgb(50, 163, 255);
+  background: rgb(19, 73, 116);
   font-size: 20px;
   color: #dedede;
   cursor: pointer;
   font-weight: bold;
 
   &:hover {
-    background: rgb(0, 140, 255);
+    background: rgb(30, 95, 149);
+    transition: 200ms;
     font-size: 22px;
   }
 }

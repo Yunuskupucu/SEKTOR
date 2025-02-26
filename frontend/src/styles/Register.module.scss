@@ -35,7 +35,7 @@
   flex-direction: column;
 
   label {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   input {
@@ -75,6 +75,7 @@
 
   &:hover {
     background: rgb(0, 140, 255);
+    transition: 200ms;
     font-size: 22px;
   }
 }
