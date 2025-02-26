@@ -2,7 +2,7 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-image: url('../assets/background/dark-bg-5.png');
   background-size: cover;
@@ -11,14 +11,24 @@
 }
 
 .form {
-  border: 1px solid black;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   padding: 30px;
-  background-color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
   border-radius: 15px;
-  width: 20%;
+  width: 25%;
   height: auto;
+  margin-left: 10%;
+  box-shadow: 0 8px 32px rgba(114, 114, 114, 0.4);
+
+  span {
+    color: #c1c1c1;
+    a {
+      color: #65718e;
+    }
+  }
 }
 
 .title {
@@ -26,11 +36,13 @@
   font-weight: bold;
   margin-bottom: 20px;
   align-self: center;
+  color: #c1c1c1;
 }
 
 .inputGroup {
   label {
     font-size: 15px;
+    color: #c1c1c1;
   }
 
   input {
@@ -42,6 +54,12 @@
     outline: none;
     border-bottom: 1px solid black;
     font-size: 15px;
+    color: #c1c1c1;
+    background: none;
+
+    &::placeholder {
+      color: #949494;
+    }
 
     &:hover {
       border-bottom: 2px solid black;
@@ -59,9 +77,9 @@
   border-radius: 10px;
   border: none;
   margin-top: 15px;
-  background: rgb(85, 179, 255);
+  background: rgb(50, 163, 255);
   font-size: 20px;
-  color: #fff;
+  color: #dedede;
   cursor: pointer;
   font-weight: bold;
 
