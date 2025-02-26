@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   FaCamera,
   FaEnvelope,
@@ -8,6 +9,7 @@ import {
 } from 'react-icons/fa';
 import styles from '../styles/Profile.module.scss';
 import Header from '../components/Header';
+import { toast } from 'react-hot-toast';
 
 const Profile = () => {
   const [fullname, setFullname] = useState('');
@@ -15,6 +17,88 @@ const Profile = () => {
   const [linkedin, setLinkedin] = useState('');
   const [github, setGithub] = useState('');
   const [bio, setBio] = useState('');
+  const [avatar, setAvatar] = useState();
+  const [loading, setLoading] = useState(false);
+
+  // Profil bilgilerini getir
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5001/api/users/profile',
+          {
+            withCredentials: true,
+          }
+        );
+        const { fullname, email, linkedin, github, bio, avatar } =
+          response.data;
+        setFullname(fullname || '');
+        setEmail(email || '');
+        setLinkedin(linkedin || '');
+        setGithub(github || '');
+        setBio(bio || '');
+        setAvatar(avatar || 'https://via.placeholder.com/150');
+      } catch (error) {
+        console.error('Profil bilgileri yüklenirken hata:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // Profil fotoğrafını güncelle
+  const handleAvatarUpdate = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        'http://localhost:5001/api/users/avatar',
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      setAvatar(response.data.avatar);
+      toast.success('Profil fotoğrafı güncellendi!');
+    } catch (error) {
+      console.error('Fotoğraf yüklenirken hata:', error);
+      toast.error('Fotoğraf yüklenemedi!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Profil bilgilerini güncelle
+  const handleProfileUpdate = async () => {
+    try {
+      setLoading(true);
+      await axios.put(
+        'http://localhost:5001/api/users/profile',
+        {
+          fullname,
+          email,
+          linkedin,
+          github,
+          bio,
+        },
+        { withCredentials: true }
+      );
+      toast.success('Profil bilgileri güncellendi!');
+    } catch (error) {
+      console.error('Profil güncellenirken hata:', error);
+      toast.error(error.response?.data?.message || 'Profil güncellenemedi!');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -27,24 +111,18 @@ const Profile = () => {
           <div className={styles.avatarContainer}>
             <div className={styles.avatarWrapper}>
               <div className={styles.avatar}>
-                <img
-                  src="https://via.placeholder.com/150"
-                  alt=""
-                  className={styles.avatarImage}
-                />
+                <img src={avatar} alt="" className={styles.avatarImage} />
                 <div className={styles.avatarOverlay}>
                   <label className={styles.uploadButton}>
                     <FaCamera className={styles.cameraIcon} />
-                    <span className={styles.uploadText}>Fotoğraf Değiştir</span>
+                    <span className={styles.uploadText}>
+                      {loading ? 'Yükleniyor...' : 'Fotoğraf Değiştir'}
+                    </span>
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          console.log('Seçilen dosya:', file);
-                        }
-                      }}
+                      onChange={handleAvatarUpdate}
+                      disabled={loading}
                     />
                   </label>
                 </div>
@@ -52,7 +130,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Profil Detayları */}
           <div className={styles.profileDetails}>
             {/* Ad Soyad */}
             <div className={styles.inputGroup}>
@@ -62,7 +139,8 @@ const Profile = () => {
                 type="text"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
-                placeholder="Yunus Emre KÜPÜCÜ"
+                placeholder="Ad Soyad"
+                disabled={loading}
               />
             </div>
 
@@ -75,6 +153,7 @@ const Profile = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
+                disabled={loading}
               />
             </div>
 
@@ -86,7 +165,8 @@ const Profile = () => {
                 type="text"
                 value={linkedin}
                 onChange={(e) => setLinkedin(e.target.value)}
-                placeholder="LinkedIn"
+                placeholder="LinkedIn profil linki"
+                disabled={loading}
               />
             </div>
 
@@ -98,7 +178,8 @@ const Profile = () => {
                 type="text"
                 value={github}
                 onChange={(e) => setGithub(e.target.value)}
-                placeholder="GitHub"
+                placeholder="GitHub profil linki"
+                disabled={loading}
               />
             </div>
 
@@ -109,8 +190,15 @@ const Profile = () => {
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Kendinizi Tanıtın"
                 rows={5}
+                disabled={loading}
               />
-              <button className={styles.updateButton}>Güncelle</button>
+              <button
+                className={styles.updateButton}
+                onClick={handleProfileUpdate}
+                disabled={loading}
+              >
+                {loading ? 'Güncelleniyor...' : 'Güncelle'}
+              </button>
             </div>
           </div>
 
