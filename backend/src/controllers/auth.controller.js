@@ -6,91 +6,81 @@ import cloudinary from "cloudinary";
 
 
 export const signup = async (req, res) => {
-    const { fullname,  email, password } = req.body;
+    const { fullname, email, password } = req.body;
+
     try {
         if (!fullname || !email || !password) {
-            return res.status(400).send("Tüm alanları doldurunuz");
+            return res.status(400).json({ message: "Tüm alanları doldurunuz" });
         }
 
         if (password.length < 6 || password.length > 20) {
-            return res.status(400).send("Şifre 6-20 karakter arasında olmalıdır");
+            return res.status(400).json({ message: "Şifre 6-20 karakter arasında olmalıdır" });
         }
 
         const emailUser = await User.findOne({ where: { email } });
         if (emailUser) {
-            return res.status(400).send("Email kullanılmaktadır");
+            return res.status(400).json({ message: "Email kullanılmaktadır" });
         }
 
-     
-        // Hash password
+        // ✅ Şifre Hashleme Hatası Giderildi
         const salt = await bcrypt.genSalt(10);
-        const password = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create new user
         const newUser = await User.create({
             fullname,
-            
             email,
-            password,
-            profile_picture_url: null, // Varsayılan olarak boş bırakabilirsiniz
-            github: null, // Varsayılan olarak boş bırakabilirsiniz
-            linkedin: null, // Varsayılan olarak boş bırakabilirsiniz
-            bio: null, // Varsayılan olarak boş bırakabilirsiniz
+            password: hashedPassword, // Düzeltildi
+            profile_picture_url: null,
+            github: null,
+            linkedin: null,
+            bio: null,
         });
 
         if (newUser) {
-            // Token oluştur ve cookie'ye yaz
             generateToken(newUser.id, res);
             await newUser.save();
             res.status(201).json({
                 id: newUser.id,
                 fullname: newUser.fullname,
-                github: newUser.github,
-                linkedin: newUser.linkedin,
-                bio: newUser.bio,
                 email: newUser.email,
                 profile_picture_url: newUser.profile_picture_url,
             });
         } else {
-            res.status(400).json("Kullanıcı oluşturulamadı");
+            res.status(400).json({ message: "Kullanıcı oluşturulamadı" });
         }
     } catch (error) {
-        console.log("Error in signup controller: ", error.message);
-        res.status(500).json({ message: 'Kullanıcı oluşturulurken hata oluştu', error: error.message });
+        console.error("Error in signup controller:", error.message);
+        res.status(500).json({ message: "Kullanıcı oluşturulurken hata oluştu", error: error.message });
     }
 };
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        if (!email|| !password) {
-            return res.status(400).json("Email ve şifre gereklidir");
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email ve şifre gereklidir" });
         }
 
-        let user = await User.findOne({ where: { email} });
-
-
+        let user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(400).json("Kullanıcı bulunamadı");
+            return res.status(400).json({ message: "Kullanıcı bulunamadı" });
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
-            return res.status(400).json("Hatalı şifre");
+            return res.status(400).json({ message: "Hatalı şifre" });
         }
-        //! burda kaldım
 
         generateToken(user.id, res);
         res.status(200).json({
             id: user.id,
             fullname: user.fullname,
-            username: user.username,
             email: user.email,
             profile_picture_url: user.profile_picture_url,
         });
     } catch (error) {
-        console.log("Error in login controller: ", error.message);
-        res.status(500).json({ message: 'Giriş yapılırken hata oluştu', error: error.message });
+        console.error("Error in login controller:", error.message);
+        res.status(500).json({ message: "Giriş yapılırken hata oluştu", error: error.message });
     }
 };
 
@@ -114,7 +104,7 @@ export const updateProfile = async (req, res) => {
         }
 
         const uploadResponse = await cloudinary.uploader.upload(profile_picture_url);
-        const updatedUser = await User.findByPk(id);
+        const updatedUser = await User.findByIdAndUpdate(id,{profile_picture_url: uploadResponse.secure_url},{new: true});
 
         if (!updatedUser) {
             return res.status(404).json({ message: "Kullanıcı bulunamadı" });

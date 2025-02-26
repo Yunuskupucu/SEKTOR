@@ -1,8 +1,14 @@
 NPM START  ile backendi çalıştır.
 npm i yapmayı unutma.
+
 database de aşağıda 
-CREATE DATABASE SEKTOR;
-\c SEKTOR;
+
+  ----- Ad-soyad
+  -----mail
+  -----github
+  ----linkedin
+  ---- kendinizi tanıtın. (bio) profilede güncellenecek şeyeler.
+
 -- Kullanıcılar Tablosu
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -69,4 +75,8 @@ CREATE TRIGGER trigger_update_user_timestamp
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION update_user_timestamp();
-SELECT tablename FROM pg_tables WHERE schemaname = 'public';
+
+  
+
+
+
