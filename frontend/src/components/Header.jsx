@@ -28,7 +28,9 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.title}>Logo</div>
+      <button className={styles.logo} onClick={() => navigate('/home')}>
+        Logo
+      </button>
 
       <div className={styles.settings}>
         <div className={styles.settingsIcon} onClick={handleMenuOpen}>
