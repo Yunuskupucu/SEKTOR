@@ -10,6 +10,7 @@ import {
 import styles from '../styles/Profile.module.scss';
 import Header from '../components/Header';
 import { toast } from 'react-hot-toast';
+import defaultAvatar from '../assets/avatar.png';
 
 const Profile = () => {
   const [fullname, setFullname] = useState('');
@@ -17,7 +18,7 @@ const Profile = () => {
   const [linkedin, setLinkedin] = useState('');
   const [github, setGithub] = useState('');
   const [bio, setBio] = useState('');
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState(defaultAvatar);
   const [loading, setLoading] = useState(false);
 
   // Profil bilgilerini getir
@@ -37,7 +38,7 @@ const Profile = () => {
         setLinkedin(linkedin || '');
         setGithub(github || '');
         setBio(bio || '');
-        setAvatar(avatar || 'https://via.placeholder.com/150');
+        setAvatar(avatar || defaultAvatar);
       } catch (error) {
         console.error('Profil bilgileri yüklenirken hata:', error);
       }
