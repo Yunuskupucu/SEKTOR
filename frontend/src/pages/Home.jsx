@@ -6,6 +6,11 @@ import Header from '../components/Header';
 
 function Home() {
   const [selectedChannel, setSelectedChannel] = useState(null);
+
+  const handleChannelClose = () => {
+    setSelectedChannel(null);
+  };
+
   return (
     <>
       <Header />
@@ -17,7 +22,10 @@ function Home() {
           />
         </div>
         <div className={styles.messageContainer}>
-          <MessageContainer selectedChannel={selectedChannel} />
+          <MessageContainer
+            selectedChannel={selectedChannel}
+            onChannelClose={handleChannelClose}
+          />
         </div>
       </div>
     </>
