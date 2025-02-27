@@ -21,7 +21,7 @@ function Header() {
   };
 
   const handleLogout = () => {
-    // Çıkış işlemleri buraya eklenebilir
+    // Çıkış işlemleri buraya eklenecek
     console.log('Çıkış Yapıldı');
     handleMenuClose();
   };
