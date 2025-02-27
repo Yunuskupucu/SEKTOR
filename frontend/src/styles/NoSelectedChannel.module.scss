@@ -1,0 +1,56 @@
+.container {
+  height: 100%;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.channelContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.inputWrapper {
+  padding: 1rem;
+  border-top: 1px solid #e0e0e0;
+  background-color: #ffffff;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.icon {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+  animation: bounce 2s infinite;
+}
+
+.title {
+  font-size: 2.6rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
