@@ -28,7 +28,7 @@
 }
 
 .icon {
-  font-size: 6rem;
+  font-size: 10rem;
   margin-bottom: 1rem;
   animation: bounce 2s infinite;
 }
@@ -48,9 +48,9 @@
 @keyframes bounce {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(5%);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
 }
