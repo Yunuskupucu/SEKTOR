@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Channels from './Channels';
 import SearchInput from './SearchInput';
@@ -28,24 +29,47 @@ const channelsData = [
 ];
 
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
+  const [filteredChannels, setFilteredChannels] = useState(channelsData);
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredChannels(channelsData);
+      return;
+    }
+
+    const filtered = channelsData.filter((channel) => {
+      const channelNameSorted = channel.name
+        .toLowerCase()
+        .split('')
+        .sort()
+        .join('');
+      const searchTermSorted = searchTerm
+        .toLowerCase()
+        .split('')
+        .sort()
+        .join('');
+
+      return channelNameSorted.includes(searchTermSorted);
+    });
+
+    setFilteredChannels(filtered);
+  };
+
   return (
     <div className={styles.sidebar}>
-      <SearchInput />
+      <SearchInput onSearch={handleSearch} />
       <Channels
-        channels={channelsData}
+        channels={filteredChannels}
         selectedChannel={selectedChannel}
-        setSelectedChannel={(id) => {
-          const channel = channelsData.find((channel) => channel.id === id);
-          setSelectedChannel(channel);
-        }}
+        setSelectedChannel={setSelectedChannel}
       />
     </div>
   );
 };
 
 Sidebar.propTypes = {
-  setSelectedChannel: PropTypes.func.isRequired,
   selectedChannel: PropTypes.object,
+  setSelectedChannel: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

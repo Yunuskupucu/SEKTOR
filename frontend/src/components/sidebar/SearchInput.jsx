@@ -1,29 +1,19 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import styles from '../../styles/SearchInput.module.scss';
 import { FaSearch } from 'react-icons/fa';
 
-const SearchInput = ({ conversations, setSelectedConversation }) => {
+const SearchInput = ({ onSearch }) => {
   const [search, setSearch] = useState('');
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    onSearch(value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!search) return;
-    if (search.length < 3) {
-      alert('Search query must be at least 3 characters long');
-      return;
-    }
-
-    const conversation = conversations.find((c) =>
-      c.fullName.toLowerCase().includes(search.toLowerCase())
-    );
-
-    if (conversation) {
-      setSelectedConversation(conversation);
-      setSearch('');
-    } else {
-      alert('No such channel found!');
-    }
   };
 
   return (
@@ -31,10 +21,10 @@ const SearchInput = ({ conversations, setSelectedConversation }) => {
       <div className={styles.container}>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Kanal Ara..."
           className={styles.input}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={handleChange}
         />
         <button type="submit" className={styles.button}>
           <FaSearch className={styles.icon} />
@@ -45,8 +35,7 @@ const SearchInput = ({ conversations, setSelectedConversation }) => {
 };
 
 SearchInput.propTypes = {
-  conversations: PropTypes.array.isRequired,
-  setSelectedConversation: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default SearchInput;
