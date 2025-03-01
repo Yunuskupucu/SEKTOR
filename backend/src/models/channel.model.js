@@ -18,13 +18,19 @@ const Channel = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+      field: 'created_at',
+    },
+    updatedAd: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'updated_ad',
     },
   },
   {
-    timestamps: false,
+    timestamps: false, // Sequelize will not automatically manage createdAt and updatedAt fields
     tableName: "channels",
   }
 );

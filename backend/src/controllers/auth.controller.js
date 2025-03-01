@@ -3,8 +3,6 @@ import User from '../models/user.model.js';
 import { generateToken } from '../lib/utils.js';
 import cloudinary from "cloudinary";
 
-
-
 export const signup = async (req, res) => {
     const { fullname, email, password } = req.body;
 
@@ -22,14 +20,13 @@ export const signup = async (req, res) => {
             return res.status(400).json({ message: "Email kullanılmaktadır" });
         }
 
-        // ✅ Şifre Hashleme Hatası Giderildi
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = await User.create({
             fullname,
             email,
-            password: hashedPassword, // Düzeltildi
+            password: hashedPassword,
             profile_picture_url: null,
             github: null,
             linkedin: null,
@@ -96,29 +93,43 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
     try {
-        const { profile_picture_url } = req.body;
+        const { fullname, email, profile_picture_url, github, linkedin, bio } = req.body;
         const id = req.user.id;
 
-        if (!profile_picture_url) {
-            return res.status(400).json({ message: "Profil resmi ekleyiniz" });
+        const updateData = {
+            fullname,
+            email,
+            github,
+            linkedin,
+            bio,
+            updatedAt: new Date(),
+        };
+
+        // Eğer profil resmi varsa Cloudinary'ye yükle
+        if (profile_picture_url) {
+            const uploadResponse = await cloudinary.uploader.upload(profile_picture_url, {
+                folder: "profile_pictures", // Cloudinary'de klasör belirtebilirsin
+                transformation: [{ width: 500, height: 500, crop: "limit" }],
+            });
+
+            if (!uploadResponse || !uploadResponse.secure_url) {
+                return res.status(500).json({ message: "Profil resmi yüklenirken hata oluştu" });
+            }
+
+            updateData.profile_picture_url = uploadResponse.secure_url;
         }
 
-        const uploadResponse = await cloudinary.uploader.upload(profile_picture_url);
-        if (!uploadResponse || !uploadResponse.secure_url) {
-            return res.status(500).json({ message: "Profil resmi yüklenirken hata oluştu" });
-        }
-
-        const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { profile_picture_url: uploadResponse.secure_url },
-            { new: true }
-        );
+        const updatedUser = await User.update(updateData, {
+            where: { id },
+            returning: true,
+            plain: true,
+        });
 
         if (!updatedUser) {
             return res.status(404).json({ message: "Kullanıcı bulunamadı" });
         }
 
-        res.status(200).json(updatedUser);
+        res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndür
     } catch (error) {
         console.log("Error in updateProfile controller: ", error.message);
         res.status(500).json({ message: 'Profil güncellenirken hata oluştu', error: error.message });
