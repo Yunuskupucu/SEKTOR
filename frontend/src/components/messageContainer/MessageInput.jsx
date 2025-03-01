@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SendIcon from '@mui/icons-material/Send';
+import { IoSendSharp } from 'react-icons/io5';
 import styles from '../../styles/MessageInput.module.scss';
 
 const MessageInput = () => {
@@ -25,7 +25,7 @@ const MessageInput = () => {
           onChange={(e) => setMessage(e.target.value)}
         />
         <button type="submit" className={styles.sendButton}>
-          <SendIcon />
+          <IoSendSharp />
         </button>
       </form>
     </div>

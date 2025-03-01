@@ -10,7 +10,12 @@ const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
           className={`${styles.channelItem} ${
             selectedChannel?.id === channel.id ? styles.selected : ''
           }`}
-          onClick={() => setSelectedChannel(channel.id)}
+          onClick={() => {
+            const selectedChannelData = channels.find(
+              (c) => c.id === channel.id
+            );
+            setSelectedChannel(selectedChannelData);
+          }}
         >
           <div className={styles.avatar}>
             <img src={channel.channelPic} alt={channel.name} />
