@@ -77,11 +77,11 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
               ))
             )}
           </div>
-          <MessageInput />
         </div>
       ) : (
         <NoSelectedChannel />
       )}
+      {selectedChannel ? <MessageInput /> : null}
     </div>
   );
 };
