@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
 import { generateToken } from '../lib/utils.js';
-import cloudinary from "cloudinary";
+import cloudinary from '../lib/cloudinary.js';
 
 export const signup = async (req, res) => {
     const { fullname, email, password } = req.body;
@@ -105,7 +105,7 @@ export const updateProfile = async (req, res) => {
             updatedAt: new Date(),
         };
 
-        // Eğer profil resmi varsa Cloudinary'ye yükle
+        // Eğer profil resmi varsa Cloudinary'ye yükleme işlemi yapılır
         if (profile_picture_url) {
             const uploadResponse = await cloudinary.uploader.upload(profile_picture_url, {
                 folder: "profile_pictures", // Cloudinary'de klasör belirtebilirsin
@@ -129,7 +129,7 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({ message: "Kullanıcı bulunamadı" });
         }
 
-        res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndür
+        res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndürür.
     } catch (error) {
         console.log("Error in updateProfile controller: ", error.message);
         res.status(500).json({ message: 'Profil güncellenirken hata oluştu', error: error.message });
@@ -142,5 +142,39 @@ export const checkAuth = (req, res) => {
     } catch (error) {
         console.log("Error in checkAuth controller: ", error.message);
         res.status(500).json({ message: 'Kimlik doğrulama sırasında hata oluştu', error: error.message });
+    }
+};
+
+export const updateAvatar = async (req, res) => {
+    try {
+        const file = req.file;
+        const id = req.user.id;
+
+        if (!file) {
+            return res.status(400).json({ message: "Dosya yüklenmedi" });
+        }
+
+        const uploadResponse = await cloudinary.uploader.upload(file.path, {
+            folder: "profile_pictures", // Cloudinary'de klasör belirtme
+            transformation: [{ width: 500, height: 500, crop: "limit" }],
+        });
+
+        if (!uploadResponse || !uploadResponse.secure_url) {
+            return res.status(500).json({ message: "Profil resmi yüklenirken hata oluştu" });
+        }
+
+        const updatedUser = await User.update(
+            { profile_picture_url: uploadResponse.secure_url },
+            { where: { id }, returning: true, plain: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+        }
+
+        res.status(200).json({ avatar: uploadResponse.secure_url });
+    } catch (error) {
+        console.log("Error in updateAvatar controller: ", error.message);
+        res.status(500).json({ message: 'Profil resmi güncellenirken hata oluştu', error: error.message });
     }
 };
