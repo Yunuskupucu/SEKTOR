@@ -5,8 +5,18 @@ import './index.scss';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
+import { useAuthStore } from './store/useAuthStore';
+import { useEffect } from 'react';
 
 function App() {
+  const { authUser, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log({ authUser });
+
   return (
     <div>
       <Toaster />

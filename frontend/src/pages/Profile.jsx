@@ -11,6 +11,7 @@ import styles from '../styles/Profile.module.scss';
 import Header from '../components/Header';
 import { toast } from 'react-hot-toast';
 import defaultAvatar from '../assets/avatar.png';
+import { axiosInstance } from '../lib/axios';
 
 const Profile = () => {
   const [fullname, setFullname] = useState('');
@@ -25,12 +26,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:5001/api/users/profile',
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosInstance.get('/users/profile', {
+          withCredentials: true,
+        });
         const { fullname, email, linkedin, github, bio, avatar } =
           response.data;
         setFullname(fullname || '');
