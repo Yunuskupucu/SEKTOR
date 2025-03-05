@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.scss';
-import axios from 'axios';
+import { axiosInstance } from '../lib/axios';
 
 function Login() {
   const navigate = useNavigate();
@@ -11,13 +11,15 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        'http://localhost:5001/api/auth/login',
+      const response = await axiosInstance.post(
+        '/auth/login',
         {
           email,
           password,
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
 
       if (response.status === 200) {

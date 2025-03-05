@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styles from '../styles/Register.module.scss';
+import { axiosInstance } from '../lib/axios';
 
 function Register() {
   const navigate = useNavigate();
@@ -12,16 +12,16 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        'http://localhost:5001/api/auth/signup',
+      const response = await axiosInstance.post(
+        '/auth/register',
         {
-          fullname,
           email,
           password,
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
-
       if (response.status === 201) {
         navigate('/login');
       }
