@@ -21,7 +21,7 @@ function Login() {
       );
 
       if (response.status === 200) {
-        navigate('/dashboard');
+        navigate('/home');
       }
     } catch (error) {
       console.error(

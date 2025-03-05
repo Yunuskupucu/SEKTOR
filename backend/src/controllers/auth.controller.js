@@ -146,14 +146,7 @@ export const updateProfile = async (req, res) => {
         console.log("Error in updateProfile controller: ", error.message);
         res.status(500).json({ message: 'Profil güncellenirken hata oluştu', error: error.message });
     }
-    res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndür
-  } catch (error) {
-    console.log('Error in updateProfile controller: ', error.message);
-    res.status(500).json({
-      message: 'Profil güncellenirken hata oluştu',
-      error: error.message,
-    });
-  }
+  res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndürür.
 };
 
 export const checkAuth = (req, res) => {
