@@ -22,4 +22,4 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
-// TODO :auth işlemleri backend ile yapılacak
+// TODO: auth işlemleri backend ile yapılacak
