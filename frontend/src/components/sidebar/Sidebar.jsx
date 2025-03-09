@@ -37,20 +37,11 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
       return;
     }
 
-    const filtered = channelsData.filter((channel) => {
-      const channelNameSorted = channel.name
-        .toLowerCase()
-        .split('')
-        .sort()
-        .join('');
-      const searchTermSorted = searchTerm
-        .toLowerCase()
-        .split('')
-        .sort()
-        .join('');
-
-      return channelNameSorted.includes(searchTermSorted);
-    });
+    const filtered = channelsData.filter((channel) =>
+      channel.name
+        .toLocaleLowerCase('tr')
+        .includes(searchTerm.toLocaleLowerCase('tr'))
+    );
 
     setFilteredChannels(filtered);
   };
