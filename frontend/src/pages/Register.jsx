@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Register.module.scss';
 import { axiosInstance } from '../lib/axios';
+import Logo from '../assets/logo/Logo.png';
 
 function Register() {
   const navigate = useNavigate();
@@ -82,6 +83,11 @@ function Register() {
           >
             Giriş Yap
           </span>
+        </div>
+      </div>
+      <div>
+        <div>
+          <img src={Logo} alt="" />
         </div>
       </div>
     </div>

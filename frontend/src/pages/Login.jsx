@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.scss';
 import { axiosInstance } from '../lib/axios';
+import Logo from '../assets/logo/LightLogo.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -68,6 +69,11 @@ function Login() {
             Kaydol
           </a>
         </span>
+      </div>
+      <div>
+        <div>
+          <img src={Logo} alt="" />
+        </div>
       </div>
     </div>
   );
