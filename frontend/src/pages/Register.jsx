@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Register.module.scss';
 import { axiosInstance } from '../lib/axios';
-import Logo from '../assets/logo/Logo.png';
+import Logo from '../assets/logo/DarkLogo.png';
 
 function Register() {
   const navigate = useNavigate();
