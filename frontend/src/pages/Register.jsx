@@ -16,6 +16,7 @@ function Register() {
       const response = await axiosInstance.post(
         '/auth/register',
         {
+          fullname,
           email,
           password,
         },

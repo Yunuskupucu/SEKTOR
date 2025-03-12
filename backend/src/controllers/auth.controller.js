@@ -3,7 +3,7 @@ import User from '../models/user.model.js';
 import { generateToken } from '../lib/utils.js';
 import cloudinary from '../lib/cloudinary.js';
 
-export const signup = async (req, res) => {
+export const register = async (req, res) => {
   const { fullname, email, password } = req.body;
 
   try {
@@ -48,7 +48,7 @@ export const signup = async (req, res) => {
       res.status(400).json({ message: 'Kullanıcı oluşturulamadı' });
     }
   } catch (error) {
-    console.error('Error in signup controller:', error.message);
+    console.error('Error in register controller:', error.message);
     res.status(500).json({
       message: 'Kullanıcı oluşturulurken hata oluştu',
       error: error.message,
