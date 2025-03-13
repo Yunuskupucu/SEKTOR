@@ -1,36 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.scss';
-import { axiosInstance } from '../lib/axios';
+import { useAuthStore } from '../store/useAuthStore';
 import Logo from '../assets/logo/LightLogo.png';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post(
-        '/auth/login',
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        navigate('/home');
-      }
+      await login(email, password);
+      navigate('/');
     } catch (error) {
-      console.error(
-        'Giriş işlemi sırasında hata oluştu:',
-        error.response?.data?.message || error.message
-      );
+      console.error('Giriş işlemi sırasında hata oluştu:', error.response?.data?.message || error.message);
       alert(error.response?.data?.message || 'Giriş başarısız!');
     }
   };

@@ -11,7 +11,6 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     }, 
-   
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -21,7 +20,6 @@ const User = sequelize.define('User', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    //base64 encoded image
     profile_picture_url: {
         type: DataTypes.TEXT,
         allowNull: true,

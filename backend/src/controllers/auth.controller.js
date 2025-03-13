@@ -17,13 +17,12 @@ export const register = async (req, res) => {
         .json({ message: 'Şifre 6-20 karakter arasında olmalıdır' });
     }
 
-    const emailUser = await User.findOne({ where: { email } });
-    if (emailUser) {
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
       return res.status(400).json({ message: 'Email kullanılmaktadır' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
       fullname,
@@ -35,18 +34,14 @@ export const register = async (req, res) => {
       bio: null,
     });
 
-    if (newUser) {
-      generateToken(newUser.id, res);
-      await newUser.save();
-      res.status(201).json({
-        id: newUser.id,
-        fullname: newUser.fullname,
-        email: newUser.email,
-        profile_picture_url: newUser.profile_picture_url,
-      });
-    } else {
-      res.status(400).json({ message: 'Kullanıcı oluşturulamadı' });
-    }
+    generateToken(newUser.id, res);
+
+    res.status(201).json({
+      id: newUser.id,
+      fullname: newUser.fullname,
+      email: newUser.email,
+      profile_picture_url: newUser.profile_picture_url,
+    });
   } catch (error) {
     console.error('Error in register controller:', error.message);
     res.status(500).json({
@@ -58,12 +53,13 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     if (!email || !password) {
       return res.status(400).json({ message: 'Email ve şifre gereklidir' });
     }
 
-    let user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: 'Kullanıcı bulunamadı' });
     }
@@ -74,6 +70,7 @@ export const login = async (req, res) => {
     }
 
     generateToken(user.id, res);
+
     res.status(200).json({
       id: user.id,
       fullname: user.fullname,
@@ -82,115 +79,131 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in login controller:', error.message);
-    res
-      .status(500)
-      .json({ message: 'Giriş yapılırken hata oluştu', error: error.message });
+    res.status(500).json({
+      message: 'Giriş yapılırken hata oluştu',
+      error: error.message,
+    });
   }
 };
 
 export const logout = (req, res) => {
-  try {
-    res.cookie('jwt', '', { maxAge: 0 });
-    res.status(200).json({ message: 'Başarıyla çıkış yapıldı' });
-  } catch (error) {
-    console.log('Error in logout controller: ', error.message);
-    res
-      .status(500)
-      .json({ message: 'Çıkış yapılırken hata oluştu', error: error.message });
-  }
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+  res.status(200).json({ message: 'Çıkış yapıldı' });
 };
 
 export const updateProfile = async (req, res) => {
   try {
-    const { fullname, email, profile_picture_url, github, linkedin, bio } =
-      req.body;
+    const { fullname, email, github, linkedin, bio } = req.body;
     const id = req.user.id;
 
-    const updateData = {
-      fullname,
-      email,
-      github,
-      linkedin,
-      bio,
-      updatedAt: new Date(),
-    };
+    const [updatedRows] = await User.update(
+      { fullname, email, github, linkedin, bio },
+      { where: { id } }
+    );
 
-        // Eğer profil resmi varsa Cloudinary'ye yükleme işlemi yapılır
-        if (profile_picture_url) {
-            const uploadResponse = await cloudinary.uploader.upload(profile_picture_url, {
-                folder: "profile_pictures", // Cloudinary'de klasör belirtebilirsin
-                transformation: [{ width: 500, height: 500, crop: "limit" }],
-            });
-
-      if (!uploadResponse || !uploadResponse.secure_url) {
-        return res
-          .status(500)
-          .json({ message: 'Profil resmi yüklenirken hata oluştu' });
-      }
-
-      updateData.profile_picture_url = uploadResponse.secure_url;
-    }
-    //find by id and update ????
-    const updatedUser = await User.update(updateData, {
-      where: { id },
-      returning: true,
-      plain: true,
-    });
-
-    if (!updatedUser) {
+    if (updatedRows === 0) {
       return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
     }
 
-        res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndürür.
-    } catch (error) {
-        console.log("Error in updateProfile controller: ", error.message);
-        res.status(500).json({ message: 'Profil güncellenirken hata oluştu', error: error.message });
-    }
-  res.status(200).json(updatedUser[1]); // Güncellenmiş kullanıcıyı döndürür.
-};
+    const updatedUser = await User.findByPk(id, {
+      attributes: ['fullname', 'email', 'github', 'linkedin', 'bio', 'profile_picture_url',],
+    });
 
-export const checkAuth = (req, res) => {
-  try {
-    res.status(200).json(req.user);
+    res.status(200).json(updatedUser);
   } catch (error) {
-    console.log('Error in checkAuth controller: ', error.message);
+    console.error('Error in updateProfile controller:', error.message);
     res.status(500).json({
-      message: 'Kimlik doğrulama sırasında hata oluştu',
+      message: 'Profil güncellenirken hata oluştu',
       error: error.message,
     });
   }
 };
 
 export const updateAvatar = async (req, res) => {
-    try {
-        const file = req.file;
-        const id = req.user.id;
+  try {
+    const file = req.file;
+    const id = req.user.id;
 
-        if (!file) {
-            return res.status(400).json({ message: "Dosya yüklenmedi" });
-        }
-
-        const uploadResponse = await cloudinary.uploader.upload(file.path, {
-            folder: "profile_pictures", // Cloudinary'de klasör belirtme
-            transformation: [{ width: 500, height: 500, crop: "limit" }],
-        });
-
-        if (!uploadResponse || !uploadResponse.secure_url) {
-            return res.status(500).json({ message: "Profil resmi yüklenirken hata oluştu" });
-        }
-
-        const updatedUser = await User.update(
-            { profile_picture_url: uploadResponse.secure_url },
-            { where: { id }, returning: true, plain: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-        }
-
-        res.status(200).json({ avatar: uploadResponse.secure_url });
-    } catch (error) {
-        console.log("Error in updateAvatar controller: ", error.message);
-        res.status(500).json({ message: 'Profil resmi güncellenirken hata oluştu', error: error.message });
+    if (!file) {
+      return res.status(400).json({ message: 'Dosya yüklenmedi' });
     }
+
+    const uploadResponse = await cloudinary.uploader.upload(file.path, {
+      folder: 'profile_pictures',
+      transformation: [{ width: 500, height: 500, crop: 'limit' }],
+    });
+
+    if (!uploadResponse.secure_url) {
+      return res.status(500).json({ message: 'Resim yüklenemedi' });
+    }
+
+    const [updatedRows] = await User.update(
+      { profile_picture_url: uploadResponse.secure_url },
+      { where: { id } }
+    );
+
+    if (updatedRows === 0) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
+    }
+
+    res.status(200).json({ avatar: uploadResponse.secure_url });
+  } catch (error) {
+    console.error('Error in updateAvatar controller:', error.message);
+    res.status(500).json({
+      message: 'Profil resmi güncellenirken hata oluştu',
+      error: error.message,
+    });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    const id = req.user.id;
+
+    const user = await User.findByPk(id, {
+      attributes: [
+        'fullname',
+        'email',
+        'profile_picture_url',
+        'github',
+        'linkedin',
+        'bio',
+        ['created_at', 'createdAt'], // Sequelize'de alias kullanımı
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
+    }
+
+    // 'createdAt' tarih formatını düzenliyoruz
+    const formattedUser = {
+      ...user.toJSON(),
+      createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null, // ISO formatında tarihi döndürüyoruz
+    };
+
+    res.status(200).json(formattedUser); // Düzenlenmiş veriyi döndürüyoruz
+  } catch (error) {
+    console.error('Error in getProfile controller:', error.message);
+    res.status(500).json({
+      message: 'Profil bilgileri getirilirken hata oluştu',
+      error: error.message,
+    });
+  }
+};
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.error('Error in checkAuth controller:', error.message);
+    res.status(500).json({
+      message: 'Kimlik doğrulama sırasında hata oluştu',
+      error: error.message,
+    });
+  }
 };
