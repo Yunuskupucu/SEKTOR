@@ -5,7 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   background: linear-gradient(to top, #263645, #3498db);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -42,10 +42,10 @@
       cursor: pointer;
       padding: 0.5rem;
       transition: all 0.3s ease;
+      color: white;
 
       &:hover {
         transform: scale(1.2);
-        font-weight: bold;
       }
 
       svg {
