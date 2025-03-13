@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import messageRoutes from "./routes/message.routes.js";
 import authRoutes from "./routes/auth.route.js";
 import channelRoutes from "./routes/channel.routes.js";
-import userRoutes from "./routes/user.routes.js"; // user.routes.js dosyasını dahil edin
+
 import { connectDb } from "./lib/db.js";
 import http from "http";
 import { Server } from "socket.io";
@@ -21,7 +21,7 @@ const io = new Server(server, {
     }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -33,7 +33,6 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/messages", messageRoutes);
-app.use("/api/users", userRoutes); // user.routes.js dosyasını kullanın
 
 // Kanal odaları ve kullanıcı bağlantısı yönetimi
 io.on("connection", (socket) => {

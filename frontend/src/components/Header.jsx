@@ -2,11 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { FiSettings, FiUser, FiLogOut } from 'react-icons/fi';
 import styles from '../styles/Header.module.scss';
-// import Logo from '../assets/logo/HeaderLogo.png';
+import { useAuthStore } from '../store/useAuthStore';
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   const handleMenuOpen = () => {
     setAnchorEl(!anchorEl);
@@ -21,10 +22,16 @@ function Header() {
     handleMenuClose();
   };
 
-  const handleLogout = () => {
-    // Çıkış işlemleri buraya eklenecek
-    console.log('Çıkış Yapıldı');
-    handleMenuClose();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      console.log('Çıkış Yapıldı');
+      navigate('/login'); // Çıkış yaptıktan sonra login sayfasına yönlendirin
+    } catch (error) {
+      console.error('Çıkış işlemi sırasında hata:', error);
+    } finally {
+      handleMenuClose();
+    }
   };
 
   return (

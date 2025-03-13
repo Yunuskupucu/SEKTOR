@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useAuthStore } from '../store/useAuthStore';
 import {
   FaCamera,
   FaEnvelope,
@@ -11,61 +11,38 @@ import styles from '../styles/Profile.module.scss';
 import Header from '../components/Header';
 import { toast } from 'react-hot-toast';
 import defaultAvatar from '../assets/avatar.png';
-import { axiosInstance } from '../lib/axios';
 
 const Profile = () => {
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [linkedin, setLinkedin] = useState('');
-  const [github, setGithub] = useState('');
-  const [bio, setBio] = useState('');
-  const [avatar, setAvatar] = useState(defaultAvatar);
+  const { authUser, updateProfile, updateAvatar, checkAuth } = useAuthStore();
+  const [fullname, setFullname] = useState(authUser?.fullname || '');
+  const [email, setEmail] = useState(authUser?.email || '');
+  const [linkedin, setLinkedin] = useState(authUser?.linkedin || '');
+  const [github, setGithub] = useState(authUser?.github || '');
+  const [bio, setBio] = useState(authUser?.bio || '');
+  const [avatar, setAvatar] = useState(authUser?.profile_picture_url || defaultAvatar);
   const [loading, setLoading] = useState(false);
+  const [joinDate, setJoinDate] = useState(authUser?.createdAt ? new Date(authUser.createdAt) : '');
 
-  // Profil bilgilerini getir
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axiosInstance.get('/users/profile', {
-          withCredentials: true,
-        });
-        const { fullname, email, linkedin, github, bio, avatar } =
-          response.data;
-        setFullname(fullname || '');
-        setEmail(email || '');
-        setLinkedin(linkedin || '');
-        setGithub(github || '');
-        setBio(bio || '');
-        setAvatar(avatar || defaultAvatar);
-      } catch (error) {
-        console.error('Profil bilgileri yüklenirken hata:', error);
-      }
-    };
+    if (authUser) {
+      setFullname(authUser.fullname || '');
+      setEmail(authUser.email || '');
+      setLinkedin(authUser.linkedin || '');
+      setGithub(authUser.github || '');
+      setBio(authUser.bio || '');
+      setAvatar(authUser.profile_picture_url || defaultAvatar);
+      setJoinDate(authUser.createdAt ? new Date(authUser.createdAt) : '');
+    }
+  }, [authUser]);
+  
 
-    fetchProfile();
-  }, []);
-
-  // Profil fotoğrafını güncelle
   const handleAvatarUpdate = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('avatar', file);
-
     try {
       setLoading(true);
-      const response = await axios.post(
-        'http://localhost:5001/api/users/avatar',
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      setAvatar(response.data.avatar);
+      await updateAvatar(file);
       toast.success('Profil fotoğrafı güncellendi!');
     } catch (error) {
       console.error('Fotoğraf yüklenirken hata:', error);
@@ -75,24 +52,13 @@ const Profile = () => {
     }
   };
 
-  // Profil bilgilerini güncelle
   const handleProfileUpdate = async () => {
     try {
       setLoading(true);
-      await axios.put(
-        'http://localhost:5001/api/users/profile',
-        {
-          fullname,
-          email,
-          linkedin,
-          github,
-          bio,
-        },
-        { withCredentials: true }
-      );
-      toast.success('Profil bilgileri güncellendi!');
+      await updateProfile({ fullname, email, linkedin, github, bio });
+      toast.success('Profil bilgileri başarıyla güncellendi!');
     } catch (error) {
-      console.error('Profil güncellenirken hata:', error);
+      console.error('Profil güncellenirken hata:', error.response || error);
       toast.error(error.response?.data?.message || 'Profil güncellenemedi!');
     } finally {
       setLoading(false);
@@ -206,7 +172,14 @@ const Profile = () => {
             <h2>Profil Bilgileri</h2>
             <div className={styles.joinDate}>
               <span>Üyelik Tarihi</span>
-              <span>Şubat 2025</span>
+              <span>
+                {joinDate
+                  ? joinDate.toLocaleDateString('tr-TR', {
+                      year: 'numeric',
+                      month: 'long',
+                    })
+                  : 'Yükleniyor...'}
+              </span>
             </div>
           </div>
         </div>

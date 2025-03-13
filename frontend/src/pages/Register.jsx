@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Register.module.scss';
-import { axiosInstance } from '../lib/axios';
+import { useAuthStore } from '../store/useAuthStore';
 import Logo from '../assets/logo/DarkLogo.png';
 
 function Register() {
   const navigate = useNavigate();
+  const { register } = useAuthStore();
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,25 +14,10 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post(
-        '/auth/register',
-        {
-          fullname,
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.status === 201) {
-        navigate('/login');
-      }
+      await register(fullname, email, password);
+      navigate('/');
     } catch (error) {
-      console.error(
-        'Kayıt işlemi sırasında hata oluştu:',
-        error.response?.data?.message || error.message
-      );
+      console.error('Kayıt işlemi sırasında hata oluştu:', error.response?.data?.message || error.message);
       alert(error.response?.data?.message || 'Kayıt başarısız!');
     }
   };
@@ -78,10 +64,7 @@ function Register() {
 
         <div className={styles.navigateSection}>
           Hesabınız var mı?
-          <span
-            className={styles.navigateLink}
-            onClick={() => navigate('/login')}
-          >
+          <span className={styles.navigateLink} onClick={() => navigate('/login')}>
             Giriş Yap
           </span>
         </div>
