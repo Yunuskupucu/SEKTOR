@@ -39,7 +39,11 @@ export const useAuthStore = create((set) => ({
 
   register: async (fullname, email, password) => {
     try {
-      const res = await axiosInstance.post('/auth/register', { fullname, email, password });
+      const res = await axiosInstance.post('/auth/register', {
+        fullname,
+        email,
+        password,
+      });
       set({ authUser: res.data });
     } catch (error) {
       console.log('Register error:', error);
