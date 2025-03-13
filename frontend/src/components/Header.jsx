@@ -2,10 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { FiSettings, FiUser, FiLogOut } from 'react-icons/fi';
 import styles from '../styles/Header.module.scss';
-<<<<<<< HEAD
-=======
 import { useAuthStore } from '../store/useAuthStore';
->>>>>>> 89a58c95d76741e6c2210eb897a24080d4d2d7c3
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(false);
