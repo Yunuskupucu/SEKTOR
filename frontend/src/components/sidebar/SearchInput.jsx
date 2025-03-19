@@ -2,9 +2,11 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from '../../styles/SearchInput.module.scss';
 import { FaSearch } from 'react-icons/fa';
+import { useTheme } from '../../context/useTheme';
 
 const SearchInput = ({ onSearch }) => {
   const [search, setSearch] = useState('');
+  const { theme } = useTheme();
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -17,12 +19,15 @@ const SearchInput = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form
+      onSubmit={handleSubmit}
+      className={`${styles.form} ${theme === 'dark' ? styles.dark : 'light'}`}
+    >
       <div className={styles.container}>
         <input
           type="text"
           placeholder="Kanal Ara..."
-          className={styles.input}
+          className={`${styles.input} ${theme === 'dark' ? styles.dark : ''}`}
           value={search}
           onChange={handleChange}
         />

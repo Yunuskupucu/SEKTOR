@@ -2,8 +2,12 @@
   background: #ffffff;
   padding: 12px 24px;
   border-top: 1px solid #e5e7eb;
-  border-bottom-right-radius: 16px;
   position: relative;
+
+  &.dark {
+    background: RGB(28, 28, 28);
+    border-top: 2px solid #2d3748;
+  }
 }
 
 .inputWrapper {
@@ -19,6 +23,11 @@
     border-color: #2193b0;
     box-shadow: 0 0 0 2px rgba(33, 147, 176, 0.1);
   }
+
+  .container.dark & {
+    background: #808080;
+    border-color: #4a5568;
+  }
 }
 
 .input {
@@ -31,7 +40,10 @@
   outline: none;
 
   &::placeholder {
-    color: #94a3b8;
+    color: #383838;
+  }
+  .container.dark & {
+    background: #808080;
   }
 }
 
@@ -54,5 +66,9 @@
 
   svg {
     font-size: 20px;
+  }
+
+  .container.dark & {
+    color: #000000;
   }
 }

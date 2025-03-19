@@ -1,12 +1,15 @@
 .sidebar {
   background: linear-gradient(to bottom, #2c3e50, #3498db);
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
   width: 280px;
   height: 100%;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+  &.dark {
+    background: #4d4d4d;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .channelsContainer {
@@ -43,14 +46,26 @@
   }
 }
 
+.darkChannelItem {
+  background: rgb(45, 45, 45);
+  color: white;
+}
+
 .selected {
   background: linear-gradient(to right, #3182ce, #4299e1);
   box-shadow: 0 4px 15px rgba(49, 130, 206, 0.3);
   transform: translateX(5px);
+  border: 3px solid #515151;
 
   .channelName {
     color: white;
     font-weight: 600;
+  }
+
+  &.darkChannelItem {
+    background: linear-gradient(to right, #535353, #141414);
+    box-shadow: 0 4px 15px rgba(113, 128, 150, 0.3);
+    border: 3px solid black;
   }
 }
 
@@ -69,6 +84,5 @@
 .channelInfo {
   .channelName {
     font-weight: 600;
-    color: #2d3748;
   }
 }

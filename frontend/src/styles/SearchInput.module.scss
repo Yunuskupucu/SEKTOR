@@ -3,41 +3,50 @@
   justify-content: center;
   align-items: center;
   border-bottom: 2px solid rgb(85, 85, 85);
-  border-right: 2px solid rgb(85, 85, 85);
-}
 
-.container {
-  position: relative;
-  width: 100%;
-}
+  .container {
+    position: relative;
+    width: 100%;
 
-.input {
-  width: 75%;
-  padding: 10px 35px 10px 10px;
-  margin: 10px 10px 10px 10px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  outline: none;
-  font-size: 15px;
-  transition: border-color 0.3s ease;
+    .input {
+      width: 75%;
+      padding: 10px 35px 10px 10px;
+      margin: 10px 10px 10px 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
 
-  &:focus {
-    border-color: #3a82f6;
+      &:focus {
+        border-color: #3a82f6;
+
+        &.dark {
+          border: 2px solid #000000;
+        }
+      }
+
+      &.dark {
+        background-color: #333;
+        border-color: #333;
+        color: #989898;
+      }
+    }
   }
-}
 
-.button {
-  position: absolute;
-  right: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
+  .button {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
 
-.icon {
-  color: #888;
-  font-size: 20px;
+  .icon {
+    color: #888;
+    font-size: 20px;
+  }
 }

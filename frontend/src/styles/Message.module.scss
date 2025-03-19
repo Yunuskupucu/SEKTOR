@@ -19,6 +19,26 @@
       }
     }
   }
+
+  &.dark {
+    .messageContainer {
+      background-color: #2a2a2a;
+      color: white;
+      border: 1px solid #444;
+
+      .content {
+        color: #e0e0e0;
+      }
+
+      .timestamp {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    .sender {
+      color: #bbbbbb;
+    }
+  }
 }
 
 .messageContainer {

@@ -11,17 +11,23 @@ import styles from '../styles/Profile.module.scss';
 import Header from '../components/Header';
 import { toast } from 'react-hot-toast';
 import defaultAvatar from '../assets/avatar.png';
+import { useTheme } from '../context/useTheme';
 
 const Profile = () => {
-  const { authUser, updateProfile, updateAvatar, checkAuth } = useAuthStore();
+  const { authUser, updateProfile, updateAvatar } = useAuthStore();
   const [fullname, setFullname] = useState(authUser?.fullname || '');
   const [email, setEmail] = useState(authUser?.email || '');
   const [linkedin, setLinkedin] = useState(authUser?.linkedin || '');
   const [github, setGithub] = useState(authUser?.github || '');
   const [bio, setBio] = useState(authUser?.bio || '');
-  const [avatar, setAvatar] = useState(authUser?.profile_picture_url || defaultAvatar);
+  const [avatar, setAvatar] = useState(
+    authUser?.profile_picture_url || defaultAvatar
+  );
   const [loading, setLoading] = useState(false);
-  const [joinDate, setJoinDate] = useState(authUser?.createdAt ? new Date(authUser.createdAt) : '');
+  const [joinDate, setJoinDate] = useState(
+    authUser?.createdAt ? new Date(authUser.createdAt) : ''
+  );
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (authUser) {
@@ -34,7 +40,6 @@ const Profile = () => {
       setJoinDate(authUser.createdAt ? new Date(authUser.createdAt) : '');
     }
   }, [authUser]);
-  
 
   const handleAvatarUpdate = async (e) => {
     const file = e.target.files[0];
@@ -68,7 +73,11 @@ const Profile = () => {
   return (
     <>
       <Header />
-      <div className={styles.container}>
+      <div
+        className={`${styles.container} ${
+          theme === 'dark' ? styles.dark : 'light'
+        }`}
+      >
         <div className={styles.paper}>
           <h1 className={styles.title}>PROFİL</h1>
 

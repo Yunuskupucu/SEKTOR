@@ -1,15 +1,21 @@
 import PropTypes from 'prop-types';
 import styles from '../../styles/Sidebar.module.scss';
+import { useTheme } from '../../context/useTheme';
 
 const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
+  const { theme } = useTheme();
   return (
-    <div className={styles.channelsContainer}>
+    <div
+      className={`${styles.channelsContainer} ${
+        theme === 'dark' ? styles.dark : ''
+      }`}
+    >
       {channels.map((channel) => (
         <div
           key={channel.id}
           className={`${styles.channelItem} ${
             selectedChannel?.id === channel.id ? styles.selected : ''
-          }`}
+          } ${theme === 'dark' ? styles.darkChannelItem : ''}`}
           onClick={() => {
             const selectedChannelData = channels.find(
               (c) => c.id === channel.id

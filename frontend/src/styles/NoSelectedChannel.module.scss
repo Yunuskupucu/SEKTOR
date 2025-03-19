@@ -4,6 +4,11 @@
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
+
+  &.dark {
+    background-color: #4d4d4d;
+    color: white;
+  }
 }
 
 .channelContent {
@@ -25,6 +30,10 @@
   text-align: center;
   width: 100%;
   height: 100%;
+
+  &.dark {
+    color: white;
+  }
 }
 
 .icon {
@@ -35,13 +44,13 @@
 
 .title {
   font-size: 2.6rem;
-  color: #333;
+  color: inherit;
   margin-bottom: 1rem;
 }
 
 .description {
   font-size: 1.2rem;
-  color: #666;
+  color: inherit;
   line-height: 1.5;
 }
 

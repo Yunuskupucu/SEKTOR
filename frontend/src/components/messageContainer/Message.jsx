@@ -1,16 +1,18 @@
 import PropTypes from 'prop-types';
 import styles from '../../styles/Message.module.scss';
+import { useTheme } from '../../context/useTheme';
 
 const Message = ({ message }) => {
   // current user Ahmet olsun
   const currentUser = 'Ahmet';
   const isOwnMessage = message.sender === currentUser;
+  const { theme } = useTheme();
 
   return (
     <div
       className={`${styles.messageWrapper} ${
         isOwnMessage ? styles.ownMessage : ''
-      }`}
+      } ${theme === 'dark' ? styles.dark : ''}`}
     >
       <div className={styles.messageContainer}>
         <div className={styles.sender}>{!isOwnMessage && message.sender}</div>

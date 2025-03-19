@@ -6,10 +6,12 @@ import styles from '../../styles/MessageContainer.module.scss';
 import MessageSkeleton from './MessageSkeleton';
 import Message from './Message';
 import NoSelectedChannel from './NoSelectedChannel';
+import { useTheme } from '../../context/useTheme';
 
 const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (!selectedChannel) return;
@@ -64,7 +66,11 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
             selectedChannel={selectedChannel}
             onClose={onChannelClose}
           />
-          <div className={styles.messagesArea}>
+          <div
+            className={`${styles.messagesArea} ${
+              theme === 'dark' ? styles.dark : ''
+            }`}
+          >
             {loading ? (
               <>
                 {[1, 2, 3].map((index) => (

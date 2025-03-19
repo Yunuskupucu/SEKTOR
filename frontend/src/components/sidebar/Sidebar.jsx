@@ -14,6 +14,7 @@ import CppPng from '../../assets/channels/cpp.png';
 import CsPng from '../../assets/channels/cs.png';
 import CodePng from '../../assets/channels/code.png';
 import JobPng from '../../assets/channels/job.png';
+import { useTheme } from '../../context/useTheme';
 
 const channelsData = [
   { id: 1, name: 'JavaScript', channelPic: JSPng },
@@ -30,6 +31,7 @@ const channelsData = [
 
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   const [filteredChannels, setFilteredChannels] = useState(channelsData);
+  const { theme } = useTheme();
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
@@ -47,7 +49,7 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   };
 
   return (
-    <div className={styles.sidebar}>
+    <div className={`${styles.sidebar} ${theme === 'dark' ? styles.dark : ''}`}>
       <SearchInput onSearch={handleSearch} />
       <Channels
         channels={filteredChannels}
