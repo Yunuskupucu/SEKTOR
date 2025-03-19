@@ -2,13 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.scss';
 import { useAuthStore } from '../store/useAuthStore';
-import Logo from '../assets/logo/LightLogo.png';
+import LightLogo from '../assets/logo/LightLogo.png';
+import DarkLogo from '../assets/logo/DarkLogo.png';
+import { CgDarkMode } from 'react-icons/cg';
+import { useTheme } from '../context/useTheme';
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { theme, toggleTheme } = useTheme();
+  const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,49 +21,86 @@ function Login() {
       await login(email, password);
       navigate('/');
     } catch (error) {
-      console.error('Giriş işlemi sırasında hata oluştu:', error.response?.data?.message || error.message);
+      console.error(
+        'Giriş işlemi sırasında hata oluştu:',
+        error.response?.data?.message || error.message
+      );
       alert(error.response?.data?.message || 'Giriş başarısız!');
     }
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.form}>
-        <h1 className={styles.title}>SEKTÖR</h1>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.inputGroup}>
-            <label>E-POSTA</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <label>PAROLA</label>
-            <input
-              type="password"
-              placeholder="******"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button className={styles.button}>Giriş Yap</button>
-        </form>
-
-        <span className={styles.navigateDiv}>
-          Hesabınız yok mu?{' '}
-          <a className={styles.navigateLink} href="/register">
-            Kaydol
-          </a>
-        </span>
-      </div>
+    <div>
       <div>
+        <CgDarkMode
+          className={`${styles.themeIcon} ${
+            theme === 'dark' ? styles.dark : ''
+          }`}
+          onClick={toggleTheme}
+        />
+      </div>
+      <div
+        className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
+      >
+        <div
+          className={`${styles.form} ${theme === 'dark' ? styles.dark : ''}`}
+        >
+          <h1
+            className={`${styles.title} ${theme === 'dark' ? styles.dark : ''}`}
+          >
+            SEKTÖR
+          </h1>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.inputGroup}>
+              <label className={theme === 'dark' ? styles.dark : ''}>
+                E-POSTA
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className={theme === 'dark' ? styles.dark : ''}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={theme === 'dark' ? styles.dark : ''}>
+                PAROLA
+              </label>
+              <input
+                type="password"
+                placeholder="******"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={theme === 'dark' ? styles.dark : ''}
+              />
+            </div>
+            <button
+              className={`${styles.button} ${
+                theme === 'dark' ? styles.dark : ''
+              }`}
+            >
+              Giriş Yap
+            </button>
+          </form>
+
+          <span
+            className={`${styles.navigateSection} ${
+              theme === 'dark' ? styles.dark : ''
+            }`}
+          >
+            Hesabınız yok mu?{' '}
+            <a className={styles.navigateLink} href="/register">
+              Kaydol
+            </a>
+          </span>
+        </div>
         <div>
-          <img src={Logo} alt="" />
+          <div>
+            <img src={logoSrc} alt="" />
+          </div>
         </div>
       </div>
     </div>
