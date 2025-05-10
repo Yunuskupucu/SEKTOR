@@ -1,5 +1,4 @@
 .container {
-  background: #f0f2f5;
   height: 88vh;
   display: flex;
   margin: 10px 3%;
@@ -10,5 +9,8 @@
 
 .messageContainer {
   width: 100%;
+  background: #000000;
+}
+.messageContainer.dark {
   background: #000000;
 }

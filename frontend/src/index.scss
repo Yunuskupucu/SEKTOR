@@ -5,6 +5,17 @@
 }
 
 :root {
-  background-color: rgb(241, 241, 241);
-  // overflow: hidden;
+  --bg-color: rgb(241, 241, 241);
+  --text-color: #000;
+}
+
+.dark {
+  --bg-color: #121212;
+  --text-color: #fff;
+}
+
+/* Tüm sayfaya uygula */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }

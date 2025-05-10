@@ -29,7 +29,7 @@ function Header() {
     try {
       await logout();
       console.log('Çıkış Yapıldı');
-      navigate('/login'); // Çıkış yaptıktan sonra login sayfasına yönlendirin
+      navigate('/login');
     } catch (error) {
       console.error('Çıkış işlemi sırasında hata:', error);
     } finally {
@@ -39,7 +39,9 @@ function Header() {
   console.log('Theme:', theme);
 
   return (
-    <header className={styles.header}>
+    <header
+      className={`${styles.header} ${theme === 'dark' ? styles.dark : ''}`}
+    >
       <button className={styles.logo} onClick={() => navigate('/')}>
         <span>S</span>
         <label>SEKTÖR</label>
