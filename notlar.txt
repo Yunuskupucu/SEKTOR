@@ -1,6 +1,31 @@
 NPM START  ile backendi çalıştır.
 npm i yapmayı unutma.
 
+- profil sayfasında fotoğraf, text area, linkedin ve github alanları db e kaydedilmiyor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 database de aşağıda 
 
   ----- Ad-soyad
