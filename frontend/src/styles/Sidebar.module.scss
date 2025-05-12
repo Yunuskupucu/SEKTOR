@@ -50,6 +50,9 @@
 .darkChannelItem {
   background: rgb(45, 45, 45);
   color: white;
+  &:hover {
+    border: 0.1px solid #fff;
+  }
 }
 
 .selected {
@@ -66,7 +69,7 @@
   &.darkChannelItem {
     background: linear-gradient(to right, #535353, #141414);
     box-shadow: 0 4px 15px rgba(113, 128, 150, 0.3);
-    border: 3px solid black;
+    border: 2px solid black;
   }
 }
 
