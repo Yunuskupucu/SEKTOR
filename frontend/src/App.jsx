@@ -10,11 +10,11 @@ import { useEffect } from 'react';
 import { Loader } from 'lucide-react';
 
 function App() {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, fetchProfile, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    fetchProfile(); // ✅ Tam profil bilgisini çeker
+  }, [fetchProfile]);
 
   console.log({ authUser });
 
@@ -64,7 +64,15 @@ function App() {
         />
         <Route
           path="/profile"
-          element={authUser ? <Profile /> : <Navigate to="/login" />}
+          element={
+            isCheckingAuth ? (
+              <div>Loading...</div>
+            ) : authUser ? (
+              <Profile />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
     </div>

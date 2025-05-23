@@ -17,10 +17,23 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  fetchProfile: async () => {
+    set({ isCheckingAuth: true });
+    try {
+      const res = await axiosInstance.get('/auth/profile');
+      set({ authUser: res.data });
+    } catch (err) {
+      console.error('❌ Profil verisi alınamadı:', err);
+      set({ authUser: null });
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
+
   login: async (email, password) => {
     try {
-      const res = await axiosInstance.post('/auth/login', { email, password });
-      set({ authUser: res.data });
+      await axiosInstance.post('/auth/login', { email, password });
+      await useAuthStore.getState().fetchProfile();
     } catch (error) {
       console.log('Login error:', error);
       throw error;
@@ -39,12 +52,12 @@ export const useAuthStore = create((set) => ({
 
   register: async (fullname, email, password) => {
     try {
-      const res = await axiosInstance.post('/auth/register', {
+      await axiosInstance.post('/auth/register', {
         fullname,
         email,
         password,
       });
-      set({ authUser: res.data });
+      await useAuthStore.getState().fetchProfile();
     } catch (error) {
       console.log('Register error:', error);
       throw error;
@@ -53,8 +66,8 @@ export const useAuthStore = create((set) => ({
 
   updateProfile: async (profileData) => {
     try {
-      const res = await axiosInstance.put('/auth/profile', profileData);
-      set({ authUser: res.data });
+      await axiosInstance.put('/auth/profile', profileData);
+      await useAuthStore.getState().fetchProfile();
     } catch (error) {
       console.log('Update profile error:', error);
       throw error;
@@ -66,12 +79,9 @@ export const useAuthStore = create((set) => ({
       const formData = new FormData();
       formData.append('avatar', avatarFile);
 
-      const res = await axiosInstance.post('/auth/avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      set({ authUser: res.data });
+      await axiosInstance.post('/auth/avatar', formData);
+
+      await useAuthStore.getState().fetchProfile();
     } catch (error) {
       console.log('Update avatar error:', error);
       throw error;

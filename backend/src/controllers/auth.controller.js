@@ -126,6 +126,8 @@ export const updateProfile = async (req, res) => {
 export const updateAvatar = async (req, res) => {
   try {
     const file = req.file;
+    console.log("➡️ Gelen dosya:", file);
+
     const id = req.user.id;
 
     if (!file) {
@@ -136,6 +138,8 @@ export const updateAvatar = async (req, res) => {
       folder: 'profile_pictures',
       transformation: [{ width: 500, height: 500, crop: 'limit' }],
     });
+
+    console.log("📤 Cloudinary response:", uploadResponse);
 
     if (!uploadResponse.secure_url) {
       return res.status(500).json({ message: 'Resim yüklenemedi' });
@@ -152,13 +156,14 @@ export const updateAvatar = async (req, res) => {
 
     res.status(200).json({ avatar: uploadResponse.secure_url });
   } catch (error) {
-    console.error('Error in updateAvatar controller:', error.message);
+    console.error('❌ Profil resmi yüklenemedi:', error.message);
     res.status(500).json({
       message: 'Profil resmi güncellenirken hata oluştu',
       error: error.message,
     });
   }
 };
+
 
 export const getProfile = async (req, res) => {
   try {
