@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Channels from './Channels';
 import SearchInput from './SearchInput';
@@ -16,33 +16,43 @@ import CodePng from '../../assets/channels/code.png';
 import JobPng from '../../assets/channels/job.png';
 import { useTheme } from '../../context/useTheme';
 
-const channelsData = [
-  { id: 1, name: 'JavaScript', channelPic: JSPng },
-  { id: 2, name: 'HTML / CSS', channelPic: CodePng },
-  { id: 3, name: 'Python', channelPic: PythonPng },
-  { id: 4, name: 'Java', channelPic: JavaPng },
-  { id: 5, name: 'Swift', channelPic: SwiftPng },
-  { id: 6, name: 'C#', channelPic: CsPng },
-  { id: 7, name: 'C++', channelPic: CppPng },
-  { id: 8, name: 'SQL', channelPic: SqlPng },
-  { id: 9, name: 'İş İlanları', channelPic: JobPng },
-  { id: 10, name: 'Genel', channelPic: HomePng },
-];
-
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
-  const [filteredChannels, setFilteredChannels] = useState(channelsData);
+  const [channels, setChannels] = useState([]);
+  const [filteredChannels, setFilteredChannels] = useState([]);
   const { theme } = useTheme();
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm) {
-      setFilteredChannels(channelsData);
-      return;
-    }
+  useEffect(() => {
+    fetch("http://localhost:5001/api/channels")
+      .then((res) => res.json())
+      .then((data) => {
+        const channelImages = {
+          JavaScript: JSPng,
+          "HTML / CSS": CodePng,
+          Python: PythonPng,
+          Java: JavaPng,
+          Swift: SwiftPng,
+          "C#": CsPng,
+          "C++": CppPng,
+          SQL: SqlPng,
+          "İş İlanları": JobPng,
+          Genel: HomePng,
+        };
 
-    const filtered = channelsData.filter((channel) =>
-      channel.name
-        .toLocaleLowerCase('tr')
-        .includes(searchTerm.toLocaleLowerCase('tr'))
+        const enriched = data.map((ch) => ({
+          ...ch,
+          channelPic: channelImages[ch.name] || HomePng,
+        }));
+
+        setChannels(enriched);
+        setFilteredChannels(enriched);
+      });
+  }, []);
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) return setFilteredChannels(channels);
+
+    const filtered = channels.filter((channel) =>
+      channel.name.toLocaleLowerCase('tr').includes(searchTerm.toLocaleLowerCase('tr'))
     );
 
     setFilteredChannels(filtered);

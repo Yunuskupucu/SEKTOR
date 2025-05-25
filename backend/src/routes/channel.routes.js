@@ -1,9 +1,17 @@
-import express from 'express';
-import { getMessagesByChannel } from '../controllers/message.controller.js'; // getMessagesByChannel fonksiyonunu içe aktar
+import express from "express";
+import Channel from "../models/channel.model.js";
+import { getMessagesByChannel } from "../controllers/message.controller.js";
+
 
 const router = express.Router();
 
-// Belirli bir kanalın mesajlarını almak için rota
-router.get('/:channel_id/messages', getMessagesByChannel);
-
+router.get("/", async (req, res) => {
+  try {
+    const channels = await Channel.findAll();
+    res.status(200).json(channels);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching channels", error: error.message });
+  }
+});
+router.get("/:channel_id/messages", getMessagesByChannel);
 export default router;
