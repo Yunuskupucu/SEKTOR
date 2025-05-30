@@ -4,6 +4,7 @@ import { body } from "express-validator";
 
 const router = express.Router();
 
+// ✅ Mesaj gönderme
 router.post(
   "/",
   [
@@ -13,6 +14,7 @@ router.post(
   sendMessage
 );
 
-
+// ✅ Kanal mesajlarını getirme (eksikti, EKLEDİK)
+router.get("/:channel_id", getMessagesByChannel);
 
 export default router;
