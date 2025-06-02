@@ -7,87 +7,68 @@ import MessageSkeleton from './MessageSkeleton';
 import Message from './Message';
 import NoSelectedChannel from './NoSelectedChannel';
 import { useTheme } from '../../context/useTheme';
+import axiosInstance from '../../lib/axios';
+import socket from '../../lib/socket';
+import { useAuthStore } from '../../store/useAuthStore';
 
 const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const { theme } = useTheme();
+  const { authUser } = useAuthStore();
 
   useEffect(() => {
     if (!selectedChannel) return;
 
-    setLoading(true);
-    const mockMessages = [
-      {
-        id: 1,
-        content: `${selectedChannel?.name} kanalına hoş geldiniz!`,
-        sender: 'Ahmet',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        content: 'Test message',
-        sender: 'Mehmet',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: 3,
-        content: 'Test message',
-        sender: 'Ahmet',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: 4,
-        content: 'Test message',
-        sender: 'Ali',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        id: 5,
-        content: 'Test message',
-        sender: 'Ali',
-        timestamp: new Date().toISOString(),
-      },
-    ];
+    const fetchMessages = async () => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.get(`/messages/${selectedChannel.id}`);
+        setMessages(res.data);
+      } catch (err) {
+        console.error('Mesajlar alınamadı:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const loadMessages = setTimeout(() => {
-      setMessages(mockMessages);
-      setLoading(false);
-    }, 1500);
+    fetchMessages();
+    socket.emit('joinChannel', selectedChannel.id);
 
-    return () => clearTimeout(loadMessages);
+    socket.on('newMessage', (message) => {
+      if (message.channel_id === selectedChannel.id) {
+        setMessages((prev) => [...prev, message]);
+      }
+    });
+
+    return () => {
+      socket.off('newMessage');
+    };
   }, [selectedChannel]);
 
   return (
     <div className={styles.container}>
       {selectedChannel ? (
-        <div className={styles.channelContent}>
-          <ChatHeader
-            selectedChannel={selectedChannel}
-            onClose={onChannelClose}
-          />
-          <div
-            className={`${styles.messagesArea} ${
-              theme === 'dark' ? styles.dark : ''
-            }`}
-          >
-            {loading ? (
-              <>
-                {[1, 2, 3].map((index) => (
-                  <MessageSkeleton key={index} />
-                ))}
-              </>
-            ) : (
-              messages.map((message) => (
-                <Message key={message.id} message={message} />
-              ))
-            )}
+        <>
+          <ChatHeader selectedChannel={selectedChannel} onClose={onChannelClose} />
+          <div className={styles.contentWrapper}>
+            <div className={`${styles.messagesArea} ${theme === 'dark' ? styles.dark : ''}`}>
+              {loading ? (
+                [1, 2, 3].map((i) => <MessageSkeleton key={i} />)
+              ) : messages.length > 0 ? (
+                messages.map((msg) => (
+                  <Message key={msg.id} message={msg} currentUser={authUser} />
+                ))
+              ) : (
+                <p>Henüz mesaj yok.</p>
+              )}
+            </div>
+            <MessageInput selectedChannel={selectedChannel} />
           </div>
-        </div>
+        </>
       ) : (
         <NoSelectedChannel />
       )}
-      {selectedChannel ? <MessageInput /> : null}
     </div>
   );
 };

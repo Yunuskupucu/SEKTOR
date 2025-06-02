@@ -2,10 +2,8 @@ import PropTypes from 'prop-types';
 import styles from '../../styles/Message.module.scss';
 import { useTheme } from '../../context/useTheme';
 
-const Message = ({ message }) => {
-  // current user Ahmet olsun
-  const currentUser = 'Ahmet';
-  const isOwnMessage = message.sender === currentUser;
+const Message = ({ message, currentUser }) => {
+  const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
   const { theme } = useTheme();
 
   return (
@@ -15,10 +13,12 @@ const Message = ({ message }) => {
       } ${theme === 'dark' ? styles.dark : ''}`}
     >
       <div className={styles.messageContainer}>
-        <div className={styles.sender}>{!isOwnMessage && message.sender}</div>
+        <div className={styles.sender}>
+          {!isOwnMessage && (message.User?.fullname || message.User?.username)}
+        </div>
         <div className={styles.content}>{message.content}</div>
         <div className={styles.timestamp}>
-          {new Date(message.timestamp).toLocaleTimeString([], {
+          {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',
           })}
@@ -29,11 +29,8 @@ const Message = ({ message }) => {
 };
 
 Message.propTypes = {
-  message: PropTypes.shape({
-    sender: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    timestamp: PropTypes.string.isRequired,
-  }).isRequired,
+  message: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
 };
 
 export default Message;

@@ -171,6 +171,7 @@ export const getProfile = async (req, res) => {
 
     const user = await User.findByPk(id, {
       attributes: [
+        'id',
         'fullname',
         'email',
         'profile_picture_url',
