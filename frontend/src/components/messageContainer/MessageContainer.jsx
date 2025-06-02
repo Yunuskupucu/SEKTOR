@@ -50,9 +50,16 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     <div className={styles.container}>
       {selectedChannel ? (
         <>
-          <ChatHeader selectedChannel={selectedChannel} onClose={onChannelClose} />
+          <ChatHeader
+            selectedChannel={selectedChannel}
+            onClose={onChannelClose}
+          />
           <div className={styles.contentWrapper}>
-            <div className={`${styles.messagesArea} ${theme === 'dark' ? styles.dark : ''}`}>
+            <div
+              className={`${styles.messagesArea} ${
+                theme === 'dark' ? styles.dark : ''
+              }`}
+            >
               {loading ? (
                 [1, 2, 3].map((i) => <MessageSkeleton key={i} />)
               ) : messages.length > 0 ? (
