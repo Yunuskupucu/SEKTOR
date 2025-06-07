@@ -54,3 +54,37 @@ export const getAllChannels = async (req, res) => {
     res.status(500).json({ message: "Error fetching channels", error: error.message });
   }
 };
+//pdf, ss göndermek için
+export const sendMessageWithAttachment = async (req, res) => {
+  const { channel_id, content } = req.body;
+  const user_id = req.user?.id || req.body.user_id;
+
+  try {
+    const user = await User.findByPk(user_id);
+    const channel = await Channel.findByPk(channel_id);
+    if (!user || !channel) {
+      return res.status(404).json({ message: "User or Channel not found" });
+    }
+
+    const attachment = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const newMessage = await Message.create({
+      user_id,
+      channel_id,
+      content,
+      attachment,
+    });
+
+    const fullMessage = await Message.findByPk(newMessage.id, {
+      include: [{ model: User, attributes: ["fullname"] }],
+    });
+
+    const io = req.app.get("io");
+    io.to(channel_id).emit("newMessage", fullMessage);
+
+    res.status(201).json(fullMessage);
+  } catch (error) {
+    res.status(500).json({ message: "Error sending message", error: error.message });
+  }
+};
+
