@@ -7,6 +7,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from 'url';
 
+import path from 'path';
+
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.routes.js";
 import channelRoutes from "./routes/channel.routes.js";

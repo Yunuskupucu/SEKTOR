@@ -1,10 +1,15 @@
 import express from "express";
-import { getMessagesByChannel, sendMessage } from "../controllers/message.controller.js";
 import { body } from "express-validator";
-import upload from "../middlewares/uploadMiddleware.js";
+import {
+  getMessagesByChannel,
+  sendMessage,
+  sendMessageWithAttachment, // ✅ Bunu eklemen gerekiyor
+} from "../controllers/message.controller.js";
+import upload from "../middleware/uploadMiddleware.js";
+
 const router = express.Router();
 
-// ✅ Mesaj gönderme
+// ✅ Metinli mesaj gönderme
 router.post(
   "/",
   [
@@ -14,8 +19,14 @@ router.post(
   sendMessage
 );
 
-// ✅ Kanal mesajlarını getirme (eksikti, EKLEDİK)
+// ✅ Dosya ekli mesaj gönderme
+router.post(
+  "/messages/with-attachment",
+  upload.single("file"),
+  sendMessageWithAttachment
+);
+
+// ✅ Belirli kanaldaki mesajları getir
 router.get("/:channel_id", getMessagesByChannel);
-router.post("/messages/with-attachment", upload.single("file"), sendMessageWithAttachment);
 
 export default router;
