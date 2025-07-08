@@ -1,10 +1,10 @@
 // backend/api/geminiModeration.js
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY); // .env
 
-const model = genAI.getGenerativeModel({ model: "modeli yazıcaz" }); //modeli yazıcaz  .ENV YE api yazılacak
-yazıcaz
+const model = genAI.getGenerativeModel({ model: 'modeli yazıcaz' }); //modeli yazıcaz  .ENV YE api yazılacak
+
 export const checkContentModeration = async (post) => {
   const prompt = `
 Bir sosyal medya moderatörüsün. Gönderi içeriklerini değerlendiriyorsun. Aşağıdaki kurallara uymayan içerikleri tespit et:
