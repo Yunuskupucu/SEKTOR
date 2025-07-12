@@ -2,7 +2,7 @@ import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import Channel from "../models/channel.model.js";
 import { validationResult } from "express-validator";
-import { checkContentModeration } from "../api/geminiModeration.js";
+import { checkContentModeration } from "../api/geminiModeration.js";  // BURASI 
 
 
 // ✅ Metinli mesaj gönderme
@@ -22,9 +22,14 @@ export const sendMessage = async (req, res) => {
       return res.status(404).json({ message: "User or Channel not found" });
     }
 
-    // ✅ İçerik denetimi
-    const result = await checkContentModeration(content);
-    const moderatedContent = result === "0" ? "Mesaj kaldırıldı." : content;
+    // ✅ İçerik denetimi // BAK BURAYA
+// ✅ İçerik denetimi
+const result = await checkContentModeration(content);
+console.log("📩 Moderasyon sonucu:", result);
+
+const moderatedContent = result === "0" ? "Mesaj kaldırıldı." : content;
+console.log("✏️ Kaydedilecek içerik:", moderatedContent);
+
 
     const newMessage = await Message.create({ user_id, channel_id, content: moderatedContent });
     const fullMessage = await Message.findByPk(newMessage.id, {
