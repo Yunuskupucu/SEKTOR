@@ -70,7 +70,13 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
                 <p>Henüz mesaj yok.</p>
               )}
             </div>
-            <MessageInput selectedChannel={selectedChannel} />
+            <div
+              className={`${styles.messageInput} ${
+                theme === 'dark' ? styles.dark : ''
+              }`}
+            >
+              <MessageInput selectedChannel={selectedChannel} />
+            </div>
           </div>
         </>
       ) : (
