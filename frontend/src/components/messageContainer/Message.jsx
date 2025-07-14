@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import styles from '../../styles/Message.module.scss';
 import { useTheme } from '../../context/useTheme';
 
+//Moderated section
 const Message = ({ message, currentUser }) => {
-  const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
+  const isOwnMessage =
+    message.User?.id === currentUser.id || message.user_id === currentUser.id;
   const { theme } = useTheme();
 
   return (
@@ -18,10 +20,13 @@ const Message = ({ message, currentUser }) => {
         </div>
         <div className={styles.content}>{message.content}</div>
         <div className={styles.timestamp}>
-          {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
+          {new Date(message.timestamp || message.createdAt).toLocaleTimeString(
+            [],
+            {
+              hour: '2-digit',
+              minute: '2-digit',
+            }
+          )}
         </div>
       </div>
     </div>
