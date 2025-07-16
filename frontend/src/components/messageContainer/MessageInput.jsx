@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
+import { GrAttachment } from 'react-icons/gr';
 import styles from '../../styles/MessageInput.module.scss';
 import { useTheme } from '../../context/useTheme';
 import PropTypes from 'prop-types';
@@ -26,7 +27,9 @@ const MessageInput = ({ selectedChannel }) => {
   };
 
   return (
-    <div className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}>
+    <div
+      className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
+    >
       <form onSubmit={handleSubmit} className={styles.inputWrapper}>
         <input
           type="text"
@@ -35,9 +38,15 @@ const MessageInput = ({ selectedChannel }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button type="submit" className={styles.sendButton}>
-          <IoSendSharp />
-        </button>
+
+        <div className={styles.buttonGroup}>
+          <button>
+            <GrAttachment className={styles.attachmentButton} />
+          </button>
+          <button type="submit" className={styles.sendButton}>
+            <IoSendSharp />
+          </button>
+        </div>
       </form>
     </div>
   );
