@@ -47,7 +47,9 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   }, [selectedChannel]);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
+    >
       {selectedChannel ? (
         <>
           <ChatHeader
