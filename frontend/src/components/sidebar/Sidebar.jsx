@@ -22,19 +22,19 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   const { theme } = useTheme();
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/channels")
+    fetch('http://localhost:5001/api/channels')
       .then((res) => res.json())
       .then((data) => {
         const channelImages = {
           JavaScript: JSPng,
-          "HTML / CSS": CodePng,
+          'HTML / CSS': CodePng,
           Python: PythonPng,
           Java: JavaPng,
           Swift: SwiftPng,
-          "C#": CsPng,
-          "C++": CppPng,
+          'C#': CsPng,
+          'C++': CppPng,
           SQL: SqlPng,
-          "İş İlanları": JobPng,
+          'İş İlanları': JobPng,
           Genel: HomePng,
         };
 
@@ -52,7 +52,9 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
     if (!searchTerm) return setFilteredChannels(channels);
 
     const filtered = channels.filter((channel) =>
-      channel.name.toLocaleLowerCase('tr').includes(searchTerm.toLocaleLowerCase('tr'))
+      channel.name
+        .toLocaleLowerCase('tr')
+        .includes(searchTerm.toLocaleLowerCase('tr'))
     );
 
     setFilteredChannels(filtered);
