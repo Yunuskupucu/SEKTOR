@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
-import { GrAttachment } from 'react-icons/gr';
+import { ImAttachment } from 'react-icons/im';
 import styles from '../../styles/MessageInput.module.scss';
 import { useTheme } from '../../context/useTheme';
 import PropTypes from 'prop-types';
@@ -11,6 +11,39 @@ const MessageInput = ({ selectedChannel }) => {
   const [message, setMessage] = useState('');
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
+
+  const fileInputRef = useRef(null);
+  const handleAttachmentClick = () => {
+    console.log('Attachment butonuna tıklandı');
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  };
+
+  // const formData = new FormData();
+  //   formData.append('file', file);      file -> backendde tutulacak ad
+
+  // try {
+  //     const response = await fetch('https://your-api-endpoint/upload', {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Yükleme başarısız');
+  //     }
+
+  //     const data = await response.json();
+  //     setUploadStatus('success');
+  //     console.log('Dosya yükleme başarılı:', data);
+  //   } catch (error) {
+  //     setUploadStatus('error');
+  //     console.error('Dosya yükleme hatası:', error);
+  //   }
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +63,7 @@ const MessageInput = ({ selectedChannel }) => {
     <div
       className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
     >
-      <form onSubmit={handleSubmit} className={styles.inputWrapper}>
+      <div onSubmit={handleSubmit} className={styles.inputWrapper}>
         <input
           type="text"
           className={styles.input}
@@ -40,14 +73,24 @@ const MessageInput = ({ selectedChannel }) => {
         />
 
         <div className={styles.buttonGroup}>
-          <button>
-            <GrAttachment className={styles.attachmentButton} />
+          <button
+            className={styles.attachmentButton}
+            onClick={handleAttachmentClick}
+          >
+            <ImAttachment />
           </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+
           <button type="submit" className={styles.sendButton}>
             <IoSendSharp />
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

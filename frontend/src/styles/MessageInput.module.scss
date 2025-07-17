@@ -51,57 +51,57 @@
 .buttonGroup {
   display: flex;
   flex-direction: row;
+}
 
-  .attachmentButton {
-    border: none;
-    background: none;
-    padding: 8px;
-    font-size: 35px;
-    color: #2193b0;
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
+.attachmentButton {
+  background: none;
+  border: none;
+  padding: 8px;
 
-    &:hover {
-      background: rgba(197, 22, 22, 0.5);
-      transform: scale(1.2);
-    }
+  color: #2193b0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
 
-    svg {
-      font-size: 20px;
-    }
+.attachmentButton:hover {
+  background: rgb(83 83 83 / 50%);
+  transform: scale(1.2);
+}
 
-    .container.dark & {
-      color: #000000;
-    }
-  }
+.attachmentButton svg {
+  font-size: 20px;
+}
 
-  .sendButton {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    color: #2193b0;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
+.container.dark .attachmentButton {
+  color: #000000;
+}
 
-    &:hover {
-      background: rgb(83 83 83 / 50%);
-      transform: scale(1.2);
-    }
+.sendButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #2193b0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
 
-    svg {
-      font-size: 20px;
-    }
+.sendButton:hover {
+  background: rgb(83 83 83 / 50%);
+  transform: scale(1.2);
+}
 
-    .container.dark & {
-      color: #000000;
-    }
-  }
+.sendButton svg {
+  font-size: 20px;
+}
+
+.container.dark .sendButton {
+  color: #000000;
 }
