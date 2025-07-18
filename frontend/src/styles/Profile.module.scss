@@ -4,6 +4,7 @@
   padding: 0 1rem;
   background: none;
 }
+
 .paper {
   background-color: #fff;
   border-radius: 1rem;
@@ -11,9 +12,10 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
   &.dark {
-    //background: rgb(77, 77, 77);
-    color: black;
+    background-color: #1e1e1e;
+    color: #ffffff;
   }
+
   .title {
     text-align: center;
     font-size: 1.8rem;
@@ -55,6 +57,10 @@
         transform: scale(1.1);
       }
     }
+
+    &.dark {
+      border: 5px solid rgb(83, 83, 83);
+    }
   }
 
   .avatarImage {
@@ -77,6 +83,10 @@
     opacity: 0;
     transition: all 0.3s ease;
     border-radius: 50%;
+
+    &.dark {
+      background: rgba(83, 83, 83, 0.9);
+    }
   }
 
   .uploadButton {
@@ -133,7 +143,7 @@
       min-width: 80px;
     }
 
-    input {
+    .profileInput {
       flex-grow: 1;
       padding: 0.5rem;
       border: none;
@@ -144,6 +154,21 @@
       &:focus {
         border-bottom-color: #1976d2;
       }
+    }
+  }
+
+  .profileInput {
+    &.dark {
+      background: none;
+      color: rgb(189, 189, 189);
+      border: none !important;
+      border-bottom: rgb(189, 189, 189) !important;
+      border-radius: 5px;
+      flex-grow: 1;
+      padding: 0.5rem;
+      border: none;
+      border-bottom: 1px solid #ddd;
+      font-size: 1rem;
     }
   }
 
@@ -205,75 +230,75 @@
 }
 
 // Global dark mode styles
-:global(.dark) {
-  .container {
-    background: none;
-    color: #ffffff;
-  }
+// :global(.dark) {
+//   .container {
+//     background: none;
+//     color: #ffffff;
+//   }
 
-  .paper {
-    background-color: #1e1e1e;
-    color: #ffffff;
-    border: 3px solid #000000;
+//   .paper {
+//     background-color: #1e1e1e;
+//     color: #ffffff;
+//     border: 3px solid #000000;
 
-    .avatar {
-      border: 5px solid rgb(83, 83, 83);
+//     .avatar {
+//       border: 5px solid rgb(83, 83, 83);
 
-      .avatarOverlay {
-        background: rgba(83, 83, 83, 0.9);
-      }
-    }
+//       .avatarOverlay {
+//         background: rgba(83, 83, 83, 0.9);
+//       }
+//     }
 
-    .title {
-      color: rgb(189, 189, 189);
-      border-bottom: 2px solid rgb(189, 189, 189);
-    }
-  }
+//     .title {
+//       color: rgb(189, 189, 189);
+//       border-bottom: 2px solid rgb(189, 189, 189);
+//     }
+//   }
 
-  .profileDetails span {
-    color: rgb(189, 189, 189) !important;
-  }
+//   .profileDetails span {
+//     color: rgb(189, 189, 189) !important;
+//   }
 
-  .profileDetails .icon {
-    color: rgb(189, 189, 189) !important;
-  }
+//   .profileDetails .icon {
+//     color: rgb(189, 189, 189) !important;
+//   }
 
-  .inputGroup input {
-    background-color: #222;
-    color: rgb(189, 189, 189);
-    border: none !important;
-    border-radius: 8px;
-  }
+//   .inputGroup input {
+//     background-color: #222;
+//     color: rgb(189, 189, 189);
+//     border: none !important;
+//     border-radius: 8px;
+//   }
 
-  .bioSection textarea {
-    background-color: #222;
-    color: rgb(189, 189, 189);
-    border: none;
-  }
+//   .bioSection textarea {
+//     background-color: #222;
+//     color: rgb(189, 189, 189);
+//     border: none;
+//   }
 
-  .updateButton {
-    background: linear-gradient(
-      80deg,
-      rgb(128, 128, 128) 20%,
-      rgb(76, 76, 76) 100%
-    );
+//   .updateButton {
+//     background: linear-gradient(
+//       80deg,
+//       rgb(128, 128, 128) 20%,
+//       rgb(76, 76, 76) 100%
+//     );
 
-    &:hover {
-      background: rgb(52, 52, 52);
-      transform: scale(1.05);
-      transition: background 0.1s ease-in-out, transform 0.2s ease-in-out;
-    }
-  }
+//     &:hover {
+//       background: rgb(52, 52, 52);
+//       transform: scale(1.05);
+//       transition: background 0.1s ease-in-out, transform 0.2s ease-in-out;
+//     }
+//   }
 
-  .accountInfo {
-    background-color: #333333 !important;
-    h2 {
-      color: rgb(189, 189, 189);
-      border-bottom: 2px solid #5c5c5c;
-    }
-  }
+//   .accountInfo {
+//     background-color: #333333 !important;
+//     h2 {
+//       color: rgb(189, 189, 189);
+//       border-bottom: 2px solid #5c5c5c;
+//     }
+//   }
 
-  .joinDate {
-    color: rgb(189, 189, 189) !important;
-  }
-}
+//   .joinDate {
+//     color: rgb(189, 189, 189) !important;
+//   }
+// }

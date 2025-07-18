@@ -15,18 +15,14 @@ import { useTheme } from '../context/useTheme';
 
 const Profile = () => {
   const { authUser, updateProfile, updateAvatar } = useAuthStore();
-  const [fullname, setFullname] = useState(authUser?.fullname || '');
-  const [email, setEmail] = useState(authUser?.email || '');
-  const [linkedin, setLinkedin] = useState(authUser?.linkedin || '');
-  const [github, setGithub] = useState(authUser?.github || '');
-  const [bio, setBio] = useState(authUser?.bio || '');
-  const [avatar, setAvatar] = useState(
-    authUser?.profile_picture_url || defaultAvatar
-  );
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [github, setGithub] = useState('');
+  const [bio, setBio] = useState('');
+  const [avatar, setAvatar] = useState(defaultAvatar);
   const [loading, setLoading] = useState(false);
-  const [joinDate, setJoinDate] = useState(
-    authUser?.createdAt ? new Date(authUser.createdAt) : ''
-  );
+  const [joinDate, setJoinDate] = useState('');
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -70,23 +66,20 @@ const Profile = () => {
     }
   };
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   return (
     <>
       <Header />
-      <div
-        className={`${styles.container} ${
-          theme === 'dark' ? styles.dark : 'light'
-        }`}
-      >
-        <div className={styles.paper}>
-          <h1 className={styles.title}>PROFİL</h1>
+      <div className={`${styles.container} ${themeClass}`}>
+        <div className={`${styles.paper} ${themeClass}`}>
+          <h1 className={`${styles.title} ${themeClass}`}>PROFİL</h1>
 
-          {/* Avatar Bölümü */}
           <div className={styles.avatarContainer}>
             <div className={styles.avatarWrapper}>
-              <div className={styles.avatar}>
-                <img src={avatar} alt="" className={styles.avatarImage} />
-                <div className={styles.avatarOverlay}>
+              <div className={`${styles.avatar} ${themeClass}`}>
+                <img src={avatar} alt="Avatar" className={styles.avatarImage} />
+                <div className={`${styles.avatarOverlay} ${themeClass}`}>
                   <label className={styles.uploadButton}>
                     <FaCamera className={styles.cameraIcon} />
                     <span className={styles.uploadText}>
@@ -105,61 +98,49 @@ const Profile = () => {
           </div>
 
           <div className={styles.profileDetails}>
-            {/* Ad Soyad */}
-            <div className={styles.inputGroup}>
-              <FaUser className={styles.icon} />
-              <span>Ad Soyad:</span>
-              <input
-                type="text"
-                value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
-                placeholder="Ad Soyad"
-                disabled={loading}
-              />
-            </div>
+            {[
+              {
+                label: 'Ad Soyad',
+                value: fullname,
+                setValue: setFullname,
+                icon: <FaUser />,
+              },
+              {
+                label: 'Email',
+                value: email,
+                setValue: setEmail,
+                icon: <FaEnvelope />,
+              },
+              {
+                label: 'LinkedIn',
+                value: linkedin,
+                setValue: setLinkedin,
+                icon: <FaLinkedin />,
+              },
+              {
+                label: 'GitHub',
+                value: github,
+                setValue: setGithub,
+                icon: <FaGithub />,
+              },
+            ].map(({ label, value, setValue, icon }, i) => (
+              <div key={i} className={styles.inputGroup}>
+                {icon}
+                <span>{label}:</span>
+                <input
+                  className={`${styles.profileInput} ${themeClass}`}
+                  type="text"
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  disabled={loading}
+                  placeholder={label}
+                />
+              </div>
+            ))}
 
-            {/* Email */}
-            <div className={styles.inputGroup}>
-              <FaEnvelope className={styles.icon} />
-              <span>Email:</span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                disabled={loading}
-              />
-            </div>
-
-            {/* LinkedIn */}
-            <div className={styles.inputGroup}>
-              <FaLinkedin className={styles.icon} />
-              <span>LinkedIn:</span>
-              <input
-                type="text"
-                value={linkedin}
-                onChange={(e) => setLinkedin(e.target.value)}
-                placeholder="LinkedIn profil linki"
-                disabled={loading}
-              />
-            </div>
-
-            {/* GitHub */}
-            <div className={styles.inputGroup}>
-              <FaGithub className={styles.icon} />
-              <span>GitHub:</span>
-              <input
-                type="text"
-                value={github}
-                onChange={(e) => setGithub(e.target.value)}
-                placeholder="GitHub profil linki"
-                disabled={loading}
-              />
-            </div>
-
-            {/* Hakkımda */}
             <div className={styles.bioSection}>
               <textarea
+                className={`${styles.profileInput} ${themeClass}`}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Kendinizi Tanıtın"
@@ -176,7 +157,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Hesap Bilgileri */}
           <div className={styles.accountInfo}>
             <h2>Profil Bilgileri</h2>
             <div className={styles.joinDate}>
