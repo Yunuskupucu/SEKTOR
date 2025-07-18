@@ -25,4 +25,4 @@ ThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export { ThemeProvider, ThemeContext }; // ThemeProvider'ı named export olarak dışa aktar
+export { ThemeProvider, ThemeContext };
