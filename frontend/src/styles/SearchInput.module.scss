@@ -3,15 +3,17 @@
   justify-content: center;
   align-items: center;
   border-bottom: 2px solid rgb(85, 85, 85);
+  padding: 1rem;
 
   .container {
     position: relative;
     width: 100%;
+    max-width: 600px;
 
     .input {
-      width: 75%;
-      padding: 10px 35px 10px 10px;
-      margin: 10px 10px 10px 10px;
+      width: 100%;
+      padding: 10px 40px 10px 10px;
+      margin: 0;
       border: 1px solid #ccc;
       border-radius: 10px;
       outline: none;
@@ -36,7 +38,7 @@
 
   .button {
     position: absolute;
-    right: 25px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -48,5 +50,40 @@
   .icon {
     color: #888;
     font-size: 20px;
+  }
+
+  // 🔻 RESPONSIVE
+  @media (max-width: 768px) {
+    .container {
+      max-width: 100%;
+    }
+
+    .input {
+      font-size: 14px;
+      padding: 10px 35px 10px 10px;
+    }
+
+    .icon {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+
+    .container {
+      width: 100%;
+    }
+
+    .input {
+      padding: 10px 40px 10px 10px;
+      font-size: 13px;
+    }
+
+    .button {
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 }

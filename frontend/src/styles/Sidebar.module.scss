@@ -90,3 +90,25 @@
     font-weight: 600;
   }
 }
+
+@media (max-width: 768px) {
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .channelInfo {
+    display: none;
+  }
+
+  .sidebar {
+    width: 7rem;
+  }
+
+  .channelItem {
+    justify-content: center; // sadece ikon ortalansın
+    padding: 12px 0;
+  }
+}
