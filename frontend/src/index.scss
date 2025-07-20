@@ -1,11 +1,16 @@
 * {
   margin: 0;
   padding: 0;
-  //top: 0;
   box-sizing: border-box;
 }
 
-:root {
-  --bg-color: rgb(241, 241, 241);
-  --text-color: #000;
+#root {
+  background-color: rgb(241, 241, 241);
+  color: #333;
+  min-height: 100vh;
+
+  &.dark {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+  }
 }
