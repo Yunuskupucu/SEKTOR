@@ -2,10 +2,10 @@ import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import Channel from "../models/channel.model.js";
 import { validationResult } from "express-validator";
-import { checkContentModeration } from "../api/geminiModeration.js";  // BURASI 
+import { handleSendMessage } from "../lib/handleSendMessage.js";
 
 
-// ✅ Metinli mesaj gönderme
+// ✅ Metinli mesaj gönderme (REST API)
 export const sendMessage = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -16,35 +16,27 @@ export const sendMessage = async (req, res) => {
   const user_id = req.user?.id || req.body.user_id;
 
   try {
+    // Kullanıcı ve kanalın varlığını kontrol et
     const user = await User.findByPk(user_id);
     const channel = await Channel.findByPk(channel_id);
     if (!user || !channel) {
       return res.status(404).json({ message: "User or Channel not found" });
     }
 
-    // ✅ İçerik denetimi // BAK BURAYA
-// ✅ İçerik denetimi
-const result = await checkContentModeration(content);
-console.log("📩 Moderasyon sonucu:", result);
+    // ✅ Ortak içerik moderasyon ve kayıt
+    const fullMessage = await handleSendMessage({ user_id, channel_id, content });
 
-const moderatedContent = result === "0" ? "Mesaj kaldırıldı." : content;
-console.log("✏️ Kaydedilecek içerik:", moderatedContent);
-
-
-    const newMessage = await Message.create({ user_id, channel_id, content: moderatedContent });
-    const fullMessage = await Message.findByPk(newMessage.id, {
-      include: [{ model: User, attributes: ["fullname"] }],
-    });
-
+    // ✅ Socket yayını (opsiyonel)
     const io = req.app.get("io");
     io.to(channel_id).emit("newMessage", fullMessage);
+
     res.status(201).json(fullMessage);
   } catch (error) {
     res.status(500).json({ message: "Error sending message", error: error.message });
   }
 };
 
-// ✅ Dosya ekli mesaj gönderme (örneğin PDF veya görsel)
+// ✅ Dosya ekli mesaj gönderme
 export const sendMessageWithAttachment = async (req, res) => {
   const { channel_id, content } = req.body;
   const user_id = req.user?.id || req.body.user_id;

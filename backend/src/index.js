@@ -1,4 +1,3 @@
-// ✅ BACKEND: index.js
 import express from "express";
 import dotenv from "dotenv";
 import http from "http";
@@ -12,10 +11,8 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.routes.js";
 import channelRoutes from "./routes/channel.routes.js";
 import { connectDb } from "./lib/db.js";
+import { handleSendMessage } from "./lib/handleSendMessage.js";
 
-import Message from "./models/message.model.js";
-import User from "./models/user.model.js";
-import { checkContentModeration } from "./api/geminiModeration.js"; // ✅ Moderasyon fonksiyonu
 
 dotenv.config();
 
@@ -56,18 +53,7 @@ io.on("connection", (socket) => {
     const { user_id, channel_id, content } = data;
 
     try {
-      console.log("🟡 Moderasyon kontrolü başlıyor...");
-      const result = await checkContentModeration(content);
-      console.log("📩 Moderasyon sonucu (socket):", result);
-
-      const moderatedContent = result.includes("0") ? "Mesaj kaldırıldı." : content;
-      console.log("✏️ Kaydedilecek içerik (socket):", moderatedContent);
-
-      const newMessage = await Message.create({ user_id, channel_id, content: moderatedContent });
-      const fullMessage = await Message.findByPk(newMessage.id, {
-        include: [{ model: User, attributes: ["fullname"] }],
-      });
-
+      const fullMessage = await handleSendMessage({ user_id, channel_id, content });
       io.to(channel_id).emit("newMessage", fullMessage);
     } catch (error) {
       console.error("❌ Socket üzerinden mesaj gönderme hatası:", error);

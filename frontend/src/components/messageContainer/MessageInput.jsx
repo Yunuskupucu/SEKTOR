@@ -11,8 +11,8 @@ const MessageInput = ({ selectedChannel }) => {
   const [message, setMessage] = useState('');
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
-
   const fileInputRef = useRef(null);
+
   const handleAttachmentClick = () => {
     console.log('Attachment butonuna tıklandı');
     fileInputRef.current.click();
@@ -21,29 +21,10 @@ const MessageInput = ({ selectedChannel }) => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (!file) return;
+
+    // İleride dosya gönderimi için kullanılabilir.
+    console.log("📎 Dosya seçildi:", file.name);
   };
-
-  // const formData = new FormData();
-  //   formData.append('file', file);      file -> backendde tutulacak ad
-
-  // try {
-  //     const response = await fetch('https://your-api-endpoint/upload', {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Yükleme başarısız');
-  //     }
-
-  //     const data = await response.json();
-  //     setUploadStatus('success');
-  //     console.log('Dosya yükleme başarılı:', data);
-  //   } catch (error) {
-  //     setUploadStatus('error');
-  //     console.error('Dosya yükleme hatası:', error);
-  //   }
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,14 +37,13 @@ const MessageInput = ({ selectedChannel }) => {
       content: message,
     });
 
+    console.log("📨 Mesaj gönderildi:", message);
     setMessage('');
   };
 
   return (
-    <div
-      className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
-    >
-      <div onSubmit={handleSubmit} className={styles.inputWrapper}>
+    <div className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}>
+      <form onSubmit={handleSubmit} className={styles.inputWrapper}>
         <input
           type="text"
           className={styles.input}
@@ -74,11 +54,13 @@ const MessageInput = ({ selectedChannel }) => {
 
         <div className={styles.buttonGroup}>
           <button
+            type="button"
             className={styles.attachmentButton}
             onClick={handleAttachmentClick}
           >
             <ImAttachment />
           </button>
+
           <input
             type="file"
             ref={fileInputRef}
@@ -90,7 +72,7 @@ const MessageInput = ({ selectedChannel }) => {
             <IoSendSharp />
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
