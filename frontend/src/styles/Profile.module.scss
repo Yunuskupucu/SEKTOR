@@ -138,7 +138,7 @@
       min-width: 24px;
     }
 
-    span {
+    .profileLabel {
       color: #666;
       min-width: 80px;
     }
@@ -157,18 +157,25 @@
     }
   }
 
+  .profileLabel {
+    &.dark {
+      color: #bdbdbd;
+      min-width: 80px;
+    }
+  }
+
   .profileInput {
     &.dark {
       background: none;
-      color: rgb(189, 189, 189);
-      border: none !important;
-      border-bottom: rgb(189, 189, 189) !important;
-      border-radius: 5px;
+      color: #bdbdbd;
+      border: none;
       flex-grow: 1;
       padding: 0.5rem;
-      border: none;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #606060;
       font-size: 1rem;
+      &:focus {
+        border-bottom-color: #bebebe;
+      }
     }
   }
 
@@ -185,6 +192,9 @@
       font-family: inherit;
       margin-bottom: 1rem;
 
+      &.dark {
+        background: #393939;
+      }
       &:focus {
         outline: none;
         border-color: #1976d2;
@@ -205,12 +215,35 @@
     &:hover {
       background-color: #1565c0;
     }
+
+    &.dark {
+      background: linear-gradient(
+        80deg,
+        rgb(95, 94, 94) 20%,
+        rgb(76, 76, 76) 100%
+      );
+
+      &:hover {
+        background: linear-gradient(
+          80deg,
+          rgb(110, 110, 110) 40%,
+          rgb(72, 72, 72) 100%
+        );
+        transform: scale(1.05);
+        transition: background 0.1s ease-in-out, transform 0.2s ease-in-out;
+        border: 1px solid #fff;
+      }
+    }
   }
 
   .accountInfo {
     padding: 1.5rem;
     background-color: #f5f5f5;
     border-radius: 1rem;
+
+    &.dark {
+      background-color: #393939;
+    }
 
     h2 {
       font-size: 1.2rem;
@@ -226,79 +259,9 @@
     justify-content: space-between;
     font-size: 0.9rem;
     color: #666;
+
+    &.dark {
+      color: #e0e0e0;
+    }
   }
 }
-
-// Global dark mode styles
-// :global(.dark) {
-//   .container {
-//     background: none;
-//     color: #ffffff;
-//   }
-
-//   .paper {
-//     background-color: #1e1e1e;
-//     color: #ffffff;
-//     border: 3px solid #000000;
-
-//     .avatar {
-//       border: 5px solid rgb(83, 83, 83);
-
-//       .avatarOverlay {
-//         background: rgba(83, 83, 83, 0.9);
-//       }
-//     }
-
-//     .title {
-//       color: rgb(189, 189, 189);
-//       border-bottom: 2px solid rgb(189, 189, 189);
-//     }
-//   }
-
-//   .profileDetails span {
-//     color: rgb(189, 189, 189) !important;
-//   }
-
-//   .profileDetails .icon {
-//     color: rgb(189, 189, 189) !important;
-//   }
-
-//   .inputGroup input {
-//     background-color: #222;
-//     color: rgb(189, 189, 189);
-//     border: none !important;
-//     border-radius: 8px;
-//   }
-
-//   .bioSection textarea {
-//     background-color: #222;
-//     color: rgb(189, 189, 189);
-//     border: none;
-//   }
-
-//   .updateButton {
-//     background: linear-gradient(
-//       80deg,
-//       rgb(128, 128, 128) 20%,
-//       rgb(76, 76, 76) 100%
-//     );
-
-//     &:hover {
-//       background: rgb(52, 52, 52);
-//       transform: scale(1.05);
-//       transition: background 0.1s ease-in-out, transform 0.2s ease-in-out;
-//     }
-//   }
-
-//   .accountInfo {
-//     background-color: #333333 !important;
-//     h2 {
-//       color: rgb(189, 189, 189);
-//       border-bottom: 2px solid #5c5c5c;
-//     }
-//   }
-
-//   .joinDate {
-//     color: rgb(189, 189, 189) !important;
-//   }
-// }

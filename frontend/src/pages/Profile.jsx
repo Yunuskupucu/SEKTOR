@@ -126,7 +126,9 @@ const Profile = () => {
             ].map(({ label, value, setValue, icon }, i) => (
               <div key={i} className={styles.inputGroup}>
                 {icon}
-                <span>{label}:</span>
+                <span className={`${styles.profileLabel}  ${themeClass}`}>
+                  {label}:
+                </span>
                 <input
                   className={`${styles.profileInput} ${themeClass}`}
                   type="text"
@@ -138,7 +140,7 @@ const Profile = () => {
               </div>
             ))}
 
-            <div className={styles.bioSection}>
+            <div className={`${styles.bioSection} ${themeClass}`}>
               <textarea
                 className={`${styles.profileInput} ${themeClass}`}
                 value={bio}
@@ -147,8 +149,9 @@ const Profile = () => {
                 rows={5}
                 disabled={loading}
               />
+
               <button
-                className={styles.updateButton}
+                className={`${styles.updateButton} ${themeClass}`}
                 onClick={handleProfileUpdate}
                 disabled={loading}
               >
@@ -157,9 +160,9 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className={styles.accountInfo}>
+          <div className={`${styles.accountInfo} ${themeClass}`}>
             <h2>Profil Bilgileri</h2>
-            <div className={styles.joinDate}>
+            <div className={`${styles.joinDate} ${themeClass}`}>
               <span>Üyelik Tarihi</span>
               <span>
                 {joinDate
