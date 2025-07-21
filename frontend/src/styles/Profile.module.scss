@@ -1,8 +1,9 @@
 .container {
   max-width: 600px;
-  margin: auto;
+  margin: 2rem auto 0;
   padding: 0 1rem;
-  background: none;
+  background: transparent;
+  border-bottom: 2rem solid transparent;
 }
 
 .paper {
@@ -10,9 +11,8 @@
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
   &.dark {
-    background-color: #1e1e1e;
+    background-color: #242424;
     color: #ffffff;
   }
 
