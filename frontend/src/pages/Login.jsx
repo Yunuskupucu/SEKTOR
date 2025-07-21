@@ -15,6 +15,8 @@ function Login() {
   const { theme, toggleTheme } = useTheme();
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -39,59 +41,39 @@ function Login() {
           onClick={toggleTheme}
         />
       </div>
-      <div
-        className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
-      >
-        <div
-          className={`${styles.form} ${theme === 'dark' ? styles.dark : ''}`}
-        >
-          <h1
-            className={`${styles.title} ${theme === 'dark' ? styles.dark : ''}`}
-          >
-            SEKTÖR
-          </h1>
+      <div className={`${styles.container} ${themeClass}`}>
+        <div className={`${styles.form} ${themeClass}`}>
+          <h1 className={`${styles.title} ${themeClass}`}>SEKTÖR</h1>
           <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
-              <label className={theme === 'dark' ? styles.dark : ''}>
-                E-POSTA
-              </label>
+              <label className={themeClass}>E-POSTA</label>
               <input
                 type="email"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className={theme === 'dark' ? styles.dark : ''}
+                className={themeClass}
               />
             </div>
             <div className={styles.inputGroup}>
-              <label className={theme === 'dark' ? styles.dark : ''}>
-                PAROLA
-              </label>
+              <label className={themeClass}>PAROLA</label>
               <input
                 type="password"
                 placeholder="******"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className={theme === 'dark' ? styles.dark : ''}
+                className={themeClass}
               />
             </div>
-            <button
-              className={`${styles.button} ${
-                theme === 'dark' ? styles.dark : ''
-              }`}
-            >
+            <button className={`${styles.button} ${themeClass}`}>
               Giriş Yap
             </button>
           </form>
 
-          <span
-            className={`${styles.navigateSection} ${
-              theme === 'dark' ? styles.dark : ''
-            }`}
-          >
-            Hesabınız yok mu?{' '}
+          <span className={`${styles.navigateSection} ${themeClass}`}>
+            Hesabınız yok mu?
             <a className={styles.navigateLink} href="/register">
               Kaydol
             </a>

@@ -13,6 +13,8 @@ const MessageInput = ({ selectedChannel }) => {
   const { authUser } = useAuthStore();
   const fileInputRef = useRef(null);
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   const handleAttachmentClick = () => {
     console.log('Attachment butonuna tıklandı');
     fileInputRef.current.click();
@@ -23,7 +25,7 @@ const MessageInput = ({ selectedChannel }) => {
     if (!file) return;
 
     // İleride dosya gönderimi için kullanılabilir.
-    console.log("📎 Dosya seçildi:", file.name);
+    console.log('📎 Dosya seçildi:', file.name);
   };
 
   const handleSubmit = (e) => {
@@ -37,12 +39,12 @@ const MessageInput = ({ selectedChannel }) => {
       content: message,
     });
 
-    console.log("📨 Mesaj gönderildi:", message);
+    console.log('📨 Mesaj gönderildi:', message);
     setMessage('');
   };
 
   return (
-    <div className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}>
+    <div className={`${styles.container} ${themeClass}`}>
       <form onSubmit={handleSubmit} className={styles.inputWrapper}>
         <input
           type="text"

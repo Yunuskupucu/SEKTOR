@@ -21,6 +21,8 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   const [filteredChannels, setFilteredChannels] = useState([]);
   const { theme } = useTheme();
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   useEffect(() => {
     fetch('http://localhost:5001/api/channels')
       .then((res) => res.json())
@@ -61,7 +63,7 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
   };
 
   return (
-    <div className={`${styles.sidebar} ${theme === 'dark' ? styles.dark : ''}`}>
+    <div className={`${styles.sidebar} ${themeClass}`}>
       <SearchInput onSearch={handleSearch} />
       <Channels
         channels={filteredChannels}

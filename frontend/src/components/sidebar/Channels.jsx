@@ -4,12 +4,11 @@ import { useTheme } from '../../context/useTheme';
 
 const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
   const { theme } = useTheme();
+
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   return (
-    <div
-      className={`${styles.channelsContainer} ${
-        theme === 'dark' ? styles.dark : ''
-      }`}
-    >
+    <div className={`${styles.channelsContainer} ${themeClass}`}>
       {channels.map((channel) => (
         <div
           key={channel.id}

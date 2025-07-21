@@ -12,6 +12,8 @@ function Header() {
   const { logout } = useAuthStore();
   const { theme, toggleTheme } = useTheme();
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   const handleMenuOpen = () => {
     setAnchorEl(!anchorEl);
   };
@@ -39,9 +41,7 @@ function Header() {
   console.log('Theme:', theme);
 
   return (
-    <header
-      className={`${styles.header} ${theme === 'dark' ? styles.dark : ''}`}
-    >
+    <header className={`${styles.header} ${themeClass}`}>
       <button className={styles.logo} onClick={() => navigate('/')}>
         <span>S</span>
         <label>SEKTÖR</label>

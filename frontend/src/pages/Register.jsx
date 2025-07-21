@@ -16,6 +16,7 @@ function Register() {
   const { theme, toggleTheme } = useTheme();
 
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
+  const themeClass = theme === 'dark' ? styles.dark : '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,83 +35,53 @@ function Register() {
     <div>
       <div>
         <CgDarkMode
-          className={`${styles.themeIcon} ${
-            theme === 'dark' ? styles.dark : ''
-          }`}
+          className={`${styles.themeIcon} ${logoSrc}`}
           onClick={toggleTheme}
         />
       </div>
-      <div
-        className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
-      >
-        <div
-          className={`${styles.form} ${theme === 'dark' ? styles.dark : ''}`}
-        >
-          <h1
-            className={`${styles.title} ${theme === 'dark' ? styles.dark : ''}`}
-          >
-            SEKTÖR
-          </h1>
+      <div className={`${styles.container} ${themeClass}`}>
+        <div className={`${styles.form} ${themeClass}`}>
+          <h1 className={`${styles.title} ${themeClass}`}>SEKTÖR</h1>
           <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
-              <label className={theme === 'dark' ? styles.dark : ''}>
-                AD SOYAD
-              </label>
+              <label className={themeClass}>AD SOYAD</label>
               <input
                 type="text"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
                 placeholder="Ad Soyad"
                 required
-                className={theme === 'dark' ? styles.dark : ''}
+                className={themeClass}
               />
             </div>
 
             <div className={styles.inputGroup}>
-              <label className={theme === 'dark' ? styles.dark : ''}>
-                E-POSTA
-              </label>
+              <label className={themeClass}>E-POSTA</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className={theme === 'dark' ? styles.dark : ''}
+                className={themeClass}
               />
             </div>
 
-            <div
-              className={`${styles.inputGroup} ${
-                theme === 'dark' ? styles.dark : ''
-              }`}
-            >
-              <label className={theme === 'dark' ? styles.dark : ''}>
-                PAROLA
-              </label>
+            <div className={`${styles.inputGroup} ${themeClass}`}>
+              <label className={themeClass}>PAROLA</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="******"
                 required
-                className={theme === 'dark' ? styles.dark : ''}
+                className={themeClass}
               />
             </div>
-            <button
-              className={`${styles.button} ${
-                theme === 'dark' ? styles.dark : ''
-              }`}
-            >
-              Kaydol
-            </button>
+            <button className={`${styles.button} ${themeClass}`}>Kaydol</button>
           </form>
 
-          <div
-            className={`${styles.navigateSection} ${
-              theme === 'dark' ? styles.dark : ''
-            }`}
-          >
+          <div className={`${styles.navigateSection} ${themeClass}`}>
             Hesabınız var mı?
             <span
               className={styles.navigateLink}

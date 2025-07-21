@@ -3,10 +3,11 @@ import { useTheme } from '../../context/useTheme';
 
 const NoSelectedChannel = () => {
   const { theme } = useTheme();
+
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   return (
-    <div
-      className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
-    >
+    <div className={`${styles.container} ${themeClass}`}>
       <div className={styles.content}>
         <div className={styles.icon}>💬</div>
         <h1 className={styles.title}>Hoş Geldiniz 👋</h1>

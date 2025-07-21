@@ -8,6 +8,8 @@ const SearchInput = ({ onSearch }) => {
   const [search, setSearch] = useState('');
   const { theme } = useTheme();
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   const handleChange = (e) => {
     const value = e.target.value;
     setSearch(value);
@@ -19,15 +21,12 @@ const SearchInput = ({ onSearch }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={`${styles.form} ${theme === 'dark' ? styles.dark : 'light'}`}
-    >
+    <form onSubmit={handleSubmit} className={`${styles.form} ${themeClass}`}>
       <div className={styles.container}>
         <input
           type="text"
           placeholder="Kanal Ara..."
-          className={`${styles.input} ${theme === 'dark' ? styles.dark : ''}`}
+          className={`${styles.input} ${themeClass}`}
           value={search}
           onChange={handleChange}
         />

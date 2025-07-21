@@ -6,10 +6,10 @@ import { useTheme } from '../../context/useTheme';
 const ChatHeader = ({ selectedChannel, onClose }) => {
   const { theme } = useTheme();
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   return (
-    <div
-      className={`${styles.chatHeader} ${theme === 'dark' ? styles.dark : ''}`}
-    >
+    <div className={`${styles.chatHeader} ${themeClass}`}>
       <h1>{selectedChannel?.name}</h1>
       {selectedChannel && (
         <button className={styles.closeButton} onClick={onClose}>

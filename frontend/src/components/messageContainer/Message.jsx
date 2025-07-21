@@ -8,11 +8,13 @@ const Message = ({ message, currentUser }) => {
     message.User?.id === currentUser.id || message.user_id === currentUser.id;
   const { theme } = useTheme();
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   return (
     <div
       className={`${styles.messageWrapper} ${
         isOwnMessage ? styles.ownMessage : ''
-      } ${theme === 'dark' ? styles.dark : ''}`}
+      } ${themeClass}`}
     >
       <div className={styles.messageContainer}>
         <div className={styles.sender}>

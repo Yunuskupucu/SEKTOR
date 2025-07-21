@@ -17,6 +17,8 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
 
+  const themeClass = theme === 'dark' ? styles.dark : '';
+
   useEffect(() => {
     if (!selectedChannel) return;
 
@@ -47,9 +49,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   }, [selectedChannel]);
 
   return (
-    <div
-      className={`${styles.container} ${theme === 'dark' ? styles.dark : ''}`}
-    >
+    <div className={`${styles.container} ${themeClass}`}>
       {selectedChannel ? (
         <>
           <ChatHeader
@@ -57,11 +57,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
             onClose={onChannelClose}
           />
           <div className={styles.contentWrapper}>
-            <div
-              className={`${styles.messagesArea} ${
-                theme === 'dark' ? styles.dark : ''
-              }`}
-            >
+            <div className={`${styles.messagesArea} ${themeClass}`}>
               {loading ? (
                 [1, 2, 3].map((i) => <MessageSkeleton key={i} />)
               ) : messages.length > 0 ? (
@@ -72,11 +68,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
                 <p>Henüz mesaj yok.</p>
               )}
             </div>
-            <div
-              className={`${styles.messageInput} ${
-                theme === 'dark' ? styles.dark : ''
-              }`}
-            >
+            <div className={`${styles.messageInput} ${themeClass}`}>
               <MessageInput selectedChannel={selectedChannel} />
             </div>
           </div>
