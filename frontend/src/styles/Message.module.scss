@@ -2,14 +2,16 @@
   display: flex;
   margin: 8px 0;
   padding: 0 16px;
+  width: 100%;
 
   &.ownMessage {
     justify-content: flex-end;
+    padding-left: 15rem;
 
     .messageContainer {
       background-color: #0084ff;
       color: white;
-      max-width: 40rem;
+
       .content {
         color: white;
       }
@@ -25,7 +27,7 @@
       background-color: #2a2a2a;
       color: white;
       border: 1px solid #444;
-      max-width: 40rem;
+
       .content {
         color: #e0e0e0;
       }
@@ -42,13 +44,14 @@
 }
 
 .messageContainer {
-  max-width: 60%;
-  min-width: 100px;
-  width: fit-content;
+  max-width: 100%;
+  width: auto;
   padding: 8px 12px;
   background-color: #f0f0f0;
   border-radius: 16px;
   position: relative;
+  display: inline-block;
+  word-break: break-word;
 }
 
 .sender {
@@ -63,6 +66,7 @@
   font-size: 16px;
   line-height: 1.4;
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 .timestamp {
@@ -71,3 +75,159 @@
   text-align: right;
   margin-top: 4px;
 }
+
+//--------------------------------------------
+// .messageWrapper {
+//   display: flex;
+//   margin: 0.5rem 0;
+//   padding: 0 1rem;
+//   width: 100%;
+//   box-sizing: border-box;
+
+//   &.ownMessage {
+//     justify-content: flex-end;
+
+//     .messageContainer {
+//       background-color: #0084ff;
+//       color: white;
+//       border-radius: 1rem 1rem 0 1rem;
+//       max-width: 80%;
+//       min-width: 6rem;
+//       padding: 0.75rem 1rem;
+//       word-break: break-word;
+
+//       .content {
+//         color: white;
+//         font-size: 1rem;
+//         line-height: 1.4;
+//       }
+
+//       .timestamp {
+//         color: rgba(255, 255, 255, 0.7);
+//         font-size: 0.75rem;
+//         text-align: right;
+//         margin-top: 0.25rem;
+//       }
+//     }
+//   }
+
+//   &:not(.ownMessage) {
+//     justify-content: flex-start;
+
+//     .messageContainer {
+//       background-color: #f0f0f0;
+//       color: #333;
+//       border-radius: 1rem 1rem 1rem 0;
+//       max-width: 80%;
+//       min-width: 6rem;
+//       padding: 0.75rem 1rem;
+//       word-break: break-word;
+
+//       .sender {
+//         font-size: 0.8125rem;
+//         font-weight: bold;
+//         color: #000;
+//         margin-bottom: 0.25rem;
+//       }
+
+//       .content {
+//         font-size: 1rem;
+//         line-height: 1.4;
+//         color: #333;
+//       }
+
+//       .timestamp {
+//         color: rgba(0, 0, 0, 0.6);
+//         font-size: 0.75rem;
+//         text-align: right;
+//         margin-top: 0.25rem;
+//       }
+//     }
+//   }
+
+//   &.dark {
+//     &:not(.ownMessage) {
+//       .messageContainer {
+//         background-color: #2a2a2a;
+//         color: #e0e0e0;
+//         border: 1px solid #444;
+//         border-radius: 1rem 1rem 1rem 0;
+
+//         .sender {
+//           color: #bbbbbb;
+//         }
+
+//         .content {
+//           color: #e0e0e0;
+//         }
+
+//         .timestamp {
+//           color: rgba(255, 255, 255, 0.6);
+//         }
+//       }
+//     }
+
+//     &.ownMessage {
+//       .messageContainer {
+//         background-color: #005bb5;
+//         border: none;
+//         border-radius: 1rem 1rem 0 1rem;
+
+//         .content {
+//           color: #e0e0e0;
+//         }
+
+//         .timestamp {
+//           color: rgba(255, 255, 255, 0.6);
+//         }
+//       }
+//     }
+//   }
+
+//   /* Mobile devices (576px and below) */
+//   @media (max-width: 576px) {
+//     padding: 0 0.5rem;
+//     margin: 0.3rem 0;
+
+//     .messageContainer {
+//       max-width: 90%;
+//       min-width: 5rem;
+//       padding: 0.5rem 0.75rem;
+
+//       .sender {
+//         font-size: 0.75rem;
+//       }
+
+//       .content {
+//         font-size: 0.9rem;
+//       }
+
+//       .timestamp {
+//         font-size: 0.7rem;
+//       }
+//     }
+//   }
+
+//   /* Tablets (577px - 768px) */
+//   @media (min-width: 577px) and (max-width: 768px) {
+//     padding: 0 0.75rem;
+
+//     .messageContainer {
+//       max-width: 85%;
+//       min-width: 5.5rem;
+//       padding: 0.6rem 0.9rem;
+
+//       .sender {
+//         font-size: 0.8rem;
+//       }
+
+//       .content {
+//         font-size: 0.95rem;
+//       }
+
+//       .timestamp {
+//         font-size: 0.72rem;
+//       }
+//     }
+//   }
+// }
