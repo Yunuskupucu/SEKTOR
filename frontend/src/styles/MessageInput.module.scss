@@ -2,8 +2,6 @@
   background: #ffffff;
   padding: 12px 24px;
   border-top: 1px solid #e5e7eb;
-  position: relative;
-  width: 100%;
 
   &.dark {
     background: RGB(28, 28, 28);
@@ -57,7 +55,6 @@
   background: none;
   border: none;
   padding: 8px;
-
   color: #2193b0;
   cursor: pointer;
   border-radius: 50%;

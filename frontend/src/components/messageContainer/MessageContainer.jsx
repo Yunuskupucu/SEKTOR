@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
@@ -18,6 +18,14 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const { authUser } = useAuthStore();
 
   const themeClass = theme === 'dark' ? styles.dark : '';
+
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (!selectedChannel) return;
@@ -67,6 +75,8 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
               ) : (
                 <p>Henüz mesaj yok.</p>
               )}
+
+              <div ref={messagesEndRef} />
             </div>
             <div className={`${styles.messageInput} ${themeClass}`}>
               <MessageInput selectedChannel={selectedChannel} />
