@@ -36,16 +36,22 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-// ✅ Dosya ekli mesaj gönderme
 export const sendMessageWithAttachment = async (req, res) => {
   const { channel_id, content } = req.body;
   const user_id = req.user?.id || req.body.user_id;
 
   try {
+    console.log("📥 İçerik:", { channel_id, content, user_id });
+    console.log("📁 Dosya:", req.file);
+
+    if (!content && !req.file) {
+      return res.status(400).json({ message: "Mesaj veya dosya boş olamaz" });
+    }
+
     const user = await User.findByPk(user_id);
     const channel = await Channel.findByPk(channel_id);
     if (!user || !channel) {
-      return res.status(404).json({ message: "User or Channel not found" });
+      return res.status(404).json({ message: "Kullanıcı veya kanal bulunamadı" });
     }
 
     const attachment = req.file ? `/uploads/${req.file.filename}` : null;
@@ -66,9 +72,12 @@ export const sendMessageWithAttachment = async (req, res) => {
 
     res.status(201).json(fullMessage);
   } catch (error) {
-    res.status(500).json({ message: "Error sending message", error: error.message });
+    console.error("❌ Backend hata:", error);
+    res.status(500).json({ message: "Sunucu hatası", error: error.message });
   }
 };
+
+
 
 // ✅ Belirli bir kanaldaki tüm mesajları çekme
 export const getMessagesByChannel = async (req, res) => {

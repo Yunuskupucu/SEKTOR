@@ -13,19 +13,45 @@ const MessageInput = ({ selectedChannel }) => {
   const { authUser } = useAuthStore();
   const fileInputRef = useRef(null);
 
-  const themeClass = theme === 'dark' ? styles.dark : '';
-
   const handleAttachmentClick = () => {
-    console.log('Attachment butonuna tıklandı');
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file || !authUser || !selectedChannel) return;
 
-    // İleride dosya gönderimi için kullanılabilir.
-    console.log('📎 Dosya seçildi:', file.name);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('content', message);
+    formData.append('channel_id', selectedChannel.id);
+    formData.append('user_id', authUser.id);
+
+    try {
+      const response = await fetch('http://localhost:5001/api/messages/with-attachment', {
+
+        method: 'POST',
+        body: formData,
+      });
+
+      const rawText = await response.text(); // düz metin olarak al
+
+      if (response.ok) {
+        const data = JSON.parse(rawText);
+        console.log('✅ Dosya gönderildi:', data);
+        socket.emit('newMessage', data);
+        setMessage('');
+      } else {
+        console.error('❌ Backend dosya hatası:', rawText);
+        // İsteğe bağlı: kullanıcıya da gösterebilirsin
+        alert(`Sunucu hatası: ${rawText}`);
+      }
+    } catch (err) {
+      console.error('❌ Dosya gönderilirken hata:', err);
+      alert(`İstemci hatası: ${err.message}`);
+    }
+
+    event.target.value = ''; // aynı dosyayı tekrar seçebilmek için sıfırla
   };
 
   const handleSubmit = (e) => {
@@ -42,6 +68,8 @@ const MessageInput = ({ selectedChannel }) => {
     console.log('📨 Mesaj gönderildi:', message);
     setMessage('');
   };
+
+  const themeClass = theme === 'dark' ? styles.dark : '';
 
   return (
     <div className={`${styles.container} ${themeClass}`}>
@@ -65,6 +93,7 @@ const MessageInput = ({ selectedChannel }) => {
 
           <input
             type="file"
+            name="file"
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
