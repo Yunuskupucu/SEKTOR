@@ -9,17 +9,6 @@
   &.dark {
     background: #4d4d4d;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-    border-right: 2px solid rgb(85, 85, 85);
-  }
-}
-
-.icon {
-  font-size: 3rem;
-  //color: #2c455c;
-  color: rgb(53, 55, 102);
-
-  .sidebar.dark & {
-    color: white;
   }
 }
 
@@ -60,16 +49,13 @@
 .darkChannelItem {
   background: rgb(45, 45, 45);
   color: white;
-  &:hover {
-    border: 0.1px solid #fff;
-  }
 }
 
 .selected {
   background: linear-gradient(to right, #3182ce, #4299e1);
   box-shadow: 0 4px 15px rgba(49, 130, 206, 0.3);
   transform: translateX(5px);
-  border: 2px solid #273743;
+  border: 3px solid #515151;
 
   .channelName {
     color: white;
@@ -79,11 +65,15 @@
   &.darkChannelItem {
     background: linear-gradient(to right, #535353, #141414);
     box-shadow: 0 4px 15px rgba(113, 128, 150, 0.3);
-    border: 2px solid black;
+    border: 3px solid black;
   }
 }
 
 .avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+
   img {
     width: 100%;
     height: 100%;
@@ -94,30 +84,5 @@
 .channelInfo {
   .channelName {
     font-weight: 600;
-  }
-}
-
-@media (max-width: 768px) {
-  .avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .channelInfo {
-    display: none;
-  }
-
-  .sidebar {
-    width: 7rem;
-  }
-
-  .channelItem {
-    justify-content: center; // sadece ikon ortalansın
-    padding: 12px 0;
   }
 }

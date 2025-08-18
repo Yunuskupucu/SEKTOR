@@ -14,14 +14,19 @@ const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
       {channels.map((channel) => (
         <div
           key={channel.id}
-          className={`
-            ${styles.channelItem}
-            ${selectedChannel?.id === channel.id ? styles.selected : ''}
-            ${theme === 'dark' ? styles.darkChannelItem : ''}
-          `}
-          onClick={() => setSelectedChannel(channel)}
+          className={`${styles.channelItem} ${
+            selectedChannel?.id === channel.id ? styles.selected : ''
+          } ${theme === 'dark' ? styles.darkChannelItem : ''}`}
+          onClick={() => {
+            const selectedChannelData = channels.find(
+              (c) => c.id === channel.id
+            );
+            setSelectedChannel(selectedChannelData);
+          }}
         >
-          <div className={styles.avatar}>{channel.channelIcon}</div>
+          <div className={styles.avatar}>
+            <img src={channel.channelPic} alt={channel.name} />
+          </div>
           <div className={styles.channelInfo}>
             <div className={styles.channelName}>{channel.name}</div>
           </div>
