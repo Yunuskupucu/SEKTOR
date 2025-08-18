@@ -22,7 +22,6 @@ const Profile = () => {
   const [bio, setBio] = useState('');
   const [avatar, setAvatar] = useState(defaultAvatar);
   const [loading, setLoading] = useState(false);
-  const [joinDate, setJoinDate] = useState('');
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -33,7 +32,6 @@ const Profile = () => {
       setGithub(authUser.github || '');
       setBio(authUser.bio || '');
       setAvatar(authUser.profile_picture_url || defaultAvatar);
-      setJoinDate(authUser.createdAt ? new Date(authUser.createdAt) : '');
     }
   }, [authUser]);
 
@@ -157,21 +155,6 @@ const Profile = () => {
               >
                 {loading ? 'Güncelleniyor...' : 'Güncelle'}
               </button>
-            </div>
-          </div>
-
-          <div className={`${styles.accountInfo} ${themeClass}`}>
-            <h2>Profil Bilgileri</h2>
-            <div className={`${styles.joinDate} ${themeClass}`}>
-              <span>Üyelik Tarihi</span>
-              <span>
-                {joinDate
-                  ? joinDate.toLocaleDateString('tr-TR', {
-                      year: 'numeric',
-                      month: 'long',
-                    })
-                  : 'Yükleniyor...'}
-              </span>
             </div>
           </div>
         </div>
