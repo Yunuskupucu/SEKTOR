@@ -4,8 +4,17 @@ import Channel from "../models/channel.model.js";
 import { validationResult } from "express-validator";
 import { handleSendMessage } from "../lib/handleSendMessage.js";
 
+// Yardımcı: Mutlak URL ekle
+const withAttachmentUrl = (req, msg) => {
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const j = typeof msg.toJSON === "function" ? msg.toJSON() : msg;
+  return {
+    ...j,
+    attachment_url: j.attachment ? `${baseUrl}${j.attachment}` : null,
+  };
+};
 
-// ✅ Metinli mesaj gönderme (REST API)
+// ✅ Metinli mesaj gönderme
 export const sendMessage = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -16,26 +25,26 @@ export const sendMessage = async (req, res) => {
   const user_id = req.user?.id || req.body.user_id;
 
   try {
-    // Kullanıcı ve kanalın varlığını kontrol et
     const user = await User.findByPk(user_id);
     const channel = await Channel.findByPk(channel_id);
     if (!user || !channel) {
       return res.status(404).json({ message: "User or Channel not found" });
     }
 
-    // ✅ Ortak içerik moderasyon ve kayıt
     const fullMessage = await handleSendMessage({ user_id, channel_id, content });
+    const payload = withAttachmentUrl(req, fullMessage);
 
-    // ✅ Socket yayını (opsiyonel)
     const io = req.app.get("io");
-    io.to(channel_id).emit("newMessage", fullMessage);
+    io.to(channel_id).emit("newMessage", payload);
 
-    res.status(201).json(fullMessage);
+    res.status(201).json(payload);
   } catch (error) {
+    console.error("❌ sendMessage hata:", error);
     res.status(500).json({ message: "Error sending message", error: error.message });
   }
 };
 
+// ✅ Dosya ekli mesaj gönderme
 export const sendMessageWithAttachment = async (req, res) => {
   const { channel_id, content } = req.body;
   const user_id = req.user?.id || req.body.user_id;
@@ -64,20 +73,20 @@ export const sendMessageWithAttachment = async (req, res) => {
     });
 
     const fullMessage = await Message.findByPk(newMessage.id, {
-      include: [{ model: User, attributes: ["fullname"] }],
+      include: [{ model: User, attributes: ["id", "fullname"] }],
     });
 
-    const io = req.app.get("io");
-    io.to(channel_id).emit("newMessage", fullMessage);
+    const payload = withAttachmentUrl(req, fullMessage);
 
-    res.status(201).json(fullMessage);
+    const io = req.app.get("io");
+    io.to(channel_id).emit("newMessage", payload);
+
+    res.status(201).json(payload);
   } catch (error) {
-    console.error("❌ Backend hata:", error);
+    console.error("❌ sendMessageWithAttachment hata:", error);
     res.status(500).json({ message: "Sunucu hatası", error: error.message });
   }
 };
-
-
 
 // ✅ Belirli bir kanaldaki tüm mesajları çekme
 export const getMessagesByChannel = async (req, res) => {
@@ -85,11 +94,15 @@ export const getMessagesByChannel = async (req, res) => {
   try {
     const messages = await Message.findAll({
       where: { channel_id },
-      include: [{ model: User, attributes: ["fullname"] }],
+      include: [{ model: User, attributes: ["id", "fullname"] }],
       order: [["timestamp", "ASC"]],
     });
-    res.status(200).json(messages);
+
+    // her mesaja mutlak url ekle
+    const result = messages.map((m) => withAttachmentUrl(req, m));
+    res.status(200).json(result);
   } catch (error) {
+    console.error("❌ getMessagesByChannel hata:", error);
     res.status(500).json({ message: "Error fetching messages", error: error.message });
   }
 };
@@ -100,6 +113,7 @@ export const getAllChannels = async (req, res) => {
     const channels = await Channel.findAll();
     res.status(200).json(channels);
   } catch (error) {
+    console.error("❌ getAllChannels hata:", error);
     res.status(500).json({ message: "Error fetching channels", error: error.message });
   }
 };

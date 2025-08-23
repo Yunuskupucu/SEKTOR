@@ -1,3 +1,4 @@
+// routes/message.routes.js
 import express from "express";
 import { body } from "express-validator";
 import {
@@ -9,10 +10,7 @@ import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-/**
- * 📎 1. Dosya ekli mesaj gönderme (POST /api/messages/with-attachment)
- * Bu route EN ÜSTE yazılmalı ki /:channel_id ile çakışmasın.
- */
+// 1) Dosya ekli mesaj
 router.post(
   "/with-attachment",
   (req, res, next) => {
@@ -27,9 +25,7 @@ router.post(
   sendMessageWithAttachment
 );
 
-/**
- * ✉️ 2. Sadece metinli mesaj gönderme (POST /api/messages/)
- */
+// 2) Metinli mesaj
 router.post(
   "/",
   [
@@ -39,10 +35,7 @@ router.post(
   sendMessage
 );
 
-/**
- * 📜 3. Belirli bir kanalın tüm mesajlarını getirme (GET /api/messages/:channel_id)
- * Bu route EN SONDA olmalı ki diğer path'lerle karışmasın.
- */
+// 3) Kanal mesajları
 router.get("/:channel_id", getMessagesByChannel);
 
 export default router;
