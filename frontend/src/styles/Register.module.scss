@@ -33,11 +33,10 @@
   flex-direction: column;
   padding: 30px;
   background: none;
-  backdrop-filter: blur(1px);
+  backdrop-filter: blur(5px);
   border-radius: 15px;
   width: 25%;
   height: auto;
-  margin-left: 10%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
   &.dark {
@@ -101,19 +100,6 @@
       &:focus {
         border-bottom: 2px solid rgb(154, 154, 154) !important;
       }
-    }
-  }
-
-  .themeIcon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 30px;
-    color: #000000;
-    cursor: pointer;
-
-    &.dark {
-      color: #f8f8f8;
     }
   }
 }

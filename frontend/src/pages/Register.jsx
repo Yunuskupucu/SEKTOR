@@ -35,7 +35,7 @@ function Register() {
     <div>
       <div>
         <CgDarkMode
-          className={`${styles.themeIcon} ${logoSrc}`}
+          className={`${styles.themeIcon} ${themeClass}`}
           onClick={toggleTheme}
         />
       </div>

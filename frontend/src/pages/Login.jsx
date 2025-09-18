@@ -35,9 +35,7 @@ function Login() {
     <div>
       <div>
         <CgDarkMode
-          className={`${styles.themeIcon} ${
-            theme === 'dark' ? styles.dark : ''
-          }`}
+          className={`${styles.themeIcon} ${themeClass}`}
           onClick={toggleTheme}
         />
       </div>
