@@ -10,6 +10,10 @@
     background: #4d4d4d;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
   }
+
+  @media (max-width: 768px) {
+    width: 80px;
+  }
 }
 
 .channelsContainer {
@@ -43,6 +47,12 @@
   &:hover {
     transform: translateX(5px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    padding: 8px;
+    gap: 0;
   }
 }
 
@@ -79,10 +89,19 @@
     height: 100%;
     object-fit: cover;
   }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .channelInfo {
   .channelName {
     font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 }

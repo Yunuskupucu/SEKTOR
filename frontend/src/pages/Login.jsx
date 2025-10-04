@@ -6,12 +6,15 @@ import LightLogo from '../assets/logo/LightLogo.png';
 import DarkLogo from '../assets/logo/DarkLogo.png';
 import { CgDarkMode } from 'react-icons/cg';
 import { useTheme } from '../context/useTheme';
+import { FaRegEye } from 'react-icons/fa';
+import { FaEyeSlash } from 'react-icons/fa';
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
 
@@ -56,14 +59,23 @@ function Login() {
             </div>
             <div className={styles.inputGroup}>
               <label className={themeClass}>PAROLA</label>
-              <input
-                type="password"
-                placeholder="******"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className={themeClass}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="******"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className={themeClass}
+                />
+                <button
+                  type="button"
+                  className={`${styles.passwordToggle} ${themeClass}`}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaRegEye />}
+                </button>
+              </div>
             </div>
             <button className={`${styles.button} ${themeClass}`}>
               Giriş Yap
@@ -77,9 +89,9 @@ function Login() {
             </a>
           </span>
         </div>
-        <div>
+        <div className={styles.logoContainer}>
           <div>
-            <img src={logoSrc} alt="" />
+            <img src={logoSrc} alt="SEKTÖR Logo" />
           </div>
         </div>
       </div>

@@ -54,36 +54,6 @@
 
   // 🔻 RESPONSIVE
   @media (max-width: 768px) {
-    .container {
-      max-width: 100%;
-    }
-
-    .input {
-      font-size: 14px;
-      padding: 10px 35px 10px 10px;
-    }
-
-    .icon {
-      font-size: 18px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-
-    .container {
-      width: 100%;
-    }
-
-    .input {
-      padding: 10px 40px 10px 10px;
-      font-size: 13px;
-    }
-
-    .button {
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+    display: none;
   }
 }

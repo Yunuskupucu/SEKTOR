@@ -6,6 +6,8 @@ import DarkLogo from '../assets/logo/DarkLogo.png';
 import LightLogo from '../assets/logo/LightLogo.png';
 import { useTheme } from '../context/useTheme';
 import { CgDarkMode } from 'react-icons/cg';
+import { FaRegEye } from 'react-icons/fa';
+import { FaEyeSlash } from 'react-icons/fa';
 
 function Register() {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ function Register() {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
@@ -69,14 +72,23 @@ function Register() {
 
             <div className={`${styles.inputGroup} ${themeClass}`}>
               <label className={themeClass}>PAROLA</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="******"
-                required
-                className={themeClass}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="******"
+                  required
+                  className={themeClass}
+                />
+                <button
+                  type="button"
+                  className={`${styles.passwordToggle} ${themeClass}`}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaRegEye />}
+                </button>
+              </div>
             </div>
             <button className={`${styles.button} ${themeClass}`}>Kaydol</button>
           </form>
@@ -91,10 +103,8 @@ function Register() {
             </span>
           </div>
         </div>
-        <div>
-          <div>
-            <img src={logoSrc} alt="Logo" />
-          </div>
+        <div className={styles.logoContainer}>
+          <img src={logoSrc} alt="Logo" className={styles.logo} />
         </div>
       </div>
     </div>
