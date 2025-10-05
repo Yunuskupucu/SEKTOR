@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useAuthStore } from '../../store/useAuthStore';
 import socket from '../../lib/socket';
 
-const MessageInput = ({ selectedChannel }) => {
+const MessageInput = ({ selectedChannel, onAttachmentUploaded }) => {
   const [message, setMessage] = useState('');
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
@@ -28,18 +28,21 @@ const MessageInput = ({ selectedChannel }) => {
     formData.append('user_id', authUser.id);
 
     try {
-      const response = await fetch('http://localhost:5001/api/messages/with-attachment', {
-
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'http://localhost:5001/api/messages/with-attachment',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       const rawText = await response.text(); // düz metin olarak al
 
       if (response.ok) {
         const data = JSON.parse(rawText);
         console.log('✅ Dosya gönderildi:', data);
-        socket.emit('newMessage', data);
+        // Backend zaten newMessage yayınlar; listeyi kesin tazelemek için callback tetikle
+        if (typeof onAttachmentUploaded === 'function') onAttachmentUploaded();
         setMessage('');
       } else {
         console.error('❌ Backend dosya hatası:', rawText);
@@ -110,6 +113,7 @@ const MessageInput = ({ selectedChannel }) => {
 
 MessageInput.propTypes = {
   selectedChannel: PropTypes.object.isRequired,
+  onAttachmentUploaded: PropTypes.func,
 };
 
 export default MessageInput;

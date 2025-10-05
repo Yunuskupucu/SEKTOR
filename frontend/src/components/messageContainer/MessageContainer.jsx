@@ -17,6 +17,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const [messages, setMessages] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState(null);
+  const [reloadSeq, setReloadSeq] = useState(0);
 
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
@@ -29,11 +30,11 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   //  eski → yeni
   const mergeUniqueById = useCallback((arr) => {
     const map = new Map();
-    for (const m of arr) map.set(m.id, m); 
+    for (const m of arr) map.set(m.id, m);
     return Array.from(map.values()).sort((a, b) => {
       const ta = new Date(a.created_at || a.ts || a.createdAt).getTime();
       const tb = new Date(b.created_at || b.ts || b.createdAt).getTime();
-      return ta - tb; 
+      return ta - tb;
     });
   }, []);
 
@@ -161,13 +162,20 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
       socket.emit('leaveChannel', selectedChannel.id);
       socket.off('newMessage', onNewMessage);
     };
-  }, [selectedChannel, mergeUniqueById]);
+  }, [selectedChannel, mergeUniqueById, reloadSeq]);
+
+  const handleAttachmentUploaded = () => {
+    setReloadSeq((prev) => prev + 1);
+  };
 
   return (
     <div className={`${styles.container} ${themeClass}`}>
       {selectedChannel ? (
         <>
-          <ChatHeader selectedChannel={selectedChannel} onClose={onChannelClose} />
+          <ChatHeader
+            selectedChannel={selectedChannel}
+            onClose={onChannelClose}
+          />
 
           <div className={styles.contentWrapper}>
             <div
@@ -176,7 +184,14 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
               onScroll={handleScroll}
             >
               {loadingMore && (
-                <div style={{ textAlign: 'center', padding: 10, fontSize: 12, color: '#888' }}>
+                <div
+                  style={{
+                    textAlign: 'center',
+                    padding: 10,
+                    fontSize: 12,
+                    color: '#888',
+                  }}
+                >
                   Eski mesajlar yükleniyor...
                 </div>
               )}
@@ -186,13 +201,24 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
               ) : messages.length > 0 ? (
                 <>
                   {hasMore && !loadingMore && (
-                    <div style={{ textAlign: 'center', padding: 10, fontSize: 12, color: '#888' }}>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        padding: 10,
+                        fontSize: 12,
+                        color: '#888',
+                      }}
+                    >
                       ↑ Daha eski mesajlar için yukarı kaydırın
                     </div>
                   )}
 
                   {messages.map((msg) => (
-                    <Message key={msg.id} message={msg} currentUser={authUser} />
+                    <Message
+                      key={msg.id}
+                      message={msg}
+                      currentUser={authUser}
+                    />
                   ))}
                 </>
               ) : (
@@ -204,7 +230,10 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
             </div>
 
             <div className={`${styles.messageInput} ${themeClass}`}>
-              <MessageInput selectedChannel={selectedChannel} />
+              <MessageInput
+                selectedChannel={selectedChannel}
+                onAttachmentUploaded={handleAttachmentUploaded}
+              />
             </div>
           </div>
         </>
