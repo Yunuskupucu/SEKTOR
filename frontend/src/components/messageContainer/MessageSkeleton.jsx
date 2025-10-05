@@ -3,9 +3,6 @@ import styles from '../../styles/MessageSkeleton.module.scss';
 const MessageSkeleton = () => {
   return (
     <div className={styles.skeletonContainer}>
-      {/* Avatar placeholder */}
-      <div className={styles.avatarSkeleton}></div>
-
       <div className={styles.contentWrapper}>
         {/* İsim placeholder */}
         <div className={styles.nameSkeleton}></div>

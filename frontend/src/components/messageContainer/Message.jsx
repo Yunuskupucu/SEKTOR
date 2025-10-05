@@ -8,7 +8,8 @@ const Message = ({ message, currentUser }) => {
   const { theme } = useTheme();
   const themeClass = theme === 'dark' ? styles.dark : '';
 
-  const isImageUrl = (url) => /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
+  const isImageUrl = (url) =>
+    /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
 
   return (
     <div
@@ -17,9 +18,14 @@ const Message = ({ message, currentUser }) => {
       } ${themeClass}`}
     >
       <div className={styles.messageContainer}>
-        <div className={styles.sender}>
+        <button
+          className={styles.sender}
+          onClick={() => {
+            console.log('PROFİL BİLGİLERİ GÖSTERİLECEK');
+          }}
+        >
           {!isOwnMessage && (message.User?.fullname || message.User?.username)}
-        </div>
+        </button>
 
         <div className={styles.content}>{message.content}</div>
 
@@ -31,7 +37,7 @@ const Message = ({ message, currentUser }) => {
                 alt="ek"
                 style={{ maxWidth: '200px', borderRadius: '8px' }}
                 onError={(e) => {
-                  console.error("IMG LOAD ERROR:", e.currentTarget.src);
+                  console.error('IMG LOAD ERROR:', e.currentTarget.src);
                   // istersen fallback ver:
                   // e.currentTarget.src = "/fallback.png";
                 }}
@@ -50,10 +56,13 @@ const Message = ({ message, currentUser }) => {
         )}
 
         <div className={styles.timestamp}>
-          {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-          })}
+          {new Date(message.timestamp || message.createdAt).toLocaleTimeString(
+            [],
+            {
+              hour: '2-digit',
+              minute: '2-digit',
+            }
+          )}
         </div>
       </div>
     </div>
