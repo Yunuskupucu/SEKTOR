@@ -15,7 +15,9 @@ function Register() {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
@@ -23,6 +25,10 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert('Parolalar eşleşmiyor. Lütfen tekrar deneyin.');
+      return;
+    }
     try {
       await register(fullname, email, password);
       navigate('/');
@@ -87,6 +93,26 @@ function Register() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaRegEye />}
+                </button>
+              </div>
+            </div>
+            <div className={`${styles.inputGroup} ${themeClass}`}>
+              <label className={themeClass}>PAROLA (tekrar) </label>
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="******"
+                  required
+                  className={themeClass}
+                />
+                <button
+                  type="button"
+                  className={`${styles.passwordToggle} ${themeClass}`}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaRegEye />}
                 </button>
               </div>
             </div>
