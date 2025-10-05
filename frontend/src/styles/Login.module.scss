@@ -244,6 +244,78 @@
   }
 }
 
+.orDivider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 0;
+  color: #666;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+  }
+
+  span {
+    margin: 0 10px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  &.dark {
+    color: #c1c1c1;
+
+    &::before,
+    &::after {
+      background: #444;
+    }
+  }
+}
+
+.socialButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.socialButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 45px;
+  border-radius: 7px;
+  border: 1px solid #e1e1e1;
+  background: #ffffff;
+  color: #333;
+  cursor: pointer;
+  font-size: 24px;
+
+  &:hover {
+    background: #f7f7f7;
+    border-color: #d5d5d5;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &.dark {
+    background: rgba(255, 255, 255, 0.2);
+    color: #f0f0f0;
+    border-color: rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
 .navigateSection {
   text-align: center;
   margin-top: 15px;

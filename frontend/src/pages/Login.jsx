@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import LightLogo from '../assets/logo/LightLogo.png';
 import DarkLogo from '../assets/logo/DarkLogo.png';
 import { CgDarkMode } from 'react-icons/cg';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { useTheme } from '../context/useTheme';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
@@ -81,6 +82,25 @@ function Login() {
               Giriş Yap
             </button>
           </form>
+
+          <div className={`${styles.orDivider} ${themeClass}`}>
+            <span>VEYA</span>
+          </div>
+
+          <div className={styles.socialButtons}>
+            <button
+              type="button"
+              className={`${styles.socialButton} ${themeClass}`}
+            >
+              <FaGoogle />
+            </button>
+            <button
+              type="button"
+              className={`${styles.socialButton} ${themeClass}`}
+            >
+              <FaGithub />
+            </button>
+          </div>
 
           <span className={`${styles.navigateSection} ${themeClass}`}>
             Hesabınız yok mu?
