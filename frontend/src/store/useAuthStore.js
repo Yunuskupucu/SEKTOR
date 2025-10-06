@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { axiosInstance } from '../lib/axios';
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   authUser: null,
   isCheckingAuth: true,
 
@@ -75,13 +75,30 @@ export const useAuthStore = create((set) => ({
   },
 
   updateAvatar: async (avatarFile) => {
+    // (Opsiyonel) Basit istemci doğrulaması:
+    if (!avatarFile) throw new Error('Dosya seçilmedi');
+    if (!/^image\//.test(avatarFile.type)) throw new Error('Sadece görsel yükleyebilirsiniz.');
+    const max = 10 * 1024 * 1024; // 10MB
+    if (avatarFile.size > max) throw new Error('Dosya 10MB sınırını aşıyor.');
+
     try {
       const formData = new FormData();
       formData.append('avatar', avatarFile);
 
-      await axiosInstance.post('/auth/avatar', formData);
+      const res = await axiosInstance.post('/auth/avatar', formData, {
+        withCredentials: true,
+        // ÖNEMLİ: Content-Type'ı ELLE AYARLAMA! Axios FormData için boundary'yi otomatik ekler.
+        headers: { /* 'Content-Type': 'multipart/form-data' koyma */ },
+      });
 
-      await useAuthStore.getState().fetchProfile();
+      const newUrl = res.data?.avatar;
+      if (!newUrl) throw new Error('Sunucudan avatar URL dönmedi.');
+
+      // Store'daki authUser'ı anında güncelle
+      const current = get().authUser || {};
+      set({ authUser: { ...current, profile_picture_url: newUrl } });
+
+      return newUrl; // UI tarafında setAvatar için kullanabilirsiniz
     } catch (error) {
       console.log('Update avatar error:', error);
       throw error;

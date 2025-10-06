@@ -35,21 +35,29 @@ const Profile = () => {
     }
   }, [authUser]);
 
-  const handleAvatarUpdate = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+ const handleAvatarUpdate = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    try {
-      setLoading(true);
-      await updateAvatar(file);
-      toast.success('Profil fotoğrafı güncellendi!');
-    } catch (error) {
-      console.error('Fotoğraf yüklenirken hata:', error);
-      toast.error('Fotoğraf yüklenemedi!');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const prev = avatar;
+  const temp = URL.createObjectURL(file);
+  setAvatar(temp);
+
+  try {
+    setLoading(true);
+    const newUrl = await updateAvatar(file); // store'dan Cloudinary URL'i dönüyor
+    setAvatar(newUrl);
+    toast.success('Profil fotoğrafı güncellendi!');
+  } catch (err) {
+    console.error('Fotoğraf yüklenirken hata:', err);
+    setAvatar(prev);
+    toast.error(err?.response?.data?.message || err.message || 'Fotoğraf yüklenemedi!');
+  } finally {
+    setLoading(false);
+    URL.revokeObjectURL(temp);
+    e.target.value = '';
+  }
+};
 
   const handleProfileUpdate = async () => {
     try {

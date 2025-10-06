@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
 import { generateToken } from '../lib/utils.js';
 import cloudinary from '../lib/cloudinary.js';
+import { uploadBufferToCloudinary } from "../lib/uploadToCloudinary.js"; 
 
 export const register = async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -126,20 +127,25 @@ export const updateProfile = async (req, res) => {
 export const updateAvatar = async (req, res) => {
   try {
     const file = req.file;
-    console.log("➡️ Gelen dosya:", file);
-
     const id = req.user.id;
 
     if (!file) {
       return res.status(400).json({ message: 'Dosya yüklenmedi' });
     }
+    if (!file.buffer) {
+      // memoryStorage devreye girmemişse burada yakalanır
+      return res.status(400).json({ message: 'Sunucu dosyayı belleğe alamadı (multer memoryStorage gerekli)' });
+    }
+    if (!/^image\//.test(file.mimetype)) {
+      return res.status(400).json({ message: 'Sadece görsel yükleyebilirsiniz.' });
+    }
 
-    const uploadResponse = await cloudinary.uploader.upload(file.path, {
-      folder: 'profile_pictures',
-      transformation: [{ width: 500, height: 500, crop: 'limit' }],
+    // Buffer → Cloudinary
+    const uploadResponse = await uploadBufferToCloudinary(file.buffer, file.originalname, {
+      folder: `profile_pictures/${id}`,
+      forceImage: true,
+      eager: [{ width: 500, height: 500, crop: 'limit' }],
     });
-
-    console.log("📤 Cloudinary response:", uploadResponse);
 
     if (!uploadResponse.secure_url) {
       return res.status(500).json({ message: 'Resim yüklenemedi' });
@@ -156,7 +162,7 @@ export const updateAvatar = async (req, res) => {
 
     res.status(200).json({ avatar: uploadResponse.secure_url });
   } catch (error) {
-    console.error('❌ Profil resmi yüklenemedi:', error.message);
+    console.error('❌ Profil resmi yüklenemedi:', error);
     res.status(500).json({
       message: 'Profil resmi güncellenirken hata oluştu',
       error: error.message,

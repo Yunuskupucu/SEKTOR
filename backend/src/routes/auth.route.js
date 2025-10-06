@@ -9,10 +9,10 @@ import {
   updateAvatar,
 } from '../controllers/auth.controller.js';
 import { protectRoute } from '../middleware/auth.middleware.js';
-import multer from 'multer';
+import upload from "../middleware/uploadMiddleware.js"; // ✅ memoryStorage
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' }); // Dosyaların geçici olarak kaydedileceği dizin
+
 
 router.post('/register', register);
 router.post('/login', login);
@@ -25,7 +25,22 @@ router.get('/profile', protectRoute, getProfile);
 // Profil bilgilerini güncelleme rotası
 router.put('/profile', protectRoute, updateProfile);
 
-// Profil fotoğrafı güncelleme rotası
-router.post('/avatar', protectRoute, upload.single('avatar'), updateAvatar);
+router.post(
+  "/avatar",
+  protectRoute,
+  (req, res, next) => {
+    upload.single("avatar")(req, res, (err) => {
+      if (err) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ message: "Dosya boyutu sınırı aşıldı (10MB)." });
+        }
+        return res.status(400).json({ message: err.message || "Yükleme hatası" });
+      }
+      next();
+    });
+  },
+  updateAvatar
+);
+
 
 export default router; // Router nesnesini dışa aktar

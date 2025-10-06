@@ -4,15 +4,25 @@ import User from "../models/user.model.js";
 import Channel from "../models/channel.model.js";
 import { validationResult } from "express-validator";
 import { handleSendMessage } from "../lib/handleSendMessage.js";
+import { uploadBufferToCloudinary } from "../lib/uploadToCloudinary.js";
+import streamifier from "streamifier";
 
-// Mutlak URL yardımcı
 const withAttachmentUrl = (req, msg) => {
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
   const j = typeof msg.toJSON === "function" ? msg.toJSON() : msg;
-  return {
-    ...j,
-    attachment_url: j.attachment ? `${baseUrl}${j.attachment}` : null,
-  };
+  const a = j.attachment;
+
+  // Cloudinary tam URL ise aynen dön
+  if (a && /^https?:\/\//i.test(a)) {
+    return { ...j, attachment_url: a };
+  }
+
+  // Eski yerel dosyalar için host ekle (ör. /uploads/..)
+  if (a && a.startsWith("/")) {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    return { ...j, attachment_url: `${baseUrl}${a}` };
+  }
+
+  return { ...j, attachment_url: null };
 };
 
 // --- LAZY LOADING + LOG
@@ -164,8 +174,18 @@ export const sendMessageWithAttachment = async (req, res) => {
       return res.status(404).json({ message: "Kullanıcı veya kanal bulunamadı" });
     }
 
-    const attachment = req.file ? `/uploads/${req.file.filename}` : null;
+    // 🔁 Artık disk yok: req.file.buffer → Cloudinary
+    let attachment = null;
+    if (req.file) {
+      const result = await uploadBufferToCloudinary(
+        req.file.buffer,
+        req.file.originalname,
+        { folder: `sektor/channels/${channel_id}` } // klasörleme
+      );
+      attachment = result.secure_url; // DB’de sadece URL tutuyoruz
+    }
 
+    // Basit oluşturma (handleSendMessage içinde dosya desteği yoksa)
     const newMessage = await Message.create({
       user_id,
       channel_id,

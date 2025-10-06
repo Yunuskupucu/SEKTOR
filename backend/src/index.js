@@ -25,15 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
-// ✅ uploads klasörü backend/uploads altında olacak (src dışında)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-// process.cwd() = proje kökü (backend dizini)
-const uploadsAbs = path.resolve(process.cwd(), "uploads");
-console.log("Static uploads dir:", uploadsAbs);
-
-app.use("/uploads", express.static(uploadsAbs));
 
 // API Routes
 app.use("/api/auth", authRoutes);
