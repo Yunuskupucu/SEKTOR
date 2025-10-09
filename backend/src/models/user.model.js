@@ -7,6 +7,15 @@ const User = sequelize.define('User', {
         autoIncrement: true,
         primaryKey: true,
     },
+    provider: {
+  type: DataTypes.ENUM("local", "google", "github"),
+  allowNull: false,
+  defaultValue: "local",
+},
+provider_id: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
     fullname: { 
         type: DataTypes.STRING,
         allowNull: false,

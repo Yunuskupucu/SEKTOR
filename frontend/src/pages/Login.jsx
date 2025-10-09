@@ -10,9 +10,13 @@ import { useTheme } from '../context/useTheme';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 
+const API_ORIGIN = "http://localhost:5001"; 
+
+
+
 function Login() {
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const { login } = useAuthStore();       
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -91,12 +95,20 @@ function Login() {
             <button
               type="button"
               className={`${styles.socialButton} ${themeClass}`}
+              onClick={() => {
+                // Google OAuth akışını başlat
+                window.location.href = `${API_ORIGIN}/api/auth/google`;
+              }}
             >
               <FaGoogle />
             </button>
             <button
               type="button"
               className={`${styles.socialButton} ${themeClass}`}
+              onClick={() => {
+                // GitHub OAuth akışını başlat
+                window.location.href = `${API_ORIGIN}/api/auth/github`;
+              }}
             >
               <FaGithub />
             </button>

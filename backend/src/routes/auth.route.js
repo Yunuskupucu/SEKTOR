@@ -9,20 +9,18 @@ import {
   updateAvatar,
 } from '../controllers/auth.controller.js';
 import { protectRoute } from '../middleware/auth.middleware.js';
-import upload from "../middleware/uploadMiddleware.js"; // ✅ memoryStorage
+import upload from "../middleware/uploadMiddleware.js";
+import passport from "../lib/passport.js";
+import { generateToken } from "../lib/utils.js";
 
 const router = express.Router();
-
 
 router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', logout);
-router.get('/check', protectRoute, checkAuth); // Bu satırın doğru olduğundan emin olun
+router.get('/check', protectRoute, checkAuth);
 
-// Profil bilgilerini getirme rotası
 router.get('/profile', protectRoute, getProfile);
-
-// Profil bilgilerini güncelleme rotası
 router.put('/profile', protectRoute, updateProfile);
 
 router.post(
@@ -42,5 +40,18 @@ router.post(
   updateAvatar
 );
 
+/* ============= OAuth: Google ============= */
+router.get("/google", passport.authenticate("google", { scope:["profile","email"], session:false }));
+router.get("/google/callback",
+  passport.authenticate("google", { session:false, failureRedirect: "http://localhost:5173/login" }),
+  (req,res)=>{ generateToken(req.user.id, res); return res.redirect("http://localhost:5173/"); }
+);
 
-export default router; // Router nesnesini dışa aktar
+/* ============= OAuth: GitHub ============= */
+router.get("/github", passport.authenticate("github", { scope:["user:email"], session:false }));
+router.get("/github/callback",
+  passport.authenticate("github", { session:false, failureRedirect: "http://localhost:5173/login" }),
+  (req,res)=>{ generateToken(req.user.id, res); return res.redirect("http://localhost:5173/"); }
+);
+
+export default router;

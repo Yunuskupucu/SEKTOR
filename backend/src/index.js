@@ -13,6 +13,7 @@ import channelRoutes from "./routes/channel.routes.js";
 import { connectDb } from "./lib/db.js";
 import { handleSendMessage } from "./lib/handleSendMessage.js";
 
+import passport from "./lib/passport.js";
 dotenv.config();
 
 const app = express();
@@ -24,11 +25,12 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-
-
+app.use(passport.initialize());
+app.get("/health", (_, res) => res.send("OK"));
 
 // API Routes
 app.use("/api/auth", authRoutes);
+
 app.use("/api/channels", channelRoutes);
 app.use("/api/messages", messageRoutes);
 
