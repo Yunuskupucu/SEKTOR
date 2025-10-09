@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
+import JobBoard from '../job/JobCard';
 import styles from '../../styles/MessageContainer.module.scss';
 import MessageSkeleton from './MessageSkeleton';
 import Message from './Message';
@@ -71,9 +72,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         params.append('beforeId', nextCursor.beforeId);
       }
 
-      const res = await axiosInstance.get(
-        `/messages/${selectedChannel.id}?${params.toString()}`
-      );
+      const res = await axiosInstance.get(`/messages/${selectedChannel.id}?${params.toString()}`);
 
       const { items, next, hasMore: more } = res.data;
 
@@ -114,9 +113,10 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     }
   }, [hasMore, loadMoreMessages]);
 
-  // İlk mesajları yükle (ve en alta in)
+  // İlk mesajları yükle (ve en alta in) — yalnızca chat tipinde
   useEffect(() => {
-    if (!selectedChannel) return;
+    const channelType = (selectedChannel?.type || '').toString().trim().toLowerCase();
+    if (!selectedChannel || channelType === 'jobs') return;
 
     const fetchMessages = async () => {
       setLoading(true);
@@ -125,9 +125,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
       setNextCursor(null);
 
       try {
-        const res = await axiosInstance.get(
-          `/messages/${selectedChannel.id}?limit=20`
-        );
+        const res = await axiosInstance.get(`/messages/${selectedChannel.id}?limit=20`);
         const { items, next, hasMore: more } = res.data;
 
         setMessages(mergeUniqueById(items));
@@ -172,35 +170,19 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     <div className={`${styles.container} ${themeClass}`}>
       {selectedChannel ? (
         <>
-          <ChatHeader
-            selectedChannel={selectedChannel}
-            onClose={onChannelClose}
-          />
+          <ChatHeader selectedChannel={selectedChannel} onClose={onChannelClose} />
 
           <div className={styles.contentWrapper}>
-            <div
-              ref={messagesAreaRef}
-              className={`${styles.messagesArea} ${themeClass}`}
-              onScroll={handleScroll}
-            >
-              {loadingMore && (
+            {(selectedChannel?.type || '').toString().trim().toLowerCase() === 'jobs' ? (
+              <JobBoard selectedChannel={selectedChannel} />
+            ) : (
+              <>
                 <div
-                  style={{
-                    textAlign: 'center',
-                    padding: 10,
-                    fontSize: 12,
-                    color: '#888',
-                  }}
+                  ref={messagesAreaRef}
+                  className={`${styles.messagesArea} ${themeClass}`}
+                  onScroll={handleScroll}
                 >
-                  Eski mesajlar yükleniyor...
-                </div>
-              )}
-
-              {loading ? (
-                [1, 2, 3].map((i) => <MessageSkeleton key={i} />)
-              ) : messages.length > 0 ? (
-                <>
-                  {hasMore && !loadingMore && (
+                  {loadingMore && (
                     <div
                       style={{
                         textAlign: 'center',
@@ -209,32 +191,47 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
                         color: '#888',
                       }}
                     >
-                      ↑ Daha eski mesajlar için yukarı kaydırın
+                      Eski mesajlar yükleniyor...
                     </div>
                   )}
 
-                  {messages.map((msg) => (
-                    <Message
-                      key={msg.id}
-                      message={msg}
-                      currentUser={authUser}
-                    />
-                  ))}
-                </>
-              ) : (
-                <p>Henüz mesaj yok.</p>
-              )}
+                  {loading ? (
+                    [1, 2, 3].map((i) => <MessageSkeleton key={i} />)
+                  ) : messages.length > 0 ? (
+                    <>
+                      {hasMore && !loadingMore && (
+                        <div
+                          style={{
+                            textAlign: 'center',
+                            padding: 10,
+                            fontSize: 12,
+                            color: '#888',
+                          }}
+                        >
+                          ↑ Daha eski mesajlar için yukarı kaydırın
+                        </div>
+                      )}
 
-              {/* En alta konumlandırma hedefi (en yeni) */}
-              <div ref={messagesEndRef} />
-            </div>
+                      {messages.map((msg) => (
+                        <Message key={msg.id} message={msg} currentUser={authUser} />
+                      ))}
+                    </>
+                  ) : (
+                    <p>Henüz mesaj yok.</p>
+                  )}
 
-            <div className={`${styles.messageInput} ${themeClass}`}>
-              <MessageInput
-                selectedChannel={selectedChannel}
-                onAttachmentUploaded={handleAttachmentUploaded}
-              />
-            </div>
+                  {/* En alta konumlandırma hedefi (en yeni) */}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                <div className={`${styles.messageInput} ${themeClass}`}>
+                  <MessageInput
+                    selectedChannel={selectedChannel}
+                    onAttachmentUploaded={handleAttachmentUploaded}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </>
       ) : (

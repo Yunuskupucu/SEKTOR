@@ -16,16 +16,16 @@ import JobPng from '../../assets/channels/job.png';
 import { useTheme } from '../../context/useTheme';
 
 const channelsData = [
-  { id: 1, name: 'JavaScript', channelPic: JSPng },
-  { id: 2, name: 'HTML / CSS', channelPic: CodePng },
-  { id: 3, name: 'Python', channelPic: PythonPng },
-  { id: 4, name: 'Java', channelPic: JavaPng },
-  { id: 5, name: 'Swift', channelPic: SwiftPng },
-  { id: 6, name: 'C#', channelPic: CsPng },
-  { id: 7, name: 'C++', channelPic: CppPng },
-  { id: 8, name: 'SQL', channelPic: SqlPng },
-  { id: 9, name: 'İş İlanları', channelPic: JobPng },
-  { id: 10, name: 'Genel', channelPic: HomePng },
+  { id: 1, name: 'JavaScript', channelPic: JSPng, type: 'chat' },
+  { id: 2, name: 'HTML / CSS', channelPic: CodePng, type: 'chat' },
+  { id: 3, name: 'Python', channelPic: PythonPng, type: 'chat' },
+  { id: 4, name: 'Java', channelPic: JavaPng, type: 'chat' },
+  { id: 5, name: 'Swift', channelPic: SwiftPng, type: 'chat' },
+  { id: 6, name: 'C#', channelPic: CsPng, type: 'chat' },
+  { id: 7, name: 'C++', channelPic: CppPng, type: 'chat' },
+  { id: 8, name: 'SQL', channelPic: SqlPng, type: 'chat' },
+  { id: 9, name: 'İş İlanları', channelPic: JobPng, type: 'jobs' },
+  { id: 10, name: 'Genel', channelPic: HomePng, type: 'chat' },
 ];
 
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
@@ -39,9 +39,7 @@ const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
     }
 
     const filtered = channelsData.filter((channel) =>
-      channel.name
-        .toLocaleLowerCase('tr')
-        .includes(searchTerm.toLocaleLowerCase('tr'))
+      channel.name.toLocaleLowerCase('tr').includes(searchTerm.toLocaleLowerCase('tr'))
     );
 
     setFilteredChannels(filtered);
