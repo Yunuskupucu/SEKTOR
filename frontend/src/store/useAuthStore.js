@@ -40,15 +40,18 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  logout: async () => {
-    try {
-      await axiosInstance.post('/auth/logout');
-      set({ authUser: null });
-    } catch (error) {
-      console.log('Logout error:', error);
-      throw error;
-    }
-  },
+logout: async () => {
+  try {
+    await axiosInstance.post('/auth/logout');
+    set({ authUser: null });
+    // localStorage/sessionStorage vs. temizliyorsan burada da yapabilirsin
+    return true;                    // ← çağırana “başarılı” de
+  } catch (error) {
+    console.log('Logout error:', error);
+    return false;
+  }
+},
+
 
   register: async (fullname, email, password) => {
     try {

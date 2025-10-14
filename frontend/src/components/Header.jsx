@@ -29,14 +29,17 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      console.log('Çıkış Yapıldı');
-      navigate('/login');
-    } catch (error) {
-      console.error('Çıkış işlemi sırasında hata:', error);
-    } finally {
-      handleMenuClose();
+    const ok = await logout();           
+ 
+    localStorage.removeItem('auth'); 
+    if (ok !== false) {
+      navigate('/login', { replace: true }); 
     }
+  } catch (error) {
+    console.error('Çıkış işlemi sırasında hata:', error);
+  } finally {
+    handleMenuClose();
+  }
   };
   console.log('Theme:', theme);
 

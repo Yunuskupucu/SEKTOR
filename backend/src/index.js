@@ -34,6 +34,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/messages", messageRoutes);
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
 // SOCKET.IO
 io.on("connection", (socket) => {
   console.log("🟢 Socket connected:", socket.id);

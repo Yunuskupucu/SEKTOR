@@ -87,13 +87,15 @@ export const login = async (req, res) => {
   }
 };
 
+
 export const logout = (req, res) => {
-  res.clearCookie('jwt', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-  });
-  res.status(200).json({ message: 'Çıkış yapıldı' });
+
+  res.clearCookie('jwt', { httpOnly: true, path: '/', sameSite: 'lax',  secure: false });
+  
+  res.clearCookie('jwt', { httpOnly: true, path: '/', sameSite: 'none', secure: true  });
+
+  res.set('Cache-Control', 'no-store');
+  return res.status(200).json({ message: 'Çıkış yapıldı' });
 };
 
 export const updateProfile = async (req, res) => {

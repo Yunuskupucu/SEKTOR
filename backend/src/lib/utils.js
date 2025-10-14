@@ -1,15 +1,17 @@
-// ? mevcut kod bloğunu yeniden kullanabileceğimiz genel amaçlı bir yardımcı sınıf
+// utils/generateToken.js
 import jwt from 'jsonwebtoken';
+
 export const generateToken = (id, res) => {
-  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '7d', // 7 gün geçerli token
-  });
-  // Cookie'ye token'ı yazma
+  const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  const isProd = process.env.NODE_ENV === 'production';
+
   res.cookie('jwt', token, {
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 gün
-    httpOnly: true, //Cookie, sadece HTTP istekleriyle erişilebilir, JavaScript ile erişilemez.
-    sameSite: 'lax', 
-    secure: process.env.NODE_ENV !== 'development',
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/',                         // ← logout ile eşleşecek
+    secure: isProd,                    // PROD: true, DEV: false
+    sameSite: isProd ? 'none' : 'lax', // farklı origin’li prod’da 'none' zorunlu
+    // domain: isProd ? '.alanadın.com' : undefined, // gerekiyorsa
   });
 
   return token;

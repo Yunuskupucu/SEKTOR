@@ -44,14 +44,21 @@ router.post(
 router.get("/google", passport.authenticate("google", { scope:["profile","email"], session:false }));
 router.get("/google/callback",
   passport.authenticate("google", { session:false, failureRedirect: "http://localhost:5173/login" }),
-  (req,res)=>{ generateToken(req.user.id, res); return res.redirect("http://localhost:5173/"); }
-);
+ (req,res)=>{
+   generateToken(req.user.id, res);
+   res.set('Cache-Control', 'no-store');
+  return res.redirect(303, "http://localhost:5173/");
+});
 
 /* ============= OAuth: GitHub ============= */
 router.get("/github", passport.authenticate("github", { scope:["user:email"], session:false }));
 router.get("/github/callback",
   passport.authenticate("github", { session:false, failureRedirect: "http://localhost:5173/login" }),
-  (req,res)=>{ generateToken(req.user.id, res); return res.redirect("http://localhost:5173/"); }
+  (req,res)=>{
+    generateToken(req.user.id, res);
+    res.set('Cache-Control', 'no-store');
+    return res.redirect(303, "http://localhost:5173/");
+  }
 );
 
 export default router;
