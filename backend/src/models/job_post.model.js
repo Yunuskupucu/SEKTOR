@@ -43,15 +43,22 @@ const JobPost = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+     expires_at: { type: DataTypes.DATE, allowNull: true },
+    status: { type: DataTypes.ENUM("draft", "active", "expired"), allowNull: false, defaultValue: "active" },
+    visibility: { type: DataTypes.ENUM("public", "channel"), allowNull: false, defaultValue: "public" },
   },
   {
     timestamps: false,
     tableName: "job_posts",
+     indexes: [{ fields: ["channel_id"] }, { fields: ["status", "expires_at"] }],
   }
 );
 
 // Kullanıcı ile ilişkilendirme
 JobPost.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 User.hasMany(JobPost, { foreignKey: "user_id", onDelete: "CASCADE" });
+
+JobPost.belongsTo(Channel,{ foreignKey: "channel_id", onDelete: "CASCADE" });
+Channel.hasMany(JobPost,  { foreignKey: "channel_id", onDelete: "CASCADE" });
 
 export default JobPost;

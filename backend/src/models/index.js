@@ -21,6 +21,12 @@ FilterLog.belongsTo(User, { foreignKey: "user_id" });
 Message.hasMany(FilterLog, { foreignKey: "message_id", onDelete: "CASCADE" });
 FilterLog.belongsTo(Message, { foreignKey: "message_id" });
 
+Channel.hasMany(JobPost, { foreignKey: "channel_id", onDelete: "CASCADE" });
+JobPost.belongsTo(Channel, { foreignKey: "channel_id", onDelete: "CASCADE" });
+
+JobPost.hasMany(Message, { foreignKey: "job_post_id", onDelete: "SET NULL" });
+Message.belongsTo(JobPost, { foreignKey: "job_post_id", onDelete: "SET NULL" });
+
 const syncModels = async () => {
   try {
     await sequelize.sync({ alter: true }); // Veritabanını günceller

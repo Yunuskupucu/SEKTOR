@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import { getOrCreateJobChannelId } from "./lib/jobChannel.js";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.routes.js";
@@ -70,5 +71,15 @@ app.set("io", io);
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  connectDb();
-});
+
+  connectDb()
+.then(async () => {
+      // 2) İş İlanları kanalını DB'den bul/oluştur ve cache'e al
+      const jobChannelId = await getOrCreateJobChannelId();
+      console.log(`📌 Job channel ready (id: ${jobChannelId})`);
+    })
+    .catch((err) => {
+      console.error("❌ Startup error (DB or job channel):", err);
+      process.exit(1); // İstersen kaldır
+    });
+}); 
