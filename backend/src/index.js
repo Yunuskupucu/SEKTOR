@@ -4,9 +4,10 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "path";
-import { fileURLToPath } from "url";
+// import path from "path";
+// import { fileURLToPath } from "url";
 import { getOrCreateJobChannelId } from "./lib/jobChannel.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.routes.js";
@@ -34,7 +35,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/channels", channelRoutes);
 app.use("/api/messages", messageRoutes);
-
+app.use("/api/dashboard", dashboardRoutes);
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.setHeader('Pragma', 'no-cache');
@@ -65,7 +66,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// Socket'i route'lara aktar
+// Socket'i route'lara aktarıyoruz
 app.set("io", io);
 
 const PORT = process.env.PORT || 5001;
@@ -74,12 +75,12 @@ server.listen(PORT, () => {
 
   connectDb()
 .then(async () => {
-      // 2) İş İlanları kanalını DB'den bul/oluştur ve cache'e al
+      //  İş İlanları kanalını DB'den bul/oluştur ve cache'e al
       const jobChannelId = await getOrCreateJobChannelId();
       console.log(`📌 Job channel ready (id: ${jobChannelId})`);
     })
     .catch((err) => {
       console.error("❌ Startup error (DB or job channel):", err);
-      process.exit(1); // İstersen kaldır
+      process.exit(1); 
     });
 }); 

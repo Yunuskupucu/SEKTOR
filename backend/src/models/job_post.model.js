@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../lib/db.js";
 import User from "./user.model.js";
+import Channel from "./channel.model.js";
 
 const JobPost = sequelize.define(
   "JobPost",
