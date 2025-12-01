@@ -1,0 +1,264 @@
+.addJobOverlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(148, 163, 184, 0.45) 0, transparent 55%),
+    rgba(15, 23, 42, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+
+  .dark & {
+    background: radial-gradient(circle at top, rgba(36, 48, 68, 0.45) 0, transparent 55%),
+      rgba(16, 22, 33, 0.9);
+    backdrop-filter: blur(7px);
+  }
+}
+
+.addJobModal {
+  width: 100%;
+  max-width: 560px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px 24px 20px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  animation: addJobModalFadeIn 0.16s ease-out;
+  max-height: min(640px, 90vh);
+  overflow: hidden;
+
+  .dark & {
+    background-color: #181e29;
+    border: 1px solid rgba(71, 85, 105, 0.55);
+    box-shadow: 0 24px 70px rgba(33, 147, 176, 0.16);
+  }
+}
+
+.addJobModalBody {
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.addJobHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.addJobTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+
+  .dark & {
+    color: #67e8f9;
+  }
+}
+
+.addJobCloseBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #64748b;
+  padding: 4px;
+
+  &:hover {
+    color: #0f172a;
+    transform: scale(1.05);
+
+    .dark & {
+      color: #e0e7ef;
+    }
+  }
+
+  .dark & {
+    color: #b6c6db;
+  }
+}
+
+.addJobForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.addJobLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #475569;
+  font-weight: 500;
+
+  .dark & {
+    color: #bcd2e6;
+  }
+}
+
+.addJobInput,
+.addJobTextarea {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5f5;
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  background-color: #f8fafc;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+  color: #101623;
+
+  &:focus {
+    border-color: #2193b0;
+    box-shadow: 0 0 0 1px rgba(33, 147, 176, 0.2);
+    background-color: #ffffff;
+    color: #101623;
+
+    .dark & {
+      border-color: #34d399;
+      background-color: #232a37;
+      color: #e7f6fa;
+    }
+  }
+
+  .dark & {
+    background-color: #1e2530;
+    border: 1px solid #334155;
+    color: #e7f6fa;
+  }
+}
+
+.addJobTextarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.addJobFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.addJobSecondaryBtn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+
+  &:hover {
+    background-color: #f8fafc;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
+
+    .dark & {
+      background-color: #232a37;
+      color: #7dd3fc;
+    }
+  }
+
+  .dark & {
+    background-color: #232a37;
+    color: #bcd2e6;
+    border: 1px solid #334155;
+  }
+}
+
+.addJobPrimaryBtn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background-image: linear-gradient(to right, #2193b0, #6dd5ed);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(33, 147, 176, 0.55);
+  transform: translateY(0);
+  transition: box-shadow 0.16s ease, transform 0.16s ease, filter 0.16s ease;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: default;
+    box-shadow: none;
+  }
+
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(33, 147, 176, 0.7);
+    filter: brightness(1.02);
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: 0 6px 18px rgba(33, 147, 176, 0.5);
+  }
+
+  .dark & {
+    background-image: linear-gradient(92deg, #1a7a93 0%, #27425b 100%);
+    color: #e7f6fa;
+    box-shadow: 0 8px 22px rgba(33, 147, 176, 0.15);
+  }
+}
+
+.addJobPrimaryBtn--loading {
+  filter: saturate(0.85) brightness(0.96);
+
+  .dark & {
+    filter: saturate(0.85) brightness(1);
+  }
+}
+
+.addJobError {
+  margin-top: 4px;
+  color: #b91c1c;
+  font-size: 0.85rem;
+
+  .dark & {
+    color: #fb7185;
+  }
+}
+
+@media (max-width: 640px) {
+  .addJobModal {
+    margin: 0 12px;
+    padding: 18px 16px 14px;
+    max-height: calc(100vh - 32px);
+  }
+
+  .dark .addJobModal {
+    background-color: #181e29;
+    border: 1px solid rgba(71, 85, 105, 0.55);
+  }
+
+  .addJobTitle {
+    font-size: 1.1rem;
+  }
+
+  .addJobFooter {
+    justify-content: space-between;
+  }
+}
+
+@keyframes addJobModalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

@@ -1,6 +1,5 @@
 .jobCardContainer {
   background: #ffffff;
-  padding: 32px 0;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -52,6 +51,36 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+
+  .addJobButton {
+    position: absolute;
+    bottom: 30px;
+    right: 60px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #2193b0;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(33, 147, 176, 0.4);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+    svg {
+      pointer-events: none;
+    }
+
+    &:hover {
+      background: #1a7a93;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 10px 24px rgba(33, 147, 176, 0.5);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 4px 12px rgba(33, 147, 176, 0.35);
+    }
+  }
 }
 
 .jobCard {
