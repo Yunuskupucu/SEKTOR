@@ -36,6 +36,7 @@ router.post(
 );
 
 // 3) Kanal mesajları
-router.get("/:channel_id", getMessagesByChannel);
+router.get("/:channel_id(\\d+)", getMessagesByChannel);
+
 
 export default router;
