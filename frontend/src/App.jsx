@@ -5,6 +5,7 @@ import './index.scss';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
 import { useAuthStore } from './store/useAuthStore';
 import { useEffect } from 'react';
 import { Loader } from 'lucide-react';
@@ -50,18 +51,10 @@ function App() {
     <div>
       <Toaster />
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/login"
-          element={!authUser ? <Login /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/register"
-          element={!authUser ? <Register /> : <Navigate to="/" />}
-        />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/app" element={authUser ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/login" element={!authUser ? <Login /> : <Navigate to="/app" />} />
+        <Route path="/register" element={!authUser ? <Register /> : <Navigate to="/app" />} />
         <Route
           path="/profile"
           element={

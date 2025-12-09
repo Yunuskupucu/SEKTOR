@@ -10,13 +10,11 @@ import { useTheme } from '../context/useTheme';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 
-const API_ORIGIN = "http://localhost:5001"; 
-
-
+const API_ORIGIN = 'http://localhost:5001';
 
 function Login() {
   const navigate = useNavigate();
-  const { login } = useAuthStore();       
+  const { login } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +27,7 @@ function Login() {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/app');
     } catch (error) {
       console.error(
         'Giriş işlemi sırasında hata oluştu:',
@@ -42,10 +40,7 @@ function Login() {
   return (
     <div>
       <div>
-        <CgDarkMode
-          className={`${styles.themeIcon} ${themeClass}`}
-          onClick={toggleTheme}
-        />
+        <CgDarkMode className={`${styles.themeIcon} ${themeClass}`} onClick={toggleTheme} />
       </div>
       <div className={`${styles.container} ${themeClass}`}>
         <div className={`${styles.form} ${themeClass}`}>
@@ -82,9 +77,7 @@ function Login() {
                 </button>
               </div>
             </div>
-            <button className={`${styles.button} ${themeClass}`}>
-              Giriş Yap
-            </button>
+            <button className={`${styles.button} ${themeClass}`}>Giriş Yap</button>
           </form>
 
           <div className={`${styles.orDivider} ${themeClass}`}>

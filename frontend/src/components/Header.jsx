@@ -29,23 +29,23 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-    const ok = await logout();           
- 
-    localStorage.removeItem('auth'); 
-    if (ok !== false) {
-      navigate('/login', { replace: true }); 
+      const ok = await logout();
+
+      localStorage.removeItem('auth');
+      if (ok !== false) {
+        navigate('/login', { replace: true });
+      }
+    } catch (error) {
+      console.error('Çıkış işlemi sırasında hata:', error);
+    } finally {
+      handleMenuClose();
     }
-  } catch (error) {
-    console.error('Çıkış işlemi sırasında hata:', error);
-  } finally {
-    handleMenuClose();
-  }
   };
   console.log('Theme:', theme);
 
   return (
     <header className={`${styles.header} ${themeClass}`}>
-      <button className={styles.logo} onClick={() => navigate('/')}>
+      <button className={styles.logo} onClick={() => navigate('/app')}>
         <span>S</span>
         <label>SEKTÖR</label>
       </button>
@@ -59,9 +59,7 @@ function Header() {
             <FiSettings size={24} />
           </div>
 
-          <div
-            className={`${styles.dropdown} ${anchorEl ? styles.active : ''}`}
-          >
+          <div className={`${styles.dropdown} ${anchorEl ? styles.active : ''}`}>
             <div className={styles.menuItem} onClick={handleProfile}>
               <FiUser size={18} />
               Profil

@@ -31,7 +31,7 @@ function Register() {
     }
     try {
       await register(fullname, email, password);
-      navigate('/');
+      navigate('/app');
     } catch (error) {
       console.error(
         'Kayıt işlemi sırasında hata oluştu:',
@@ -43,10 +43,7 @@ function Register() {
   return (
     <div>
       <div>
-        <CgDarkMode
-          className={`${styles.themeIcon} ${themeClass}`}
-          onClick={toggleTheme}
-        />
+        <CgDarkMode className={`${styles.themeIcon} ${themeClass}`} onClick={toggleTheme} />
       </div>
       <div className={`${styles.container} ${themeClass}`}>
         <div className={`${styles.form} ${themeClass}`}>
@@ -121,10 +118,7 @@ function Register() {
 
           <div className={`${styles.navigateSection} ${themeClass}`}>
             Hesabınız var mı?
-            <span
-              className={styles.navigateLink}
-              onClick={() => navigate('/login')}
-            >
+            <span className={styles.navigateLink} onClick={() => navigate('/login')}>
               Giriş Yap
             </span>
           </div>
