@@ -3,19 +3,15 @@ import styles from '../../styles/Message.module.scss';
 import { useTheme } from '../../context/useTheme';
 
 const Message = ({ message, currentUser }) => {
-  const isOwnMessage =
-    message.User?.id === currentUser.id || message.user_id === currentUser.id;
+  const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
   const { theme } = useTheme();
   const themeClass = theme === 'dark' ? styles.dark : '';
 
-  const isImageUrl = (url) =>
-    /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
+  const isImageUrl = (url) => /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
 
   return (
     <div
-      className={`${styles.messageWrapper} ${
-        isOwnMessage ? styles.ownMessage : ''
-      } ${themeClass}`}
+      className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${themeClass}`}
     >
       <div className={styles.messageContainer}>
         <button
@@ -56,13 +52,10 @@ const Message = ({ message, currentUser }) => {
         )}
 
         <div className={styles.timestamp}>
-          {new Date(message.timestamp || message.createdAt).toLocaleTimeString(
-            [],
-            {
-              hour: '2-digit',
-              minute: '2-digit',
-            }
-          )}
+          {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
         </div>
       </div>
     </div>

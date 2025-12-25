@@ -4,7 +4,7 @@
 .dashboard {
   min-height: 100vh;
   padding: 32px;
-  background: #f1f1f1;
+  background: #e5e5e5;
   color: #111827;
   display: flex;
   flex-direction: column;
@@ -12,21 +12,21 @@
 }
 
 .dark {
-  background: #333333;
-  color: #f1f1f1;
+  background: #181818;
+  color: #ffffff;
 
   .iconButton {
-    border-color: rgba(255, 255, 255, 0.08);
-    background: #1f2933;
-    color: #f1f1f1;
+    border-color: rgb(83, 83, 83);
+    background: #393939;
+    color: #ffffff;
   }
 
   .card,
   .chartBox,
   .listBox,
   .miniCard {
-    background: #1f2933;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #393939;
+    border: 1px solid rgb(83, 83, 83);
     box-shadow: none;
   }
 
@@ -35,7 +35,7 @@
   .listSub,
   .listEmpty,
   .miniLabel {
-    color: #cbd5e1;
+    color: #f0f0f0;
   }
 
   .cardValue,
@@ -43,30 +43,50 @@
   .listTitle,
   .miniValue,
   .brandTitle {
-    color: #f8fafc;
+    color: #ffffff;
+  }
+
+  .brandMark,
+  .brandTitle {
+    background: linear-gradient(80deg, rgba(217, 217, 217, 1) 20%, rgba(115, 115, 115, 1) 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .cta {
-    border-color: rgba(255, 255, 255, 0.08);
-    background: linear-gradient(135deg, rgba(91, 141, 239, 0.18), rgba(168, 85, 247, 0.18));
+    border-color: rgb(83, 83, 83);
+    background: #393939;
   }
 
   .ctaTitle {
-    color: #f8fafc;
+    color: #ffffff;
   }
 
   .ctaText {
-    color: #e2e8f0;
+    color: #bdbdbd;
   }
 
   .badge {
-    background: rgba(91, 141, 239, 0.18);
-    color: #f8fafc;
+    background: rgba(83, 83, 83, 0.9);
+    color: #ffffff;
   }
 
   .listItem {
-    background: #111827;
-    border-color: rgba(255, 255, 255, 0.08);
+    background: #393939;
+    border-color: #606060;
+  }
+
+  .ctaButton {
+    background: linear-gradient(80deg, rgb(95, 94, 94) 20%, rgb(76, 76, 76) 100%);
+    color: #ffffff;
+    border: 1px solid rgb(83, 83, 83);
+
+    &:hover {
+      background: linear-gradient(80deg, rgb(110, 110, 110) 40%, rgb(72, 72, 72) 100%);
+      transform: scale(1.05);
+      transition: background 0.1s ease-in-out, transform 0.2s ease-in-out;
+      border-color: #bebebe;
+    }
   }
 }
 
@@ -88,27 +108,21 @@
 
 .brandMark {
   font-family: 'Better Saturday', sans-serif;
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   border-radius: 14px;
   display: grid;
   place-items: center;
   font-weight: 700;
-  font-size: 24px;
-  color: #fff;
+  font-size: 30px;
+  color: #0f172a;
 }
 
 .brandTitle {
-  font-size: 22px;
+  font-size: 30px;
   font-weight: 500;
   color: #0f172a;
   letter-spacing: 0.5px;
-
-  &.dark {
-    background: linear-gradient(80deg, rgba(217, 217, 217, 1) 20%, rgba(115, 115, 115, 1) 100%);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
 }
 
 .actions {
@@ -148,6 +162,10 @@
   margin: 48px auto;
   font-size: 16px;
   color: #cbd5e1;
+}
+
+.dark .loading {
+  color: #bdbdbd;
 }
 
 .summary {

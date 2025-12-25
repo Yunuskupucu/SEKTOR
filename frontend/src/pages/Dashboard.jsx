@@ -176,9 +176,12 @@ function Dashboard() {
                       <stop offset="95%" stopColor="#5b8def" stopOpacity={0.1} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={theme === 'dark' ? '#606060' : '#e5e7eb'}
+                  />
+                  <XAxis dataKey="name" stroke={theme === 'dark' ? '#bebebe' : '#6b7280'} />
+                  <YAxis allowDecimals={false} stroke={theme === 'dark' ? '#bebebe' : '#6b7280'} />
                   <Tooltip />
                   <Area
                     type="monotone"
@@ -198,9 +201,12 @@ function Dashboard() {
               </div>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={channelChartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={theme === 'dark' ? '#606060' : '#e5e7eb'}
+                  />
+                  <XAxis dataKey="name" stroke={theme === 'dark' ? '#bebebe' : '#6b7280'} />
+                  <YAxis allowDecimals={false} stroke={theme === 'dark' ? '#bebebe' : '#6b7280'} />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="value" name="Mesaj" radius={[6, 6, 0, 0]}>
