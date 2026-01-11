@@ -8,10 +8,18 @@ export const handleSendMessage = async ({ user_id, channel_id, content }) => {
   const result = await checkContentModeration(content);
   console.log("📩 [handleSendMessage] Moderasyon sonucu:", result);
 
-  const moderatedContent = result.includes("0") ? "Mesaj kaldırıldı." : content;
+  const isRemoved = result === "0"; 
+  const moderatedContent = isRemoved ? "Mesaj kaldırıldı." : content;
+
   console.log("✏️ [handleSendMessage] Kaydedilecek içerik:", moderatedContent);
 
-  const newMessage = await Message.create({ user_id, channel_id, content: moderatedContent });
+  const newMessage = await Message.create({
+    user_id,
+    channel_id,
+    content: moderatedContent,
+    status: isRemoved ? "removed" : "active",
+  });
+
   const fullMessage = await Message.findByPk(newMessage.id, {
     include: [{ model: User, attributes: ["fullname"] }],
   });

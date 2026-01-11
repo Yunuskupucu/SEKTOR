@@ -1,5 +1,5 @@
 import { Op, fn, col } from "sequelize";
-
+import { extractWeeklyTrends } from "../api/geminiModeration.js"; 
 import User from "../models/user.model.js";
 import Channel from "../models/channel.model.js";
 import Message from "../models/message.model.js";
@@ -63,7 +63,6 @@ export const getPublicGlobalStats = async (req, res) => {
 export const getMessageGlobalStats = async (req, res) => {
   try {
     const now = new Date();
-
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
 
@@ -74,6 +73,7 @@ export const getMessageGlobalStats = async (req, res) => {
       totalMessages,
       messagesLast7Days,
       messagesLast24Hours,
+      removedMessagesLast7Days, // 
     ] = await Promise.all([
       Message.count(),
 
@@ -88,6 +88,14 @@ export const getMessageGlobalStats = async (req, res) => {
           timestamp: { [Op.gte]: oneDayAgo },
         },
       }),
+
+      // 🆕 Moderasyon nedeniyle kaldırılan mesajların sayısı
+      Message.count({
+        where: {
+          status: "removed", // Veritabanında 'removed' veya 'deleted' olarak işaretlediğini varsayıyorum
+          timestamp: { [Op.gte]: sevenDaysAgo },
+        },
+      }),
     ]);
 
     return res.json({
@@ -96,6 +104,7 @@ export const getMessageGlobalStats = async (req, res) => {
         totalMessages,
         messagesLast7Days,
         messagesLast24Hours,
+        removedMessagesLast7Days, 
       },
     });
   } catch (error) {
@@ -106,14 +115,12 @@ export const getMessageGlobalStats = async (req, res) => {
       error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
-};
+}; 
+// Kanal bazlı mesaj sayısı
 export const getMessageStatsPerChannel = async (req, res) => {
   try {
     const messagesPerChannel = await Message.findAll({
-      attributes: [
-        "channel_id",
-        [fn("COUNT", col("id")), "messageCount"],
-      ],
+      attributes: ["channel_id", [fn("COUNT", col("id")), "messageCount"]],
       group: ["channel_id"],
       order: [[fn("COUNT", col("id")), "DESC"]],
       raw: true,
@@ -122,7 +129,7 @@ export const getMessageStatsPerChannel = async (req, res) => {
     return res.json({
       success: true,
       data: {
-        messagesPerChannel, // [{ channel_id: 1, messageCount: '20' }, ...]
+        messagesPerChannel,
       },
     });
   } catch (error) {
@@ -130,6 +137,49 @@ export const getMessageStatsPerChannel = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Sunucu hatası. Kanal bazlı mesaj istatistikleri alınamadı.",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+};
+  // LLM ile haftalık trend konuları çıkarma
+export const getWeeklyTrends = async (req, res) => {   
+  try { 
+    const now = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    const rows = await Message.findAll({
+      attributes: ["content"],
+      where: {
+        status: "active",
+        timestamp: { [Op.gte]: sevenDaysAgo },
+        content: { [Op.ne]: "Mesaj kaldırıldı." },
+      },
+      order: [["timestamp", "DESC"]],
+      limit: 1500,
+    });
+
+    const messages = rows
+      .map((r) => (r.content || "").trim().slice(0, 300))
+      .filter(Boolean)
+      .slice(0, 800);
+
+    const trends = await extractWeeklyTrends(messages);
+
+    return res.json({
+      success: true,
+      data: {
+        from: sevenDaysAgo,
+        to: now,
+        trends,
+        sampledMessageCount: messages.length,
+      },
+    });
+  } catch (error) {
+    console.error("getWeeklyTrends error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Sunucu hatası. Haftalık trendler alınamadı.",
       error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
