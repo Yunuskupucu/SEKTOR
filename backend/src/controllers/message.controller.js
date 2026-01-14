@@ -208,3 +208,96 @@ export const sendMessageWithAttachment = async (req, res) => {
     res.status(500).json({ message: "Sunucu hatası", error: error.message });
   }
 };
+//  MESAJ DÜZENLEME
+export const editMessage = async (req, res) => {
+  const { id } = req.params;
+  const { content } = req.body;
+  const user_id = req.user?.id;
+
+  try {
+    if (!content || !content.trim()) {
+      return res.status(400).json({ message: "content boş olamaz" });
+    }
+
+    const msg = await Message.findByPk(id);
+    if (!msg) return res.status(404).json({ message: "Mesaj bulunamadı" });
+
+    if (msg.user_id !== user_id) {
+      return res.status(403).json({ message: "Bu mesajı düzenleme yetkin yok" });
+    }
+
+    if (msg.status === "removed") {
+      return res.status(400).json({ message: "Kaldırılmış mesaj düzenlenemez" });
+    }
+
+    await msg.update({ content: content.trim() });
+
+    const fullMessage = await Message.findByPk(msg.id, {
+      include: [{ model: User, attributes: ["id", "fullname"] }],
+    });
+
+    const payload = withAttachmentUrl(req, fullMessage);
+
+    
+    const io = req.app.get("io");
+    io.to(String(msg.channel_id)).emit("messageUpdated", payload);
+
+    return res.status(200).json(payload);
+  } catch (error) {
+    console.error("❌ editMessage hata:", error);
+    return res.status(500).json({ message: "Sunucu hatası", error: error.message });
+  }
+};
+// MESAJ VEYA EK SİLME
+export const deleteMessageOrAttachment = async (req, res) => {
+  const { id } = req.params;
+  const mode = (req.query.mode || "").toLowerCase(); // "attachment" | ""
+  const user_id = req.user?.id;
+
+  try {
+    const msg = await Message.findByPk(id);
+    if (!msg) return res.status(404).json({ message: "Mesaj bulunamadı" });
+
+    if (msg.user_id !== user_id) {
+      return res.status(403).json({ message: "Bu işlem için yetkin yok" });
+    }
+
+    if (msg.status === "removed") {
+      return res.status(200).json({ success: true, message: "Mesaj zaten kaldırılmış" });
+    }
+
+    // 
+    if (mode === "attachment") {
+      await msg.update({ attachment: null });
+
+      const fullMessage = await Message.findByPk(msg.id, {
+        include: [{ model: User, attributes: ["id", "fullname"] }],
+      });
+
+      const payload = withAttachmentUrl(req, fullMessage);
+
+      const io = req.app.get("io");
+      io.to(String(msg.channel_id)).emit("messageUpdated", payload); // aynı event yeter
+
+      return res.status(200).json({ success: true, data: payload });
+    }
+
+    // 2) soft delete
+    await msg.update({
+      status: "removed",
+      content: "Mesaj kaldırıldı.",
+      attachment: null,
+    });
+
+    const io = req.app.get("io");
+    io.to(String(msg.channel_id)).emit("messageDeleted", {
+      id: msg.id,
+      channel_id: msg.channel_id,
+    });
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("❌ deleteMessageOrAttachment hata:", error);
+    return res.status(500).json({ message: "Sunucu hatası", error: error.message });
+  }
+};

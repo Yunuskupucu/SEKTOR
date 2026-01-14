@@ -7,6 +7,9 @@ import {
   getMessagesByChannel,
 } from "../controllers/message.controller.js";
 import upload from "../middleware/uploadMiddleware.js";
+import { editMessage, deleteMessageOrAttachment } from "../controllers/message.controller.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
+
 
 const router = express.Router();
 
@@ -38,5 +41,10 @@ router.post(
 // 3) Kanal mesajları
 router.get("/:channel_id(\\d+)", getMessagesByChannel);
 
+// edit sadece content
+router.patch("/:id", protectRoute, editMessage);
+
+// delete: mode=attachment -> sadece ek sil, yoksa mesaj kaldır
+router.delete("/:id", protectRoute, deleteMessageOrAttachment);
 
 export default router;
