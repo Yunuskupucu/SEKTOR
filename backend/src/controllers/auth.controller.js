@@ -221,3 +221,39 @@ export const checkAuth = (req, res) => {
     });
   }
 };
+//profil görüntüleme için public
+export const getPublicProfileById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, {
+      attributes: [
+        "id",
+        "fullname",
+        "profile_picture_url",
+        "github",
+        "linkedin",
+        "bio",
+        ["created_at", "createdAt"],
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        ...user.toJSON(),
+        createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null,
+      },
+    });
+  } catch (error) {
+    console.error("Error in getPublicProfileById:", error.message);
+    return res.status(500).json({
+      message: "Profil bilgileri getirilirken hata oluştu",
+      error: error.message,
+    });
+  }
+};

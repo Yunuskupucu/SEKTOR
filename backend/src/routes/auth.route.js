@@ -12,7 +12,7 @@ import { protectRoute } from '../middleware/auth.middleware.js';
 import upload from "../middleware/uploadMiddleware.js";
 import passport from "../lib/passport.js";
 import { generateToken } from "../lib/utils.js";
-
+import { getPublicProfileById } from "../controllers/auth.controller.js";
 const router = express.Router();
 
 router.post('/register', register);
@@ -22,7 +22,7 @@ router.get('/check', protectRoute, checkAuth);
 
 router.get('/profile', protectRoute, getProfile);
 router.put('/profile', protectRoute, updateProfile);
-
+router.get("/users/:id/profile", getPublicProfileById);
 router.post(
   "/avatar",
   protectRoute,

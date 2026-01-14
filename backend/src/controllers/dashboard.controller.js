@@ -92,7 +92,7 @@ export const getMessageGlobalStats = async (req, res) => {
       // 🆕 Moderasyon nedeniyle kaldırılan mesajların sayısı
       Message.count({
         where: {
-          status: "removed", // Veritabanında 'removed' veya 'deleted' olarak işaretlediğini varsayıyorum
+          status: "removed", 
           timestamp: { [Op.gte]: sevenDaysAgo },
         },
       }),
