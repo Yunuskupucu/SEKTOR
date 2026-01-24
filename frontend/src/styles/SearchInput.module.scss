@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 2px solid rgb(85, 85, 85);
+  border-bottom: 2px solid rgb(46, 53, 69);
   padding: 1rem;
 
   .container {
@@ -24,18 +24,18 @@
         border-color: #3a82f6;
 
         &.dark {
-          border-color: #60A5FA;
+          border-color: #60a5fa;
           box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.12);
         }
       }
 
       &.dark {
-        background: #21262D;
-        border-color: #3D434C;
-        color: #D1D5DB;
+        background: #21262d;
+        border-color: #3d434c;
+        color: #d1d5db;
 
         &::placeholder {
-          color: #A8B0BA;
+          color: #a8b0ba;
         }
       }
     }

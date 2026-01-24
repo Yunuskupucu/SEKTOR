@@ -119,3 +119,71 @@
     background: rgba(96, 165, 250, 0.1);
   }
 }
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+
+  &:hover {
+    transform: none;
+    background: none;
+  }
+}
+
+.loadingText {
+  font-size: 12px;
+  color: inherit;
+}
+
+.editBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #1565c0;
+
+  .container.dark & {
+    background: rgba(96, 165, 250, 0.15);
+    border-color: #60A5FA;
+    color: #93c5fd;
+  }
+}
+
+.editText {
+  font-weight: 500;
+}
+
+.cancelEditButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: inherit;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  opacity: 0.7;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    opacity: 1;
+  }
+
+  .container.dark & {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  svg {
+    font-size: 18px;
+  }
+}
