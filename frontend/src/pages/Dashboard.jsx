@@ -96,6 +96,7 @@ function Dashboard() {
       })),
     [channelStats, channelsMap]
   );
+  console.log(channelChartData);
 
   const topChannels = useMemo(
     () =>

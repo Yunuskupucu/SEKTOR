@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
 import { generateToken } from '../lib/utils.js';
 import cloudinary from '../lib/cloudinary.js';
-import { uploadBufferToCloudinary } from "../lib/uploadToCloudinary.js"; 
+import { uploadBufferToCloudinary } from '../lib/uploadToCloudinary.js';
 
 export const register = async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -13,9 +13,7 @@ export const register = async (req, res) => {
     }
 
     if (password.length < 6 || password.length > 20) {
-      return res
-        .status(400)
-        .json({ message: 'Şifre 6-20 karakter arasında olmalıdır' });
+      return res.status(400).json({ message: 'Şifre 6-20 karakter arasında olmalıdır' });
     }
 
     const existingUser = await User.findOne({ where: { email } });
@@ -87,12 +85,10 @@ export const login = async (req, res) => {
   }
 };
 
-
 export const logout = (req, res) => {
+  res.clearCookie('jwt', { httpOnly: true, path: '/', sameSite: 'lax', secure: false });
 
-  res.clearCookie('jwt', { httpOnly: true, path: '/', sameSite: 'lax',  secure: false });
-  
-  res.clearCookie('jwt', { httpOnly: true, path: '/', sameSite: 'none', secure: true  });
+  res.clearCookie('jwt', { httpOnly: true, path: '/', sameSite: 'none', secure: true });
 
   res.set('Cache-Control', 'no-store');
   return res.status(200).json({ message: 'Çıkış yapıldı' });
@@ -113,7 +109,7 @@ export const updateProfile = async (req, res) => {
     }
 
     const updatedUser = await User.findByPk(id, {
-      attributes: ['fullname', 'email', 'github', 'linkedin', 'bio', 'profile_picture_url',],
+      attributes: ['fullname', 'email', 'github', 'linkedin', 'bio', 'profile_picture_url'],
     });
 
     res.status(200).json(updatedUser);
@@ -136,7 +132,9 @@ export const updateAvatar = async (req, res) => {
     }
     if (!file.buffer) {
       // memoryStorage devreye girmemişse burada yakalanır
-      return res.status(400).json({ message: 'Sunucu dosyayı belleğe alamadı (multer memoryStorage gerekli)' });
+      return res
+        .status(400)
+        .json({ message: 'Sunucu dosyayı belleğe alamadı (multer memoryStorage gerekli)' });
     }
     if (!/^image\//.test(file.mimetype)) {
       return res.status(400).json({ message: 'Sadece görsel yükleyebilirsiniz.' });
@@ -171,7 +169,6 @@ export const updateAvatar = async (req, res) => {
     });
   }
 };
-
 
 export const getProfile = async (req, res) => {
   try {
@@ -228,31 +225,38 @@ export const getPublicProfileById = async (req, res) => {
 
     const user = await User.findByPk(id, {
       attributes: [
-        "id",
-        "fullname",
-        "profile_picture_url",
-        "github",
-        "linkedin",
-        "bio",
-        ["created_at", "createdAt"],
+        'id',
+        'fullname',
+        'email',
+        'profile_picture_url',
+        'github',
+        'linkedin',
+        'bio',
+        'created_at',
       ],
     });
 
     if (!user) {
-      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
     }
 
     return res.status(200).json({
       success: true,
       data: {
-        ...user.toJSON(),
-        createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null,
+        id: user.id,
+        fullname: user.fullname,
+        email: user.email,
+        profile_picture_url: user.profile_picture_url,
+        github: user.github,
+        linkedin: user.linkedin,
+        bio: user.bio,
+        createdAt: user.created_at ? new Date(user.created_at).toISOString() : null,
       },
     });
   } catch (error) {
-    console.error("Error in getPublicProfileById:", error.message);
+    console.error('Error in getPublicProfileById:', error.message);
     return res.status(500).json({
-      message: "Profil bilgileri getirilirken hata oluştu",
+      message: 'Profil bilgileri getirilirken hata oluştu',
       error: error.message,
     });
   }

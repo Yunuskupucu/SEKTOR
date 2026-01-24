@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import styles from '../../styles/Message.module.scss';
 import { useTheme } from '../../context/useTheme';
+import UserProfileModal from './UserProfileModal';
 
 const Message = ({ message, currentUser }) => {
   const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
   const { theme } = useTheme();
   const themeClass = theme === 'dark' ? styles.dark : '';
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const isImageUrl = (url) => /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
 
@@ -17,7 +20,9 @@ const Message = ({ message, currentUser }) => {
         <button
           className={styles.sender}
           onClick={() => {
-            console.log('PROFİL BİLGİLERİ GÖSTERİLECEK');
+            if (!isOwnMessage && (message.User?.id || message.user_id)) {
+              setShowProfileModal(true);
+            }
           }}
         >
           {!isOwnMessage && (message.User?.fullname || message.User?.username)}
@@ -58,6 +63,13 @@ const Message = ({ message, currentUser }) => {
           })}
         </div>
       </div>
+
+      {showProfileModal && (
+        <UserProfileModal
+          userId={message.User?.id || message.user_id}
+          onClose={() => setShowProfileModal(false)}
+        />
+      )}
     </div>
   );
 };
