@@ -19,6 +19,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState(null);
   const [reloadSeq, setReloadSeq] = useState(0);
+  const [editingMessage, setEditingMessage] = useState(null);
 
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
@@ -154,11 +155,33 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
       });
     };
 
+    // Mesaj güncellendiğinde (düzenleme veya ek silme)
+    const onMessageUpdated = (updatedMessage) => {
+      if (updatedMessage.channel_id !== selectedChannel.id) return;
+      setMessages((prev) => {
+        return prev.map((m) => (m.id === updatedMessage.id ? updatedMessage : m));
+      });
+    };
+
+    // Mesaj silindiğinde
+    const onMessageDeleted = (deletedData) => {
+      if (deletedData.channel_id !== selectedChannel.id) return;
+      setMessages((prev) => {
+        return prev.map((m) =>
+          m.id === deletedData.id ? { ...m, status: 'removed', content: 'Mesaj kaldırıldı.' } : m
+        );
+      });
+    };
+
     socket.on('newMessage', onNewMessage);
+    socket.on('messageUpdated', onMessageUpdated);
+    socket.on('messageDeleted', onMessageDeleted);
 
     return () => {
       socket.emit('leaveChannel', selectedChannel.id);
       socket.off('newMessage', onNewMessage);
+      socket.off('messageUpdated', onMessageUpdated);
+      socket.off('messageDeleted', onMessageDeleted);
     };
   }, [selectedChannel, mergeUniqueById, reloadSeq]);
 
@@ -213,7 +236,21 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
                       )}
 
                       {messages.map((msg) => (
-                        <Message key={msg.id} message={msg} currentUser={authUser} />
+                        <Message
+                          key={msg.id}
+                          message={msg}
+                          currentUser={authUser}
+                          onEdit={(message) => setEditingMessage(message)}
+                          onMessageDelete={(messageId) => {
+                            setMessages((prev) =>
+                              prev.map((m) =>
+                                m.id === messageId
+                                  ? { ...m, status: 'removed', content: 'Mesaj kaldırıldı.' }
+                                  : m
+                              )
+                            );
+                          }}
+                        />
                       ))}
                     </>
                   ) : (
@@ -228,6 +265,14 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
                   <MessageInput
                     selectedChannel={selectedChannel}
                     onAttachmentUploaded={handleAttachmentUploaded}
+                    editingMessage={editingMessage}
+                    onEditCancel={() => setEditingMessage(null)}
+                    onEditComplete={(updatedMessage) => {
+                      setMessages((prev) =>
+                        prev.map((m) => (m.id === updatedMessage.id ? updatedMessage : m))
+                      );
+                      setEditingMessage(null);
+                    }}
                   />
                 </div>
               </>

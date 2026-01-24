@@ -230,7 +230,10 @@ export const editMessage = async (req, res) => {
       return res.status(400).json({ message: "Kaldırılmış mesaj düzenlenemez" });
     }
 
-    await msg.update({ content: content.trim() });
+    await msg.update({ 
+      content: content.trim(),
+      edited_at: new Date()
+    });
 
     const fullMessage = await Message.findByPk(msg.id, {
       include: [{ model: User, attributes: ["id", "fullname"] }],

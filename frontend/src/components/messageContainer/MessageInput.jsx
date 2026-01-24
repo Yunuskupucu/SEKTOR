@@ -1,17 +1,37 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
 import { ImAttachment } from 'react-icons/im';
+import { IoClose } from 'react-icons/io5';
 import styles from '../../styles/MessageInput.module.scss';
 import { useTheme } from '../../context/useTheme';
 import PropTypes from 'prop-types';
 import { useAuthStore } from '../../store/useAuthStore';
 import socket from '../../lib/socket';
+import axiosInstance from '../../lib/axios';
 
-const MessageInput = ({ selectedChannel, onAttachmentUploaded }) => {
+const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, onEditCancel, onEditComplete }) => {
   const [message, setMessage] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
   const fileInputRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Düzenleme modunda mesaj içeriğini yükle
+  useEffect(() => {
+    if (editingMessage) {
+      setMessage(editingMessage.content || '');
+      // Input'a focus
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          inputRef.current.select();
+        }
+      }, 100);
+    } else {
+      setMessage('');
+    }
+  }, [editingMessage]);
 
   const handleAttachmentClick = () => {
     fileInputRef.current.click();
@@ -57,11 +77,40 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded }) => {
     event.target.value = ''; // aynı dosyayı tekrar seçebilmek için sıfırla
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!message.trim() || !authUser || !selectedChannel) return;
 
+    // Düzenleme modunda
+    if (editingMessage) {
+      if (message.trim() === editingMessage.content) {
+        // Değişiklik yoksa iptal et
+        onEditCancel();
+        return;
+      }
+
+      setIsUpdating(true);
+      try {
+        const response = await axiosInstance.patch(`/messages/${editingMessage.id}`, {
+          content: message.trim(),
+        });
+
+        if (onEditComplete) {
+          onEditComplete(response.data);
+        }
+
+        setMessage('');
+      } catch (error) {
+        console.error('❌ Mesaj düzenlenirken hata:', error);
+        alert(error.response?.data?.message || 'Mesaj düzenlenirken bir hata oluştu');
+      } finally {
+        setIsUpdating(false);
+      }
+      return;
+    }
+
+    // Yeni mesaj gönderme
     socket.emit('sendMessage', {
       user_id: authUser.id,
       channel_id: selectedChannel.id,
@@ -72,38 +121,79 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded }) => {
     setMessage('');
   };
 
+  const handleCancelEdit = () => {
+    if (onEditCancel) {
+      onEditCancel();
+    }
+    setMessage('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape' && editingMessage) {
+      handleCancelEdit();
+    }
+  };
+
   const themeClass = theme === 'dark' ? styles.dark : '';
 
   return (
     <div className={`${styles.container} ${themeClass}`}>
+      {editingMessage && (
+        <div className={styles.editBanner}>
+          <span className={styles.editText}>Mesajı düzenliyorsunuz</span>
+          <button
+            type="button"
+            className={styles.cancelEditButton}
+            onClick={handleCancelEdit}
+            aria-label="Düzenlemeyi iptal et"
+          >
+            <IoClose />
+          </button>
+        </div>
+      )}
       <form onSubmit={handleSubmit} className={styles.inputWrapper}>
         <input
+          ref={inputRef}
           type="text"
           className={styles.input}
-          placeholder="Mesajınızı yazın..."
+          placeholder={editingMessage ? 'Mesajınızı düzenleyin...' : 'Mesajınızı yazın...'}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={isUpdating}
         />
 
         <div className={styles.buttonGroup}>
+          {!editingMessage && (
+            <>
+              <button
+                type="button"
+                className={styles.attachmentButton}
+                onClick={handleAttachmentClick}
+              >
+                <ImAttachment />
+              </button>
+
+              <input
+                type="file"
+                name="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+            </>
+          )}
+
           <button
-            type="button"
-            className={styles.attachmentButton}
-            onClick={handleAttachmentClick}
+            type="submit"
+            className={styles.sendButton}
+            disabled={isUpdating || !message.trim()}
           >
-            <ImAttachment />
-          </button>
-
-          <input
-            type="file"
-            name="file"
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-
-          <button type="submit" className={styles.sendButton}>
-            <IoSendSharp />
+            {isUpdating ? (
+              <span className={styles.loadingText}>Kaydediliyor...</span>
+            ) : (
+              <IoSendSharp />
+            )}
           </button>
         </div>
       </form>
@@ -114,6 +204,9 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded }) => {
 MessageInput.propTypes = {
   selectedChannel: PropTypes.object.isRequired,
   onAttachmentUploaded: PropTypes.func,
+  editingMessage: PropTypes.object,
+  onEditCancel: PropTypes.func,
+  onEditComplete: PropTypes.func,
 };
 
 export default MessageInput;

@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -24,20 +24,19 @@ export const checkContentModeration = async (post) => {
   `;
 
   try {
-    console.log("🟡 Moderasyon analizi yapılıyor...");
+    console.log('🟡 Moderasyon analizi yapılıyor...');
 
     const result = await model.generateContent(prompt);
     const output = result.response.text().trim();
 
-    console.log("🟢 Model Yanıtı:", output);
+    console.log('🟢 Model Yanıtı:', output);
 
     // Sadece "0" içerip içermediğini kontrol etmek daha güvenlidir.
-    return output.includes("0") ? "0" : "1";
-
+    return output.includes('0') ? '0' : '1';
   } catch (error) {
-    console.error("❌ Gemini API Hatası:", error.message);
+    console.error('❌ Gemini API Hatası:', error.message);
     // Hata durumunda (örneğin limit aşımı) mesajı onaylamak güvenli bir varsayılandır.
-    return "1"; 
+    return '1';
   }
 };
 
@@ -45,7 +44,7 @@ export const checkContentModeration = async (post) => {
  * Haftalık trend konuları
  */
 export const extractWeeklyTrends = async (messages) => {
-  const combinedText = messages.join("\n");
+  const combinedText = messages.join('\n');
 
   const prompt = `
 Aşağıdaki mesajları analiz et ve son 7 günün en çok konuşulan 5 ana konusunu çıkar.
@@ -76,10 +75,10 @@ ${combinedText}
     const result = await model.generateContent(prompt);
     const raw = result.response.text().trim();
 
-    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const cleaned = raw.replace(/```json|```/g, '').trim();
     return JSON.parse(cleaned);
   } catch (error) {
-    console.error("❌ Trend Analiz Hatası:", error.message);
+    console.error('❌ Trend Analiz Hatası:', error.message);
     return { topics: [] };
   }
 };

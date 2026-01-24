@@ -41,6 +41,10 @@ const Message = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    edited_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
 
     status: {
       type: DataTypes.STRING, // TEXT de olabilir
