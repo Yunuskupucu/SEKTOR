@@ -8,9 +8,10 @@
   background-color: rgb(241, 241, 241);
   color: #333;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   &.dark {
-    background-color: #333333;
-    color: #f1f1f1;
+    background: linear-gradient(135deg, #1C2128 0%, #161B22 50%, #21262D 100%);
+    color: #D1D5DB;
   }
 }

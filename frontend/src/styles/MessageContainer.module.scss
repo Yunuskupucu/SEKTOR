@@ -32,14 +32,8 @@
   }
 
   &.dark h1 {
-    background: linear-gradient(
-      80deg,
-      rgb(255, 255, 255) 40%,
-      rgb(78, 78, 78) 70%
-    );
-
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #E6EDF3;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   }
 
   .closeButton {
@@ -68,7 +62,8 @@
   }
 
   &.dark {
-    background: linear-gradient(to right, #3b3b3b, #141414);
+    background: linear-gradient(to right, #2D333B, #1C2128);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }
 

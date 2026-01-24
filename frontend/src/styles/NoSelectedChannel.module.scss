@@ -6,8 +6,8 @@
   flex-direction: column;
 
   &.dark {
-    background-color: #4d4d4d;
-    color: white;
+    background: linear-gradient(135deg, #21262D 0%, #1C2128 100%);
+    color: #D1D5DB;
   }
 }
 
@@ -32,7 +32,7 @@
   height: 100%;
 
   &.dark {
-    color: white;
+    color: #D1D5DB;
   }
 }
 

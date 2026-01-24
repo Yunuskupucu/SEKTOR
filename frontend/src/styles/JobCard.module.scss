@@ -6,7 +6,7 @@
   transition: background 0.3s;
 
   &.dark {
-    background: RGB(28, 28, 28);
+    background: linear-gradient(135deg, #1C2128 0%, #161B22 50%, #21262D 100%);
   }
 }
 
@@ -25,9 +25,9 @@
   transition: background 0.3s;
 
   .dark & {
-    background: #232323;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 24px 0 rgba(33, 147, 176, 0.12);
+    background: #21262D;
+    border: 1px solid #3D434C;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -42,7 +42,7 @@
     margin: 0;
 
     .dark & {
-      color: #7dd3fc;
+      color: #60A5FA;
     }
   }
 }
@@ -64,7 +64,10 @@
     color: #ffffff;
     cursor: pointer;
     box-shadow: 0 6px 18px rgba(33, 147, 176, 0.4);
-    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
 
     svg {
       pointer-events: none;
@@ -92,7 +95,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: background 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
   flex: 1 1 280px; /* min kutu genişliği */
   max-width: calc(33.333% - 16px);
 
@@ -102,11 +107,13 @@
   }
 
   .dark & {
-    background: #232323;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #21262D;
+    border: 1px solid #3D434C;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: #2D333B;
+      box-shadow: 0 4px 16px 0 rgba(96, 165, 250, 0.12);
+      border-color: #60A5FA;
     }
   }
 }
@@ -137,10 +144,10 @@
   }
 
   .dark & {
-    color: #e0e0e0;
+    color: #D1D5DB;
 
     svg {
-      color: #7dd3fc;
+      color: #60A5FA;
     }
   }
 }
@@ -163,10 +170,10 @@
   }
 
   .dark & {
-    color: #bdbdbd;
+    color: #A8B0BA;
 
     svg {
-      color: #7dd3fc;
+      color: #60A5FA;
     }
   }
 }
@@ -195,10 +202,10 @@
   }
 
   .dark & {
-    color: #7dd3fc;
+    color: #60A5FA;
 
     svg {
-      color: #7dd3fc;
+      color: #60A5FA;
     }
   }
 }

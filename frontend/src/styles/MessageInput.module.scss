@@ -3,8 +3,8 @@
   padding: 12px 24px;
 
   &.dark {
-    background: RGB(28, 28, 28);
-    border-top: 2px solid #353535;
+    background: linear-gradient(180deg, #21262D 0%, #1C2128 100%);
+    border-top: 1px solid #3D434C;
   }
 }
 
@@ -23,8 +23,13 @@
   }
 
   .container.dark & {
-    background: #808080;
-    border-color: #4a5568;
+    background: #21262D;
+    border-color: #3D434C;
+
+    &:focus-within {
+      border-color: #60A5FA;
+      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.12);
+    }
   }
 }
 
@@ -40,8 +45,13 @@
   &::placeholder {
     color: #383838;
   }
+  
   .container.dark & {
-    background: #808080;
+    color: #D1D5DB;
+
+    &::placeholder {
+      color: #A8B0BA;
+    }
   }
 }
 
@@ -73,7 +83,11 @@
 }
 
 .container.dark .attachmentButton {
-  color: #000000;
+  color: #60A5FA;
+
+  &:hover {
+    background: rgba(96, 165, 250, 0.1);
+  }
 }
 
 .sendButton {
@@ -99,5 +113,9 @@
 }
 
 .container.dark .sendButton {
-  color: #000000;
+  color: #60A5FA;
+
+  &:hover {
+    background: rgba(96, 165, 250, 0.1);
+  }
 }

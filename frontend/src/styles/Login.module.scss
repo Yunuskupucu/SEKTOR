@@ -62,10 +62,10 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
   &.dark {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    box-shadow: 0 8px 32px rgba(114, 114, 114, 0.4);
+    border: 1px solid #3D434C;
+    background: linear-gradient(135deg, rgba(33, 38, 45, 0.95), rgba(28, 33, 40, 0.95));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
   }
 
   @media (max-width: 768px) {
@@ -104,7 +104,7 @@
   label {
     font-size: 16px;
     &.dark {
-      color: #c1c1c1;
+      color: #D1D5DB;
     }
   }
 
@@ -130,15 +130,16 @@
     }
 
     &.dark {
-      border-bottom: 1px solid #000000;
-      color: #cacaca;
+      border-bottom: 1px solid #3D434C;
+      color: #D1D5DB;
 
       &:hover {
-        border-bottom: 2px solid #030202 !important;
+        border-bottom: 2px solid #3B82F6;
       }
 
       &:focus {
-        border-bottom: 2px solid rgb(154, 154, 154) !important;
+        border-bottom: 2px solid #60A5FA;
+        box-shadow: 0 1px 0 0 rgba(96, 165, 250, 0.2);
       }
     }
 
@@ -191,10 +192,10 @@
   transition: color 200ms;
 
   &.dark {
-    color: #cacaca;
+    color: #D1D5DB;
 
     &:hover {
-      color: #f8f8f8;
+      color: #60A5FA;
     }
   }
 
@@ -225,11 +226,15 @@
   }
 
   &.dark {
-    background: rgb(128, 128, 128);
-    border: 2px solid black;
+    background: linear-gradient(80deg, #2D333B 20%, #21262D 100%);
+    border: 1px solid #3D434C;
+    color: #F9FAFB;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background: rgb(93, 93, 93);
+      background: linear-gradient(80deg, #363D47 40%, #252A32 100%);
+      box-shadow: 0 6px 18px rgba(96, 165, 250, 0.15);
+      border-color: #60A5FA;
     }
   }
 
@@ -266,11 +271,11 @@
   }
 
   &.dark {
-    color: #c1c1c1;
+    color: #D1D5DB;
 
     &::before,
     &::after {
-      background: #444;
+      background: #3D434C;
     }
   }
 }
@@ -305,13 +310,13 @@
   }
 
   &.dark {
-    background: rgba(255, 255, 255, 0.2);
-    color: #f0f0f0;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(33, 38, 45, 0.4);
+    color: #D1D5DB;
+    border-color: #3D434C;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.25);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(33, 38, 45, 0.6);
+      border-color: #60A5FA;
     }
   }
 }
@@ -322,7 +327,7 @@
   font-size: 16px;
 
   &.dark {
-    color: #c1c1c1;
+    color: #D1D5DB;
   }
 
   @media (max-width: 480px) {

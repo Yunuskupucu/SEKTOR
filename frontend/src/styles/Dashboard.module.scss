@@ -12,22 +12,27 @@
 }
 
 .dark {
-  background: #181818;
-  color: #ffffff;
+  background: linear-gradient(135deg, #1C2128 0%, #161B22 50%, #21262D 100%);
+  color: #D1D5DB;
 
   .iconButton {
-    border-color: rgb(83, 83, 83);
-    background: #393939;
-    color: #ffffff;
+    border-color: #3D434C;
+    background: #21262D;
+    color: #D1D5DB;
+
+    &:hover {
+      border-color: #60A5FA;
+      background: #2D333B;
+    }
   }
 
   .card,
   .chartBox,
   .listBox,
   .miniCard {
-    background: #393939;
-    border: 1px solid rgb(83, 83, 83);
-    box-shadow: none;
+    background: #21262D;
+    border: 1px solid #3D434C;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
   .cardLabel,
@@ -35,7 +40,7 @@
   .listSub,
   .listEmpty,
   .miniLabel {
-    color: #f0f0f0;
+    color: #A8B0BA;
   }
 
   .cardValue,
@@ -43,49 +48,58 @@
   .listTitle,
   .miniValue,
   .brandTitle {
-    color: #ffffff;
+    color: #D1D5DB;
   }
 
   .brandMark,
   .brandTitle {
-    background: linear-gradient(80deg, rgba(217, 217, 217, 1) 20%, rgba(115, 115, 115, 1) 100%);
+    background: linear-gradient(80deg, #D1D5DB 20%, #8B929D 100%);
     background-clip: text;
+    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: none;
   }
 
   .cta {
-    border-color: rgb(83, 83, 83);
-    background: #393939;
+    border-color: #3D434C;
+    background: linear-gradient(135deg, rgba(33, 38, 45, 0.8), rgba(28, 33, 40, 0.8));
   }
 
   .ctaTitle {
-    color: #ffffff;
+    color: #D1D5DB;
   }
 
   .ctaText {
-    color: #bdbdbd;
+    color: #A8B0BA;
   }
 
   .badge {
-    background: rgba(83, 83, 83, 0.9);
-    color: #ffffff;
+    background: linear-gradient(80deg, #60A5FA 20%, #3B82F6 100%);
+    color: #F9FAFB;
+    box-shadow: 0 2px 8px rgba(96, 165, 250, 0.2);
   }
 
   .listItem {
-    background: #393939;
-    border-color: #606060;
+    background: #21262D;
+    border-color: #3D434C;
+
+    &:hover {
+      background: #2D333B;
+      border-color: #60A5FA;
+    }
   }
 
   .ctaButton {
-    background: linear-gradient(80deg, rgb(95, 94, 94) 20%, rgb(76, 76, 76) 100%);
-    color: #ffffff;
-    border: 1px solid rgb(83, 83, 83);
+    background: linear-gradient(80deg, #2D333B 20%, #21262D 100%);
+    color: #F9FAFB;
+    border: 1px solid #3D434C;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background: linear-gradient(80deg, rgb(110, 110, 110) 40%, rgb(72, 72, 72) 100%);
-      transform: scale(1.05);
-      transition: background 0.1s ease-in-out, transform 0.2s ease-in-out;
-      border-color: #bebebe;
+      background: linear-gradient(80deg, #363D47 40%, #252A32 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(96, 165, 250, 0.15);
+      border-color: #60A5FA;
     }
   }
 }
@@ -165,7 +179,7 @@
 }
 
 .dark .loading {
-  color: #bdbdbd;
+  color: #A8B0BA;
 }
 
 .summary {
@@ -276,7 +290,9 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ctaButton:hover {

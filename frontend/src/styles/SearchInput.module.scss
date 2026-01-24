@@ -24,14 +24,19 @@
         border-color: #3a82f6;
 
         &.dark {
-          border: 1px solid #989898;
+          border-color: #60A5FA;
+          box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.12);
         }
       }
 
       &.dark {
-        background-color: #333;
-        border-color: #333;
-        color: #989898;
+        background: #21262D;
+        border-color: #3D434C;
+        color: #D1D5DB;
+
+        &::placeholder {
+          color: #A8B0BA;
+        }
       }
     }
   }

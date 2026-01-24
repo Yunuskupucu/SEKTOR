@@ -12,7 +12,8 @@
   color: white;
 
   &.dark {
-    background: linear-gradient(to top, #040404, #3c3c3c);
+    background: linear-gradient(to top, #1C2128, #2D333B);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
   .logo {
@@ -47,14 +48,8 @@
   &.dark .logo {
     span,
     label {
-      background: linear-gradient(
-        80deg,
-        rgba(217, 217, 217, 1) 20%,
-        rgba(115, 115, 115, 1) 100%
-      );
-
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #D1D5DB;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -122,22 +117,25 @@
 
   &.dark .settingsContainer {
     .themeIcon {
-      color: lightgray;
+      color: #D1D5DB;
     }
 
     .settingsIcon {
-      color: lightgray;
+      color: #D1D5DB;
     }
 
     .dropdown {
-      background-color: #333;
-      color: white;
+      background: #21262D;
+      border: 1px solid #3D434C;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 
       .menuItem {
-        color: white;
+        color: #D1D5DB;
+        transition: all 0.2s ease;
 
         &:hover {
-          background-color: #4c4a4a;
+          background: #2D333B;
+          color: #60A5FA;
         }
       }
     }
