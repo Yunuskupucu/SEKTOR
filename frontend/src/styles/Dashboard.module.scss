@@ -12,17 +12,17 @@
 }
 
 .dark {
-  background: linear-gradient(135deg, #1C2128 0%, #161B22 50%, #21262D 100%);
-  color: #D1D5DB;
+  background: linear-gradient(135deg, #1c2128 0%, #161b22 50%, #21262d 100%);
+  color: #d1d5db;
 
   .iconButton {
-    border-color: #3D434C;
-    background: #21262D;
-    color: #D1D5DB;
+    border-color: #3d434c;
+    background: #21262d;
+    color: #d1d5db;
 
     &:hover {
-      border-color: #60A5FA;
-      background: #2D333B;
+      border-color: #60a5fa;
+      background: #2d333b;
     }
   }
 
@@ -30,8 +30,8 @@
   .chartBox,
   .listBox,
   .miniCard {
-    background: #21262D;
-    border: 1px solid #3D434C;
+    background: #21262d;
+    border: 1px solid #3d434c;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
@@ -40,7 +40,7 @@
   .listSub,
   .listEmpty,
   .miniLabel {
-    color: #A8B0BA;
+    color: #a8b0ba;
   }
 
   .cardValue,
@@ -48,12 +48,12 @@
   .listTitle,
   .miniValue,
   .brandTitle {
-    color: #D1D5DB;
+    color: #d1d5db;
   }
 
   .brandMark,
   .brandTitle {
-    background: linear-gradient(80deg, #D1D5DB 20%, #8B929D 100%);
+    background: linear-gradient(80deg, #d1d5db 20%, #8b929d 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -61,45 +61,45 @@
   }
 
   .cta {
-    border-color: #3D434C;
+    border-color: #3d434c;
     background: linear-gradient(135deg, rgba(33, 38, 45, 0.8), rgba(28, 33, 40, 0.8));
   }
 
   .ctaTitle {
-    color: #D1D5DB;
+    color: #d1d5db;
   }
 
   .ctaText {
-    color: #A8B0BA;
+    color: #a8b0ba;
   }
 
   .badge {
-    background: linear-gradient(80deg, #60A5FA 20%, #3B82F6 100%);
-    color: #F9FAFB;
+    background: linear-gradient(80deg, #60a5fa 20%, #3b82f6 100%);
+    color: #f9fafb;
     box-shadow: 0 2px 8px rgba(96, 165, 250, 0.2);
   }
 
   .listItem {
-    background: #21262D;
-    border-color: #3D434C;
+    background: #21262d;
+    border-color: #3d434c;
 
     &:hover {
-      background: #2D333B;
-      border-color: #60A5FA;
+      background: #2d333b;
+      border-color: #60a5fa;
     }
   }
 
   .ctaButton {
-    background: linear-gradient(80deg, #2D333B 20%, #21262D 100%);
-    color: #F9FAFB;
-    border: 1px solid #3D434C;
+    background: linear-gradient(80deg, #2d333b 20%, #21262d 100%);
+    color: #f9fafb;
+    border: 1px solid #3d434c;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background: linear-gradient(80deg, #363D47 40%, #252A32 100%);
+      background: linear-gradient(80deg, #363d47 40%, #252a32 100%);
       transform: translateY(-2px);
       box-shadow: 0 6px 18px rgba(96, 165, 250, 0.15);
-      border-color: #60A5FA;
+      border-color: #60a5fa;
     }
   }
 }
@@ -179,7 +179,7 @@
 }
 
 .dark .loading {
-  color: #A8B0BA;
+  color: #a8b0ba;
 }
 
 .summary {
@@ -307,11 +307,12 @@
 }
 
 .listBox {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(226, 232, 240, 0.08);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 14px;
   min-height: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
 }
 
 .list {
@@ -327,33 +328,44 @@
   align-items: center;
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(226, 232, 240, 0.08);
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
 }
 
 .listTitle {
   margin: 0;
-  color: #fff;
+  color: #0f172a;
   font-weight: 600;
 }
 
 .listSub {
   margin: 2px 0 0;
-  color: #cbd5e1;
+  color: #6b7280;
   font-size: 12px;
 }
 
 .listEmpty {
-  color: #cbd5e1;
+  color: #6b7280;
   margin: 12px 0 0;
 }
 
 .badge {
-  background: rgba(91, 141, 239, 0.12);
-  color: #0f172a;
+  background: linear-gradient(135deg, #5b8def, #a855f7);
+  color: #ffffff;
   border-radius: 10px;
-  padding: 6px 10px;
+  padding: 6px 0;
   font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(91, 141, 239, 0.2);
+  min-width: 100px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .miniCards {
