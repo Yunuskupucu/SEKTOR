@@ -21,8 +21,8 @@ import styles from '../styles/Dashboard.module.scss';
 import axiosInstance from '../lib/axios';
 import { useTheme } from '../context/useTheme';
 
-const PIE_COLORS = ['#5b8def', '#a855f7', '#22c55e', '#f97316', '#06b6d4'];
-const BAR_COLORS = ['#5b8def', '#a855f7', '#22c55e', '#f97316', '#e11d48'];
+const PIE_COLORS = ['#5b8def', '#38bdf8', '#22c55e', '#f97316', '#06b6d4'];
+const BAR_COLORS = ['#5b8def', '#38bdf8', '#22c55e', '#f97316', '#e11d48'];
 
 function Dashboard() {
   const navigate = useNavigate();
