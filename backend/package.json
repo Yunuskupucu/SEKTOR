@@ -25,6 +25,7 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.5",
     "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.3",
     "streamifier": "^0.1.1"
   }
 }

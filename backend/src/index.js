@@ -14,6 +14,7 @@ import channelRoutes from './routes/channel.routes.js';
 import jobRoutes from './routes/job.routes.js';
 import { connectDb } from './lib/db.js';
 import { handleSendMessage } from './lib/handleSendMessage.js';
+import { getAIResponse } from "./lib/ai.js";
 
 import passport from './lib/passport.js';
 dotenv.config();
@@ -24,9 +25,13 @@ const io = new Server(server, {
   cors: { origin: 'http://localhost:5173', credentials: true },
 });
 
+
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
+
 app.use(passport.initialize());
 app.get('/health', (_, res) => res.send('OK'));
 
@@ -45,19 +50,47 @@ app.use((req, res, next) => {
 // SOCKET.IO
 io.on('connection', (socket) => {
   console.log('🟢 Socket connected:', socket.id);
-
-  socket.on('joinChannel', (channel_id) => {
+  
+  socket.on("joinChannel", (channel_id) => {
     socket.join(channel_id);
-    console.log(`📡 Joined channel: ${channel_id}`);
   });
 
-  socket.on('sendMessage', async (data) => {
-    const { user_id, channel_id, content } = data;
+  socket.on("sendMessage", async (data) => {
+    const { user_id, channel_id, content, aiEnabled } = data;
+
     try {
-      const fullMessage = await handleSendMessage({ user_id, channel_id, content });
-      io.to(channel_id).emit('newMessage', fullMessage);
+      // 1️⃣ Normal mesaj → DB + kanala
+      const fullMessage = await handleSendMessage({
+        user_id,
+        channel_id,
+        content,
+      });
+
+      io.to(channel_id).emit("newMessage", fullMessage);
+
+      // 2️⃣ AI açıksa → SADECE bu socket’e cevap
+      if (aiEnabled === true) {
+        console.log("🤖 AI tetiklendi (private)");
+
+        const aiReply = await getAIResponse({
+          userMessage: content,
+          userId: user_id,
+          channelId: channel_id,
+        });
+
+        // 🔥 KRİTİK NOKTA
+        socket.emit("aiResponse", {
+          id: `ai-${Date.now()}`,
+          role: "assistant",
+          content: aiReply,
+          timestamp: new Date(),
+        });
+      }
     } catch (error) {
-      console.error('❌ Socket üzerinden mesaj gönderme hatası:', error);
+      console.error("❌ Socket sendMessage error:", error);
+      socket.emit("errorMessage", {
+        message: "Mesaj gönderilirken hata oluştu",
+      });
     }
   });
 
