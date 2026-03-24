@@ -38,6 +38,32 @@
     }
   }
 
+  &.ownMessage.removed {
+    .messageContainer.removedMessage {
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+      border: 1px solid #fda4af;
+      box-shadow: 0 2px 10px rgba(225, 29, 72, 0.14);
+      color: #881337;
+
+      .removedContent {
+        color: #881337;
+        font-weight: 600;
+      }
+
+      .warningIcon {
+        color: #e11d48;
+      }
+
+      .timestamp {
+        color: #9f1239;
+
+        .editedLabel {
+          color: #be123c;
+        }
+      }
+    }
+  }
+
   &.dark {
     .messageContainer {
       background: #21262d;
@@ -98,6 +124,31 @@
           }
         }
       }
+
+      &.removed {
+        .messageContainer.removedMessage {
+          background: linear-gradient(135deg, #3f1420 0%, #2a0d16 100%);
+          border: 1px solid #7f1d1d;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          color: #fecdd3;
+
+          .removedContent {
+            color: #fecdd3;
+          }
+
+          .warningIcon {
+            color: #fb7185;
+          }
+
+          .timestamp {
+            color: rgba(254, 205, 211, 0.9);
+
+            .editedLabel {
+              color: rgba(251, 113, 133, 0.95);
+            }
+          }
+        }
+      }
     }
 
     .sender {
@@ -126,8 +177,8 @@
   word-break: break-word;
 
   &.removedMessage {
-    background-color: #1a1a1a;
-    border: 1px solid #3a3a3a;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 1px solid #fdba74;
   }
 }
 
@@ -154,15 +205,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ef4444;
+  color: #9a3412;
   font-size: 14px;
   line-height: 1.5;
-  font-style: italic;
+  font-style: normal;
+  font-weight: 500;
 }
 
 .warningIcon {
   font-size: 18px;
-  color: #ef4444;
+  color: #ea580c;
   flex-shrink: 0;
 }
 
@@ -323,6 +375,16 @@
 }
 
 .messageWrapper.removed {
+  .removedContent {
+    color: #9a3412;
+  }
+
+  .warningIcon {
+    color: #ea580c;
+  }
+}
+
+.messageWrapper.dark.removed {
   .removedContent {
     color: #ef4444;
   }
