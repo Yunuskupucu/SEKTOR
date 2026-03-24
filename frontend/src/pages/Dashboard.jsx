@@ -66,9 +66,12 @@ function Dashboard() {
       { label: 'Toplam Kanal', value: globalStats?.totalChannels ?? 0 },
       { label: 'İş İlanı (aktif)', value: globalStats?.activeJobPosts ?? 0 },
       { label: 'Toplam İş İlanı', value: globalStats?.totalJobPosts ?? 0 },
-      { label: 'Son 7 günde aktif kanal', value: globalStats?.activeChannelsLast7Days ?? 0 },
+      {
+        label: 'Son 7 günde AI Tarafından Engellenen Mesaj Sayısı',
+        value: messageStats?.removedMessagesLast7Days ?? 0,
+      },
     ],
-    [globalStats]
+    [globalStats, messageStats]
   );
 
   const messageWindowData = useMemo(
@@ -222,7 +225,6 @@ function Dashboard() {
             <div className={styles.chartBox}>
               <div className={styles.chartHeader}>
                 <h3>Genel Görünüm</h3>
-                <p>Kullanıcı, kanal ve ilan dağılımı</p>
               </div>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
