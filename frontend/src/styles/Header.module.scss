@@ -48,8 +48,19 @@
   &.dark .logo {
     span,
     label {
-      color: #d1d5db;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(80deg, rgba(217, 217, 217, 1) 20%, rgba(115, 115, 115, 1) 100%);
+
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  &:not(.dark) .logo {
+    span,
+    label {
+      background: linear-gradient(80deg, #f8fbff 15%, #d8ebff 45%, #b9dbff 100%);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   }
 
