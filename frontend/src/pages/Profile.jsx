@@ -157,9 +157,11 @@ const Profile = () => {
               />
 
               <button
-                className={`${styles.updateButton} ${themeClass}`}
+                className={`${styles.updateButton} ${themeClass} ${loading ? styles.loading : ''}`}
                 onClick={handleProfileUpdate}
                 disabled={loading}
+                aria-busy={loading}
+                type="button"
               >
                 {loading ? 'Güncelleniyor...' : 'Güncelle'}
               </button>
