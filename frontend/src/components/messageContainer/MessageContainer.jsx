@@ -146,32 +146,32 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
 
     socket.emit('joinChannel', selectedChannel.id);
 
-    // Yeni mesaj (aynı kanaldaysa ve yoksa ekle)
-    const onNewMessage = (message) => {
-      if (message.channel_id !== selectedChannel.id) return;
-      setMessages((prev) => {
-        if (prev.some((m) => m.id === message.id)) return prev;
-        return mergeUniqueById([...prev, message]);
-      });
-    };
+const onNewMessage = (message) => {
+  // Number() ile normalize et
+  if (Number(message.channel_id) !== Number(selectedChannel.id)) return;
+  setMessages((prev) => {
+    if (prev.some((m) => m.id === message.id)) return prev;
+    return mergeUniqueById([...prev, message]);
+  });
+};
 
-    // Mesaj güncellendiğinde (düzenleme veya ek silme)
-    const onMessageUpdated = (updatedMessage) => {
-      if (updatedMessage.channel_id !== selectedChannel.id) return;
-      setMessages((prev) => {
-        return prev.map((m) => (m.id === updatedMessage.id ? updatedMessage : m));
-      });
-    };
+const onMessageUpdated = (updatedMessage) => {
+  if (Number(updatedMessage.channel_id) !== Number(selectedChannel.id)) return;
+  setMessages((prev) =>
+    prev.map((m) => (m.id === updatedMessage.id ? updatedMessage : m))
+  );
+};
 
-    // Mesaj silindiğinde
-    const onMessageDeleted = (deletedData) => {
-      if (deletedData.channel_id !== selectedChannel.id) return;
-      setMessages((prev) => {
-        return prev.map((m) =>
-          m.id === deletedData.id ? { ...m, status: 'removed', content: 'Mesaj kaldırıldı.' } : m
-        );
-      });
-    };
+const onMessageDeleted = (deletedData) => {
+  if (Number(deletedData.channel_id) !== Number(selectedChannel.id)) return;
+  setMessages((prev) =>
+    prev.map((m) =>
+      m.id === deletedData.id
+        ? { ...m, status: 'removed', content: 'Mesaj kaldırıldı.' }
+        : m
+    )
+  );
+};
 
     socket.on('newMessage', onNewMessage);
     socket.on('messageUpdated', onMessageUpdated);

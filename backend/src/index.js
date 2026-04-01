@@ -14,7 +14,7 @@ import channelRoutes from './routes/channel.routes.js';
 import jobRoutes from './routes/job.routes.js';
 import { connectDb } from './lib/db.js';
 import { handleSendMessage } from './lib/handleSendMessage.js';
-
+import { handleAiReply } from './lib/handleAiReply.js';
 import passport from './lib/passport.js';
 dotenv.config();
 
@@ -47,17 +47,47 @@ io.on('connection', (socket) => {
   console.log('🟢 Socket connected:', socket.id);
 
   socket.on('joinChannel', (channel_id) => {
-    socket.join(channel_id);
-    console.log(`📡 Joined channel: ${channel_id}`);
+    const room = String(channel_id);
+    socket.join(room);
+    console.log(`📡 Joined channel: ${room}`);
+  });
+
+  socket.on('leaveChannel', (channel_id) => {
+    const room = String(channel_id);
+    socket.leave(room);
+    console.log(`📴 Left channel: ${room}`);
   });
 
   socket.on('sendMessage', async (data) => {
     const { user_id, channel_id, content } = data;
+
     try {
+      const room = String(channel_id);
+
       const fullMessage = await handleSendMessage({ user_id, channel_id, content });
-      io.to(channel_id).emit('newMessage', fullMessage);
+
+      io.to(room).emit('newMessage', fullMessage);
+
+      console.log('✅ handleSendMessage tamamlandı, status:', fullMessage.status);
+      console.log('🔍 @ai var mı:', /@ai\b/i.test(content));
+
+      if (/@ai\b/i.test(content) && fullMessage.status !== 'removed') {
+        console.log('🤖 handleAiReply başlıyor...');
+        try {
+          await handleAiReply({
+            channel_id,
+            question: content,
+            io,
+            req: null,
+            historySize: 10,
+          });
+          console.log('✅ handleAiReply tamamlandı');
+        } catch (aiErr) {
+          console.error('❌ handleAiReply içi hata:', aiErr.message, aiErr.stack);
+        }
+      }
     } catch (error) {
-      console.error('❌ Socket üzerinden mesaj gönderme hatası:', error);
+      console.error('❌ Socket mesaj hatası:', error.message, error.stack);
     }
   });
 

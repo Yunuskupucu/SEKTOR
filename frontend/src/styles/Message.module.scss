@@ -503,6 +503,16 @@
   }
 }
 
+.aiBubble {
+  background: linear-gradient(135deg, #e6edf5, #d6e2ee);
+  color: #243746;
+  border: 1px solid #c3d1df;
+}
+
+.aiMessage .messageContainer {
+  border-left: 3px solid #7b97b6;
+}
+
 //--------------------------------------------
 // .messageWrapper {
 //   display: flex;

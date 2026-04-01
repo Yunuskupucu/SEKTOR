@@ -6,6 +6,7 @@ import { validationResult } from "express-validator";
 import { handleSendMessage } from "../lib/handleSendMessage.js";
 import { uploadBufferToCloudinary } from "../lib/uploadToCloudinary.js";
 import streamifier from "streamifier";
+import { handleAiReply } from '../lib/handleAiReply.js'
 
 const withAttachmentUrl = (req, msg) => {
   const j = typeof msg.toJSON === "function" ? msg.toJSON() : msg;
@@ -136,28 +137,44 @@ export const sendMessage = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { channel_id, content } = req.body;
+  const { channel_id, content } = req.body;s
   const user_id = req.user?.id || req.body.user_id;
 
   try {
     const user = await User.findByPk(user_id);
     const channel = await Channel.findByPk(channel_id);
     if (!user || !channel) {
-      return res.status(404).json({ message: "User or Channel not found" });
+      return res.status(404).json({ message: 'User or Channel not found' });
     }
 
+    // ── Kullanıcı mesajını kaydet (moderasyonlu) ────────────────────────
     const fullMessage = await handleSendMessage({ user_id, channel_id, content });
     const payload = withAttachmentUrl(req, fullMessage);
 
-    const io = req.app.get("io");
-    io.to(channel_id).emit("newMessage", payload);
+    const io = req.app.get('io');
+    io.to(channel_id).emit('newMessage', payload);
 
     res.status(201).json(payload);
+
+    // ── @ai tetikleyici (response gönderdikten SONRA, fire-and-forget) ──
+    const AI_TRIGGER = /@ai\b/i;
+    if (AI_TRIGGER.test(content) && fullMessage.status !== 'removed') {
+      // await beklemiyoruz: kullanıcıya anında 201 dönmüş oldu,
+      // AI yanıtı hazır olunca socket üzerinden gelecek.
+      handleAiReply({
+        channel_id,
+        question: content,
+        io,
+        req,
+        historySize: 10,
+      }).catch((err) => console.error('❌ handleAiReply hata:', err));
+    }
   } catch (error) {
-    console.error("❌ sendMessage hata:", error);
-    res.status(500).json({ message: "Error sending message", error: error.message });
+    console.error('❌ sendMessage hata:', error);
+    res.status(500).json({ message: 'Error sending message', error: error.message });
   }
 };
+
 
 export const sendMessageWithAttachment = async (req, res) => {
   const { channel_id, content } = req.body;

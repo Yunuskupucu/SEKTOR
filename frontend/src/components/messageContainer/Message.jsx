@@ -8,6 +8,8 @@ import axiosInstance from '../../lib/axios';
 
 const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
   const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
+  const isAiBot = message.User?.email === 'ai-bot@sektor.internal' || 
+                message.User?.fullname === 'Sektör AI';
   const { theme } = useTheme();
   const themeClass = theme === 'dark' ? styles.dark : '';
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -66,9 +68,9 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
 
   return (
     <div
-      className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${themeClass}`}
+      className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${isAiBot ? styles.aiMessage : ''} ${themeClass}`}
     >
-      <div className={`${styles.messageContainer} ${isRemoved ? styles.removedMessage : ''}`}>
+      <div className={`${styles.messageContainer} ${isRemoved ? styles.removedMessage : ''} ${isAiBot ? styles.aiBubble : ''}`}>
         {isOwnMessage && !isRemoved && (
           <div className={styles.messageActions} ref={menuRef}>
             <button
@@ -95,19 +97,23 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
           </div>
         )}
 
-        {!isRemoved && (
-          <button
-            className={styles.sender}
-            onClick={() => {
-              if (!isOwnMessage && (message.User?.id || message.user_id)) {
-                setShowProfileModal(true);
-              }
-            }}
-          >
-            {!isOwnMessage && (message.User?.fullname || message.User?.username)}
-          </button>
-        )}
-
+       {!isRemoved && (
+  <button
+    className={styles.sender}
+    onClick={() => {
+      if (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) {
+        setShowProfileModal(true);
+      }
+    }}
+  >
+    {!isOwnMessage && (
+      <>
+        {isAiBot && <span style={{ marginRight: 4 }}>🤖</span>}
+        {message.User?.fullname || message.User?.username}
+      </>
+    )}
+  </button>
+)}
         {isRemoved ? (
           <div className={styles.removedContent}>
             <IoWarning className={styles.warningIcon} />
