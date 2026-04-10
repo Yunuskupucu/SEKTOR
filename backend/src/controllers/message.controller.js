@@ -137,7 +137,7 @@ export const sendMessage = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { channel_id, content } = req.body;s
+  const { channel_id, content } = req.body;
   const user_id = req.user?.id || req.body.user_id;
 
   try {
