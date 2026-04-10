@@ -85,7 +85,7 @@ export const getMessagesByChannel = async (req, res) => {
     console.time(`[${rid}] Message.findAll`);
     const rows = await Message.findAll({
       where,
-      include: [{ model: User, attributes: ["id", "fullname"] }],
+      include: [{ model: User, attributes: ["id", "fullname","profile_picture_url"] }],
       order: [
         ["timestamp", "DESC"], 
         ["id", "DESC"],        
@@ -211,7 +211,7 @@ export const sendMessageWithAttachment = async (req, res) => {
     });
 
     const fullMessage = await Message.findByPk(newMessage.id, {
-      include: [{ model: User, attributes: ["id", "fullname"] }],
+      include: [{ model: User, attributes: ["id", "fullname","profile_picture_url"] }],
     });
 
     const payload = withAttachmentUrl(req, fullMessage);
@@ -253,7 +253,7 @@ export const editMessage = async (req, res) => {
     });
 
     const fullMessage = await Message.findByPk(msg.id, {
-      include: [{ model: User, attributes: ["id", "fullname"] }],
+      include: [{ model: User, attributes: ["id", "fullname","profile_picture_url"] }],
     });
 
     const payload = withAttachmentUrl(req, fullMessage);
