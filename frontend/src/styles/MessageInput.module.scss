@@ -3,8 +3,8 @@
   padding: 12px 24px;
 
   &.dark {
-    background: linear-gradient(180deg, #21262D 0%, #1C2128 100%);
-    border-top: 1px solid #3D434C;
+    background: linear-gradient(180deg, #21262d 0%, #1c2128 100%);
+    border-top: 1px solid #3d434c;
   }
 }
 
@@ -23,34 +23,136 @@
   }
 
   .container.dark & {
-    background: #21262D;
-    border-color: #3D434C;
+    background: #21262d;
+    border-color: #3d434c;
 
     &:focus-within {
-      border-color: #60A5FA;
+      border-color: #60a5fa;
       box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.12);
     }
   }
 }
 
-.input {
+.inputField {
+  position: relative;
   flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  font-family: inherit;
+}
+
+.inputField:has(.input:disabled) .inputMirror {
+  opacity: 0.55;
+}
+
+.inputMirror {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: inherit;
+  pointer-events: none;
+  user-select: none;
+  white-space: pre;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.mirrorLine {
+  display: inline;
+  font-family: inherit;
+}
+
+/* Etiket görünümü: genişliği metinle aynı tutmak için padding yerine ::before ile bg */
+.aiTrigger {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-size: inherit;
+  color: #0369a1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1.68em;
+    border-radius: 999px;
+    background: linear-gradient(145deg, #e0f2fe 0%, #dbeafe 55%, #cffafe 100%);
+    border: 1px solid rgba(14, 165, 233, 0.42);
+    box-shadow:
+      0 1px 2px rgba(14, 116, 144, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    z-index: -1;
+  }
+
+  .container.dark & {
+    color: #7dd3fc;
+
+    &::before {
+      background: linear-gradient(
+        145deg,
+        rgba(56, 189, 248, 0.22) 0%,
+        rgba(59, 130, 246, 0.2) 50%,
+        rgba(34, 211, 238, 0.14) 100%
+      );
+      border-color: rgba(125, 211, 252, 0.38);
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+  }
+}
+
+.mirrorRest {
+  color: #1e293b;
+
+  .container.dark & {
+    color: #d1d5db;
+  }
+}
+
+.input {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
   border: none;
   background: transparent;
   padding: 8px;
   font-size: 16px;
-  color: #1e293b;
+  line-height: 1.5;
+  font-family: inherit;
+  color: transparent;
+  caret-color: #1e293b;
   outline: none;
 
   &::placeholder {
     color: #383838;
   }
-  
+
+  &::selection {
+    background: rgba(33, 147, 176, 0.25);
+  }
+
   .container.dark & {
-    color: #D1D5DB;
+    caret-color: #d1d5db;
 
     &::placeholder {
-      color: #A8B0BA;
+      color: #a8b0ba;
+    }
+
+    &::selection {
+      background: rgba(96, 165, 250, 0.28);
     }
   }
 }
@@ -83,7 +185,7 @@
 }
 
 .container.dark .attachmentButton {
-  color: #60A5FA;
+  color: #60a5fa;
 
   &:hover {
     background: rgba(96, 165, 250, 0.1);
@@ -113,7 +215,7 @@
 }
 
 .container.dark .sendButton {
-  color: #60A5FA;
+  color: #60a5fa;
 
   &:hover {
     background: rgba(96, 165, 250, 0.1);
@@ -150,7 +252,7 @@
 
   .container.dark & {
     background: rgba(96, 165, 250, 0.15);
-    border-color: #60A5FA;
+    border-color: #60a5fa;
     color: #93c5fd;
   }
 }

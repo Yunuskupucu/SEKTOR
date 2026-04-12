@@ -9,6 +9,37 @@ import { useAuthStore } from '../../store/useAuthStore';
 import socket from '../../lib/socket';
 import axiosInstance from '../../lib/axios';
 
+const AI_TRIGGER = '@ai';
+
+/**
+ * Metni ayna katmanı için parçalar: herhangi bir yerde @ ile başlayan @ / @a / @ai önekleri
+ * (tam @ai dahil) ayrı segment; geri kalan düz metin.
+ */
+function segmentMessageForAiMirror(text) {
+  const segments = [];
+  let i = 0;
+  while (i < text.length) {
+    if (text[i] === '@') {
+      let plen = 0;
+      while (
+        plen < AI_TRIGGER.length &&
+        i + plen < text.length &&
+        text[i + plen] === AI_TRIGGER[plen]
+      ) {
+        plen += 1;
+      }
+      segments.push({ kind: 'trigger', value: text.slice(i, i + plen) });
+      i += plen;
+    } else {
+      const nextAt = text.indexOf('@', i);
+      const end = nextAt === -1 ? text.length : nextAt;
+      segments.push({ kind: 'plain', value: text.slice(i, end) });
+      i = end;
+    }
+  }
+  return segments;
+}
+
 const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, onEditCancel, onEditComplete }) => {
   const [message, setMessage] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
@@ -135,6 +166,7 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
   };
 
   const themeClass = theme === 'dark' ? styles.dark : '';
+  const mirrorSegments = message ? segmentMessageForAiMirror(message) : [];
 
   return (
     <div className={`${styles.container} ${themeClass}`}>
@@ -152,16 +184,37 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
         </div>
       )}
       <form onSubmit={handleSubmit} className={styles.inputWrapper}>
-        <input
-          ref={inputRef}
-          type="text"
-          className={styles.input}
-          placeholder={editingMessage ? 'Mesajınızı düzenleyin...' : 'Mesajınızı yazın...'}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={isUpdating}
-        />
+        <div className={styles.inputField}>
+          <div className={styles.inputMirror} aria-hidden="true">
+            {mirrorSegments.length > 0 ? (
+              <span className={styles.mirrorLine}>
+                {mirrorSegments.map((seg, idx) =>
+                  seg.kind === 'trigger' ? (
+                    <span key={idx} className={styles.aiTrigger}>
+                      {seg.value}
+                    </span>
+                  ) : (
+                    <span key={idx} className={styles.mirrorRest}>
+                      {seg.value}
+                    </span>
+                  )
+                )}
+              </span>
+            ) : null}
+          </div>
+          <input
+            ref={inputRef}
+            type="text"
+            className={styles.input}
+            placeholder={editingMessage ? 'Mesajınızı düzenleyin...' : 'Mesajınızı yazın...'}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={isUpdating}
+            spellCheck={false}
+            autoComplete="off"
+          />
+        </div>
 
         <div className={styles.buttonGroup}>
           {!editingMessage && (
