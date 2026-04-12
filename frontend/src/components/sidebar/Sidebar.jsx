@@ -8,7 +8,7 @@ import PythonPng from '../../assets/channels/python.png';
 import JavaPng from '../../assets/channels/java.png';
 import HomePng from '../../assets/channels/home.png';
 import SwiftPng from '../../assets/channels/swift.png';
-import SqlPng from '../../assets/channels/sql.png';
+import SqlPng from '../../assets/channels/database.svg';
 import CppPng from '../../assets/channels/cpp.png';
 import CsPng from '../../assets/channels/cs.png';
 import CodePng from '../../assets/channels/code.png';
