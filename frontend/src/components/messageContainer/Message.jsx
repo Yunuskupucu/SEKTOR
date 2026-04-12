@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import styles from '../../styles/Message.module.scss';
 import { useTheme } from '../../context/useTheme';
 import UserProfileModal from './UserProfileModal';
+import ConfirmModal from '../common/ConfirmModal';
 import { IoWarning } from 'react-icons/io5';
 import axiosInstance from '../../lib/axios';
 import robotAvatar from '../../assets/ai-avatar.png';
@@ -20,6 +21,9 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
   const menuRef = useRef(null);
 
   const isImageUrl = (url) => /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
@@ -47,12 +51,21 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
     setShowMenu(false);
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm('Bu mesajı silmek istediğinize emin misiniz?')) {
-      setShowMenu(false);
-      return;
-    }
+  const openDeleteModal = () => {
+    setShowMenu(false);
+    setDeleteError('');
+    setShowDeleteModal(true);
+  };
 
+  const closeDeleteModal = () => {
+    if (deleteLoading) return;
+    setShowDeleteModal(false);
+    setDeleteError('');
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleteError('');
+    setDeleteLoading(true);
     try {
       const response = await axiosInstance.delete(`/messages/${message.id}`);
 
@@ -60,12 +73,13 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
         if (onMessageDelete) {
           onMessageDelete(message.id);
         }
+        setShowDeleteModal(false);
       }
     } catch (error) {
       console.error('❌ Mesaj silinirken hata:', error);
-      alert(error.response?.data?.message || 'Mesaj silinirken bir hata oluştu');
+      setDeleteError(error.response?.data?.message || 'Mesaj silinirken bir hata oluştu');
     } finally {
-      setShowMenu(false);
+      setDeleteLoading(false);
     }
   };
 
@@ -143,7 +157,7 @@ const handleProfileClick = () => {
                   </button>
                   <button
                     className={`${styles.menuItem} ${styles.deleteItem}`}
-                    onClick={handleDelete}
+                    onClick={openDeleteModal}
                     type="button"
                   >
                     Sil
@@ -216,6 +230,18 @@ const handleProfileClick = () => {
           onClose={() => setShowProfileModal(false)}
         />
       )}
+
+      <ConfirmModal
+        open={showDeleteModal}
+        title="Mesajı sil"
+        description="Bu mesajı silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+        confirmLabel={deleteLoading ? 'Siliniyor...' : 'Sil'}
+        cancelLabel="Vazgeç"
+        onConfirm={handleConfirmDelete}
+        onCancel={closeDeleteModal}
+        confirmDisabled={deleteLoading}
+        error={deleteError}
+      />
     </div>
   );
 };
