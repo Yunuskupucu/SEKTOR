@@ -5,7 +5,7 @@ import { useTheme } from '../../context/useTheme';
 import UserProfileModal from './UserProfileModal';
 import { IoWarning } from 'react-icons/io5';
 import axiosInstance from '../../lib/axios';
-import robotAvatar from '../../assets/robot-avatar.png';
+import robotAvatar from '../../assets/ai-avatar.png';
 
 const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
   const isOwnMessage =
@@ -81,116 +81,132 @@ const userAvatar = isOwnMessage
 
 const avatarSrc = isAiBot ? robotAvatar : userAvatar;
 
+const handleProfileClick = () => {
+  if (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) {
+    setShowProfileModal(true);
+  }
+};
+
   return (
     <div
       className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${isAiBot ? styles.aiMessage : ''} ${themeClass}`}
     >
-      <div
-        className={`${styles.messageContainer} ${isRemoved ? styles.removedMessage : ''} ${isAiBot ? styles.aiBubble : ''}`}
-      >
-        {isOwnMessage && !isRemoved && (
-          <div className={styles.messageActions} ref={menuRef}>
-            <button
-              className={styles.menuButton}
-              onClick={() => setShowMenu(!showMenu)}
-              aria-label="Mesaj seçenekleri"
-              type="button"
-            >
-              <span className={styles.menuIcon}>⋯</span>
-            </button>
+      <div className={styles.messageBody}>
+        <div 
+          className={styles.avatar}
+          onClick={handleProfileClick}
+          style={{ cursor: (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) ? 'pointer' : 'default' }}
+          role={(!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) ? 'button' : undefined}
+          tabIndex={(!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) ? 0 : undefined}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleProfileClick();
+            }
+          }}
+        >
+          {avatarSrc ? (
+            <img
+              src={avatarSrc}
+              alt={isAiBot ? 'AI Bot' : senderName}
+              className={styles.avatarImage}
+            />
+          ) : (
+            <div className={styles.avatarFallback}>
+              {senderName.charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
 
-            {showMenu && (
-              <div className={`${styles.menu} ${themeClass}`}>
-                <button
-                  className={styles.menuItem}
-                  onClick={handleEdit}
-                  type="button"
-                >
-                  Düzenle
-                </button>
-                <button
-                  className={`${styles.menuItem} ${styles.deleteItem}`}
-                  onClick={handleDelete}
-                  type="button"
-                >
-                  Sil
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        <div
+          className={`${styles.messageContainer} ${isRemoved ? styles.removedMessage : ''} ${isAiBot ? styles.aiBubble : ''}`}
+        >
+          {isOwnMessage && !isRemoved && (
+            <div className={styles.messageActions} ref={menuRef}>
+              <button
+                className={styles.menuButton}
+                onClick={() => setShowMenu(!showMenu)}
+                aria-label="Mesaj seçenekleri"
+                type="button"
+              >
+                <span className={styles.menuIcon}>⋯</span>
+              </button>
 
-        {!isRemoved && (
-          <div className={styles.messageHeader}>
-            <div className={styles.avatar}>
-              {avatarSrc ? (
-                <img
-                  src={avatarSrc}
-                  alt={isAiBot ? 'AI Bot' : senderName}
-                  className={styles.avatarImage}
-                />
-              ) : (
-                <div className={styles.avatarFallback}>
-                  {senderName.charAt(0).toUpperCase()}
+              {showMenu && (
+                <div className={`${styles.menu} ${themeClass}`}>
+                  <button
+                    className={styles.menuItem}
+                    onClick={handleEdit}
+                    type="button"
+                  >
+                    Düzenle
+                  </button>
+                  <button
+                    className={`${styles.menuItem} ${styles.deleteItem}`}
+                    onClick={handleDelete}
+                    type="button"
+                  >
+                    Sil
+                  </button>
                 </div>
               )}
             </div>
-
-            <button
-              className={styles.sender}
-              onClick={() => {
-                if (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) {
-                  setShowProfileModal(true);
-                }
-              }}
-              type="button"
-            >
-              {senderName}
-            </button>
-          </div>
-        )}
-
-        {isRemoved ? (
-          <div className={styles.removedContent}>
-            <IoWarning className={styles.warningIcon} />
-            <span>Bu mesaj uygunsuz içerik nedeniyle engellendi.</span>
-          </div>
-        ) : (
-          <div className={styles.content}>{message.content}</div>
-        )}
-
-        {!isRemoved && message.attachment_url && (
-          <div className={styles.attachment}>
-            {isImageUrl(message.attachment_url) ? (
-              <img
-                src={message.attachment_url}
-                alt="ek"
-                style={{ maxWidth: '200px', borderRadius: '8px' }}
-                onError={(e) => {
-                  console.error('IMG LOAD ERROR:', e.currentTarget.src);
-                }}
-              />
-            ) : (
-              <a
-                href={message.attachment_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.fileLink}
-              >
-                📎 Dosya indir
-              </a>
-            )}
-          </div>
-        )}
-
-        <div className={styles.timestamp}>
-          {message.edited_at && (
-            <span className={styles.editedLabel}>Düzenlendi</span>
           )}
-          {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
+
+          {!isRemoved && (
+            <div className={styles.messageHeader}>
+              <button
+                className={styles.sender}
+                onClick={handleProfileClick}
+                type="button"
+              >
+                {senderName}
+              </button>
+            </div>
+          )}
+
+          {isRemoved ? (
+            <div className={styles.removedContent}>
+              <IoWarning className={styles.warningIcon} />
+              <span>Bu mesaj uygunsuz içerik nedeniyle engellendi.</span>
+            </div>
+          ) : (
+            <div className={styles.content}>{message.content}</div>
+          )}
+
+          {!isRemoved && message.attachment_url && (
+            <div className={styles.attachment}>
+              {isImageUrl(message.attachment_url) ? (
+                <img
+                  src={message.attachment_url}
+                  alt="ek"
+                  style={{ maxWidth: '200px', borderRadius: '8px' }}
+                  onError={(e) => {
+                    console.error('IMG LOAD ERROR:', e.currentTarget.src);
+                  }}
+                />
+              ) : (
+                <a
+                  href={message.attachment_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.fileLink}
+                >
+                  📎 Dosya indir
+                </a>
+              )}
+            </div>
+          )}
+
+          <div className={styles.timestamp}>
+            {message.edited_at && (
+              <span className={styles.editedLabel}>Düzenlendi</span>
+            )}
+            {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </div>
         </div>
       </div>
 
