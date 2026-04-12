@@ -18,6 +18,7 @@ export const handleSendMessage = async ({ user_id, channel_id, content }) => {
     channel_id,
     content: moderatedContent,
     status: isRemoved ? "removed" : "active",
+    removal_reason: isRemoved ? "moderation" : null,
   });
 
   const fullMessage = await Message.findByPk(newMessage.id, {

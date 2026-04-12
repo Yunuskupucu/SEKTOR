@@ -302,17 +302,19 @@ export const deleteMessageOrAttachment = async (req, res) => {
       return res.status(200).json({ success: true, data: payload });
     }
 
-    // 2) soft delete
+    // 2) soft delete (kullanıcı kendi mesajını sildi)
     await msg.update({
       status: "removed",
       content: "Mesaj kaldırıldı.",
       attachment: null,
+      removal_reason: "user",
     });
 
     const io = req.app.get("io");
     io.to(String(msg.channel_id)).emit("messageDeleted", {
       id: msg.id,
       channel_id: msg.channel_id,
+      removal_reason: "user",
     });
 
     return res.status(200).json({ success: true });

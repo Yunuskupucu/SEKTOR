@@ -55,6 +55,15 @@ const Message = sequelize.define(
       },
     },
 
+    /** status === 'removed' iken: moderasyon mu, kullanıcı silmesi mi */
+    removal_reason: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isIn: [["moderation", "user"]],
+      },
+    },
+
     type: {
       type: DataTypes.ENUM("text", "job_post", "system"),
       allowNull: false,

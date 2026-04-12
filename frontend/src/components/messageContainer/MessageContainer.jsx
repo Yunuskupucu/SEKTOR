@@ -167,7 +167,12 @@ const onMessageDeleted = (deletedData) => {
   setMessages((prev) =>
     prev.map((m) =>
       m.id === deletedData.id
-        ? { ...m, status: 'removed', content: 'Mesaj kaldırıldı.' }
+        ? {
+            ...m,
+            status: 'removed',
+            content: 'Mesaj kaldırıldı.',
+            removal_reason: deletedData.removal_reason || 'user',
+          }
         : m
     )
   );
@@ -245,7 +250,12 @@ const onMessageDeleted = (deletedData) => {
                             setMessages((prev) =>
                               prev.map((m) =>
                                 m.id === messageId
-                                  ? { ...m, status: 'removed', content: 'Mesaj kaldırıldı.' }
+                                  ? {
+                                      ...m,
+                                      status: 'removed',
+                                      content: 'Mesaj kaldırıldı.',
+                                      removal_reason: 'user',
+                                    }
                                   : m
                               )
                             );

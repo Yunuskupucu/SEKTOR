@@ -42,7 +42,7 @@
     }
   }
 
-  &.ownMessage.removed {
+  &.ownMessage.removed:not(.removedByUser) {
     .messageContainer.removedMessage {
       background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
       border: 1px solid #fda4af;
@@ -64,6 +64,59 @@
         .editedLabel {
           color: #be123c;
         }
+      }
+    }
+  }
+
+  &.ownMessage.removed.removedByUser {
+    .messageContainer.removedMessage {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+      color: #334155;
+
+      .removedContent {
+        color: #334155;
+        font-weight: 600;
+      }
+
+      .removedUserIcon {
+        color: #64748b;
+      }
+
+      .removedNeutralIcon {
+        color: #64748b;
+      }
+
+      .timestamp {
+        color: #475569;
+
+        .editedLabel {
+          color: #64748b;
+        }
+      }
+    }
+  }
+
+  &.removedByUser:not(.ownMessage) {
+    .messageContainer.removedMessage {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      color: #334155;
+
+      .removedContent {
+        color: #334155;
+        font-weight: 500;
+      }
+
+      .removedUserIcon,
+      .removedNeutralIcon {
+        color: #64748b;
+      }
+
+      .timestamp {
+        color: #64748b;
       }
     }
   }
@@ -129,7 +182,7 @@
         }
       }
 
-      &.removed {
+      &.removed:not(.removedByUser) {
         .messageContainer.removedMessage {
           background: linear-gradient(135deg, #3f1420 0%, #2a0d16 100%);
           border: 1px solid #7f1d1d;
@@ -153,6 +206,32 @@
           }
         }
       }
+
+      &.removed.removedByUser {
+        .messageContainer.removedMessage {
+          background: linear-gradient(135deg, #2a3444 0%, #1e293b 100%);
+          border: 1px solid #475569;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+          color: #cbd5e1;
+
+          .removedContent {
+            color: #e2e8f0;
+          }
+
+          .removedUserIcon,
+          .removedNeutralIcon {
+            color: #94a3b8;
+          }
+
+          .timestamp {
+            color: rgba(203, 213, 225, 0.9);
+
+            .editedLabel {
+              color: rgba(148, 163, 184, 0.95);
+            }
+          }
+        }
+      }
     }
 
     .sender {
@@ -165,6 +244,28 @@
 
       &:hover {
         color: #60a5fa;
+      }
+    }
+
+    &.removedByUser:not(.ownMessage) {
+      .messageContainer.removedMessage {
+        background: linear-gradient(135deg, #252b36 0%, #1a1f28 100%);
+        border: 1px solid #3d434c;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        color: #cbd5e1;
+
+        .removedContent {
+          color: #e2e8f0;
+        }
+
+        .removedUserIcon,
+        .removedNeutralIcon {
+          color: #94a3b8;
+        }
+
+        .timestamp {
+          color: #a8b0ba;
+        }
       }
     }
   }
@@ -226,6 +327,18 @@
 .warningIcon {
   font-size: 18px;
   color: #ea580c;
+  flex-shrink: 0;
+}
+
+.removedUserIcon {
+  font-size: 18px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.removedNeutralIcon {
+  font-size: 18px;
+  color: #94a3b8;
   flex-shrink: 0;
 }
 
@@ -374,7 +487,7 @@
     }
   }
 
-  &.removed {
+  &.removed:not(.removedByUser) {
     .removedContent {
       color: #ef4444;
     }
@@ -385,7 +498,7 @@
   }
 }
 
-.messageWrapper.removed {
+.messageWrapper.removed:not(.removedByUser) {
   .removedContent {
     color: #9a3412;
   }
@@ -395,7 +508,7 @@
   }
 }
 
-.messageWrapper.dark.removed {
+.messageWrapper.dark.removed:not(.removedByUser) {
   .removedContent {
     color: #ef4444;
   }

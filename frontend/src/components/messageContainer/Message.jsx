@@ -4,7 +4,7 @@ import styles from '../../styles/Message.module.scss';
 import { useTheme } from '../../context/useTheme';
 import UserProfileModal from './UserProfileModal';
 import ConfirmModal from '../common/ConfirmModal';
-import { IoWarning } from 'react-icons/io5';
+import { IoInformationCircleOutline, IoTrashOutline, IoWarning } from 'react-icons/io5';
 import axiosInstance from '../../lib/axios';
 import robotAvatar from '../../assets/ai-avatar.png';
 
@@ -84,6 +84,29 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
   };
 
   const isRemoved = message.status === 'removed';
+  const removalReason = message.removal_reason;
+  const isUserRemoved = isRemoved && removalReason === 'user';
+
+  /** Kaldırılmış mesajda yalnızca bu üç uyarı tipinden biri gösterilir. */
+  const removedNotice = !isRemoved
+    ? null
+    : removalReason === 'moderation'
+      ? {
+          Icon: IoWarning,
+          iconClass: styles.warningIcon,
+          text: 'Bu mesaj uygunsuz içerik nedeniyle engellendi.',
+        }
+      : removalReason === 'user'
+        ? {
+            Icon: IoTrashOutline,
+            iconClass: styles.removedUserIcon,
+            text: isOwnMessage ? 'Mesajı sildiniz.' : 'Mesaj silindi.',
+          }
+        : {
+            Icon: IoInformationCircleOutline,
+            iconClass: styles.removedNeutralIcon,
+            text: 'Mesaj silindi.',
+          };
 
 const senderName = isOwnMessage
   ? currentUser?.fullname || currentUser?.username || 'Kullanıcı'
@@ -103,7 +126,7 @@ const handleProfileClick = () => {
 
   return (
     <div
-      className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${isAiBot ? styles.aiMessage : ''} ${themeClass}`}
+      className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${isUserRemoved ? styles.removedByUser : ''} ${isAiBot ? styles.aiMessage : ''} ${themeClass}`}
     >
       <div className={styles.messageBody}>
         <div 
@@ -179,10 +202,12 @@ const handleProfileClick = () => {
             </div>
           )}
 
-          {isRemoved ? (
-            <div className={styles.removedContent}>
-              <IoWarning className={styles.warningIcon} />
-              <span>Bu mesaj uygunsuz içerik nedeniyle engellendi.</span>
+          {removedNotice ? (
+            <div
+              className={`${styles.removedContent} ${isUserRemoved ? styles.removedContentUser : ''}`}
+            >
+              <removedNotice.Icon className={removedNotice.iconClass} aria-hidden />
+              <span>{removedNotice.text}</span>
             </div>
           ) : (
             <div className={styles.content}>{message.content}</div>
