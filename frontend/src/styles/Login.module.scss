@@ -117,8 +117,21 @@
     font-size: 15px;
     transition: border-bottom 200ms;
     margin: 5px 0px 30px 0px;
-    background: none;
+    background: transparent;
     box-sizing: border-box;
+
+    /* Chrome / Safari autofill — varsayılan beyaz arka planı kaldır */
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-text-fill-color: #111827;
+      caret-color: #111827;
+      box-shadow: 0 0 0 1000px transparent inset !important;
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      background-color: transparent !important;
+      transition: background-color 99999s ease-out 0s;
+    }
 
     &:hover {
       border-bottom: 2px solid black;
@@ -132,6 +145,28 @@
     &.dark {
       border-bottom: 1px solid #3D434C;
       color: #D1D5DB;
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:active {
+        -webkit-text-fill-color: #d1d5db;
+        caret-color: #d1d5db;
+        box-shadow: 0 0 0 1000px transparent inset !important;
+        -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+        background-color: transparent !important;
+      }
+
+      &:-webkit-autofill:focus {
+        -webkit-text-fill-color: #d1d5db;
+        caret-color: #d1d5db;
+        box-shadow:
+          0 0 0 1000px transparent inset,
+          0 1px 0 0 rgba(96, 165, 250, 0.2) !important;
+        -webkit-box-shadow:
+          0 0 0 1000px transparent inset,
+          0 1px 0 0 rgba(96, 165, 250, 0.2) !important;
+        background-color: transparent !important;
+      }
 
       &:hover {
         border-bottom: 2px solid #3B82F6;
