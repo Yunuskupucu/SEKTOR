@@ -16,13 +16,88 @@ import {
   Cell,
 } from 'recharts';
 import { CgDarkMode } from 'react-icons/cg';
-import { FiRefreshCw } from 'react-icons/fi';
+import {
+  FiBarChart2,
+  FiBriefcase,
+  FiKey,
+  FiLayers,
+  FiMessageSquare,
+  FiRefreshCw,
+  FiShield,
+  FiZap,
+} from 'react-icons/fi';
+import aiAvatar from '../assets/ai-avatar.png';
 import styles from '../styles/Dashboard.module.scss';
 import axiosInstance from '../lib/axios';
 import { useTheme } from '../context/useTheme';
 
 const PIE_COLORS = ['#5b8def', '#38bdf8', '#22c55e', '#f97316', '#06b6d4'];
 const BAR_COLORS = ['#5b8def', '#38bdf8', '#22c55e', '#f97316', '#e11d48'];
+
+/** Tanıtım kartları: açık / koyu temada kontrast için ayrı vurgu renkleri */
+const INTRO_ACCENTS = {
+  indigo: { light: '#3d5eb8', dark: '#8eb4ff' },
+  orange: { light: '#c2410c', dark: '#fdba74' },
+  cyan: { light: '#0d9488', dark: '#5eead4' },
+  green: { light: '#15803d', dark: '#4ade80' },
+  sky: { light: '#0369a1', dark: '#7dd3fc' },
+};
+
+function introAccentColor(theme, accentId) {
+  const pair = INTRO_ACCENTS[accentId];
+  return pair ? pair[theme === 'dark' ? 'dark' : 'light'] : INTRO_ACCENTS.indigo.light;
+}
+
+const INTRO_CARDS = [
+  {
+    title: 'SEKTÖR',
+    text: 'Yazılım ekosisteminde bilgi paylaşımı, mentorluk ve istihdamı güçlendiren gerçek zamanlı bir topluluk modelidir.',
+    Icon: FiLayers,
+    accentId: 'indigo',
+  },
+  {
+    title: 'Yapay Zekâ Asistanı',
+    text: 'Sohbette "@ai" yazarak o kanala özel yapay zekâ ile doğrudan iletişim kurabilirsiniz. Her kanalın kendi bağlamı vardır; asistan yanıtları kanal bazında tutulur.',
+    avatarSrc: aiAvatar,
+    accentId: 'orange',
+  },
+  {
+    title: 'Akıllı Moderasyon Sistemi',
+    text: 'Büyük Dil Modeli (LLM) kullanarak toksik içerik ve kötü niyetli iletişimi %75 doğrulukla otomatik olarak filtreleyerek güvenli bir ortam sağlar.',
+    Icon: FiShield,
+    accentId: 'cyan',
+  },
+  {
+    title: 'Geliştirici Odaklı Kanallar',
+    text: 'Programlama dillerine göre özelleşmiş sohbet kanallarında teknik yardımlaşma ve mentorluk etkileşimini artırarak sosyal öğrenmeyi destekler.',
+    Icon: FiMessageSquare,
+    accentId: 'green',
+  },
+  {
+    title: 'Düşük Gecikmeli İletişim',
+    text: 'Düşük gecikme süresine sahip çift yönlü bir iletişim altyapısı sunar.',
+    Icon: FiZap,
+    accentId: 'indigo',
+  },
+  {
+    title: 'Veri Odaklı Dashboard',
+    text: 'Platform verimliliğini; mesaj istatistikleri, moderasyon başarısı ve kullanıcı etkileşim metrikleri üzerinden anlık olarak görselleştirir.',
+    Icon: FiBarChart2,
+    accentId: 'sky',
+  },
+  {
+    title: 'Güvenli Kimlik Yönetimi',
+    text: 'Kullanıcı verilerini korumak amacıyla JSON Web Token (JWT) tabanlı oturum yönetimi ve güvenli yapay zekâ kılavuz ilkelerini uygular.',
+    Icon: FiKey,
+    accentId: 'sky',
+  },
+  {
+    title: 'İstihdam ve Fırsat Havuzu:',
+    text: 'Aktif ve toplam iş ilanı sayılarını izleyin; kariyer fırsatlarının platformdaki yerini ölçün.',
+    Icon: FiBriefcase,
+    accentId: 'orange',
+  },
+];
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -148,6 +223,40 @@ function Dashboard() {
       </header>
 
       {error && <div className={styles.error}>{error}</div>}
+
+      <section className={styles.introSection} aria-label="Tanıtım">
+        {INTRO_CARDS.map(({ title, text, Icon, accentId, featured, avatarSrc }) => {
+          const accent = introAccentColor(theme, accentId);
+          return (
+            <article
+              key={title}
+              className={`${styles.introCard} ${featured ? styles.introCardFeatured : ''}`}
+              style={{ '--intro-accent': accent }}
+            >
+              <div className={`${styles.introRow} ${featured ? styles.introRowFeatured : ''}`}>
+                <div
+                  className={`${styles.introIconWrap} ${avatarSrc ? styles.introIconWrapAvatar : ''}`}
+                >
+                  {avatarSrc ? (
+                    <img
+                      src={avatarSrc}
+                      alt="Yapay zekâ asistan"
+                      className={styles.introAvatarImg}
+                      width={48}
+                      height={48}
+                    />
+                  ) : (
+                    <Icon size={24} aria-hidden />
+                  )}
+                </div>
+                <h2 className={styles.introTitle}>{title}</h2>
+              </div>
+              <p className={styles.introText}>{text}</p>
+              <div className={styles.introAccent} />
+            </article>
+          );
+        })}
+      </section>
 
       {loading ? (
         <div className={styles.loading}>Veriler yükleniyor...</div>
