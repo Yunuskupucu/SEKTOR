@@ -53,7 +53,7 @@ KURALLAR:
 - Sadece JSON döndür. Başka hiçbir şey yazma.
 - "title" 2-5 kelime olsun.
 - Benzer konuları birleştir.
-- Küfür/argo içeren veya "Mesaj kaldırıldı." olan içerikleri konu olarak sayma.
+- Küfür/argo içeren veya kaldırılan içerikleri konu olarak sayma.
 - Kişi isimlerini konu yapma.
 
 ÇIKTI FORMATI:
