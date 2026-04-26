@@ -6,18 +6,18 @@ import styles from '../../styles/Sidebar.module.scss';
 import JSPng from '../../assets/channels/javascript.png';
 import PythonPng from '../../assets/channels/python.png';
 import JavaPng from '../../assets/channels/java.png';
-import HomePng from '../../assets/channels/home.png';
+import AiPng from '../../assets/channels/ai.png';
 import SwiftPng from '../../assets/channels/swift.png';
 import SqlPng from '../../assets/channels/database.svg';
 import CppPng from '../../assets/channels/cpp.png';
 import CsPng from '../../assets/channels/cs.png';
-import CodePng from '../../assets/channels/code.png';
+import HtmlSvg from '../../assets/channels/html.svg';
 import JobPng from '../../assets/channels/job.png';
 import { useTheme } from '../../context/useTheme';
 
 const channelsData = [
   { id: 1, name: 'JavaScript', channelPic: JSPng, type: 'chat' },
-  { id: 2, name: 'HTML / CSS', channelPic: CodePng, type: 'chat' },
+  { id: 2, name: 'HTML / CSS', channelPic: HtmlSvg, type: 'chat' },
   { id: 3, name: 'Python', channelPic: PythonPng, type: 'chat' },
   { id: 4, name: 'Java', channelPic: JavaPng, type: 'chat' },
   { id: 5, name: 'Swift', channelPic: SwiftPng, type: 'chat' },
@@ -25,7 +25,7 @@ const channelsData = [
   { id: 7, name: 'C++', channelPic: CppPng, type: 'chat' },
   { id: 8, name: 'SQL', channelPic: SqlPng, type: 'chat' },
   { id: 9, name: 'İş İlanları', channelPic: JobPng, type: 'jobs' },
-  { id: 10, name: 'Genel', channelPic: HomePng, type: 'chat' },
+  { id: 10, name: 'Yapay Zekâ', channelPic: AiPng, type: 'chat' },
 ];
 
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {
