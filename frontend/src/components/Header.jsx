@@ -5,11 +5,12 @@ import styles from '../styles/Header.module.scss';
 import { useAuthStore } from '../store/useAuthStore';
 import { useTheme } from '../context/useTheme';
 import { CgDarkMode } from 'react-icons/cg';
+import { FiBarChart2 } from 'react-icons/fi';
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(false);
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { logout, authUser, isCheckingAuth } = useAuthStore();
   const { theme, toggleTheme } = useTheme();
 
   const themeClass = theme === 'dark' ? styles.dark : '';
@@ -27,13 +28,27 @@ function Header() {
     handleMenuClose();
   };
 
+  const handleDashboard = () => {
+    navigate('/');
+    handleMenuClose();
+  };
+
+  const handleLogoClick = () => {
+    if (authUser || isCheckingAuth) {
+      navigate('/app');
+      return;
+    }
+
+    navigate('/');
+  };
+
   const handleLogout = async () => {
     try {
       const ok = await logout();
 
       localStorage.removeItem('auth');
       if (ok !== false) {
-        navigate('/login', { replace: true });
+        navigate('/', { replace: true });
       }
     } catch (error) {
       console.error('Çıkış işlemi sırasında hata:', error);
@@ -45,7 +60,7 @@ function Header() {
 
   return (
     <header className={`${styles.header} ${themeClass}`}>
-      <button className={styles.logo} onClick={() => navigate('/app')}>
+      <button className={styles.logo} onClick={handleLogoClick}>
         <span>S</span>
         <label>SEKTÖR</label>
       </button>
@@ -63,6 +78,10 @@ function Header() {
             <div className={styles.menuItem} onClick={handleProfile}>
               <FiUser size={18} />
               Profil
+            </div>
+            <div className={styles.menuItem} onClick={handleDashboard}>
+              <FiBarChart2 size={18} />
+              Dashboard
             </div>
             <div className={styles.menuItem} onClick={handleLogout}>
               <FiLogOut size={18} />

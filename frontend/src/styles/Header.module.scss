@@ -122,6 +122,13 @@
             background-color: #f5f5f5;
           }
         }
+
+        .dashboardIcon {
+          width: 18px;
+          height: 18px;
+          object-fit: contain;
+          flex-shrink: 0;
+        }
       }
     }
   }
