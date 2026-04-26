@@ -9,12 +9,10 @@ import axiosInstance from '../../lib/axios';
 import robotAvatar from '../../assets/ai-avatar.png';
 
 const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
-  const isOwnMessage =
-    message.User?.id === currentUser.id || message.user_id === currentUser.id;
+  const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
 
   const isAiBot =
-    message.User?.email === 'ai-bot@sektor.internal' ||
-    message.User?.fullname === 'Sektör AI';
+    message.User?.email === 'ai-bot@sektor.internal' || message.User?.fullname === 'Sektör AI';
 
   const { theme } = useTheme();
   const themeClass = theme === 'dark' ? styles.dark : '';
@@ -24,6 +22,7 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
   const menuRef = useRef(null);
 
   const isImageUrl = (url) => /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url || '');
@@ -43,6 +42,21 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showMenu]);
+
+  useEffect(() => {
+    if (!selectedImage) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setSelectedImage(null);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [selectedImage]);
 
   const handleEdit = () => {
     if (onEdit) {
@@ -108,33 +122,44 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
             text: 'Mesaj silindi.',
           };
 
-const senderName = isOwnMessage
-  ? currentUser?.fullname || currentUser?.username || 'Kullanıcı'
-  : message.User?.fullname || message.User?.username || 'Kullanıcı';
+  const senderName = isOwnMessage
+    ? currentUser?.fullname || currentUser?.username || 'Kullanıcı'
+    : message.User?.fullname || message.User?.username || 'Kullanıcı';
 
-const userAvatar = isOwnMessage
-  ? currentUser?.profile_picture_url || null
-  : message.User?.profile_picture_url || null;
+  const userAvatar = isOwnMessage
+    ? currentUser?.profile_picture_url || null
+    : message.User?.profile_picture_url || null;
 
-const avatarSrc = isAiBot ? robotAvatar : userAvatar;
+  const avatarSrc = isAiBot ? robotAvatar : userAvatar;
 
-const handleProfileClick = () => {
-  if (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) {
-    setShowProfileModal(true);
-  }
-};
+  const handleProfileClick = () => {
+    if (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) {
+      setShowProfileModal(true);
+    }
+  };
 
   return (
     <div
       className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${isUserRemoved ? styles.removedByUser : ''} ${isAiBot ? styles.aiMessage : ''} ${themeClass}`}
     >
       <div className={styles.messageBody}>
-        <div 
+        <div
           className={styles.avatar}
           onClick={handleProfileClick}
-          style={{ cursor: (!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) ? 'pointer' : 'default' }}
-          role={(!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) ? 'button' : undefined}
-          tabIndex={(!isOwnMessage && !isAiBot && (message.User?.id || message.user_id)) ? 0 : undefined}
+          style={{
+            cursor:
+              !isOwnMessage && !isAiBot && (message.User?.id || message.user_id)
+                ? 'pointer'
+                : 'default',
+          }}
+          role={
+            !isOwnMessage && !isAiBot && (message.User?.id || message.user_id)
+              ? 'button'
+              : undefined
+          }
+          tabIndex={
+            !isOwnMessage && !isAiBot && (message.User?.id || message.user_id) ? 0 : undefined
+          }
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
@@ -149,9 +174,7 @@ const handleProfileClick = () => {
               className={styles.avatarImage}
             />
           ) : (
-            <div className={styles.avatarFallback}>
-              {senderName.charAt(0).toUpperCase()}
-            </div>
+            <div className={styles.avatarFallback}>{senderName.charAt(0).toUpperCase()}</div>
           )}
         </div>
 
@@ -171,11 +194,7 @@ const handleProfileClick = () => {
 
               {showMenu && (
                 <div className={`${styles.menu} ${themeClass}`}>
-                  <button
-                    className={styles.menuItem}
-                    onClick={handleEdit}
-                    type="button"
-                  >
+                  <button className={styles.menuItem} onClick={handleEdit} type="button">
                     Düzenle
                   </button>
                   <button
@@ -192,11 +211,7 @@ const handleProfileClick = () => {
 
           {!isRemoved && (
             <div className={styles.messageHeader}>
-              <button
-                className={styles.sender}
-                onClick={handleProfileClick}
-                type="button"
-              >
+              <button className={styles.sender} onClick={handleProfileClick} type="button">
                 {senderName}
               </button>
             </div>
@@ -216,14 +231,21 @@ const handleProfileClick = () => {
           {!isRemoved && message.attachment_url && (
             <div className={styles.attachment}>
               {isImageUrl(message.attachment_url) ? (
-                <img
-                  src={message.attachment_url}
-                  alt="ek"
-                  style={{ maxWidth: '200px', borderRadius: '8px' }}
-                  onError={(e) => {
-                    console.error('IMG LOAD ERROR:', e.currentTarget.src);
-                  }}
-                />
+                <button
+                  type="button"
+                  className={styles.imageButton}
+                  onClick={() => setSelectedImage(message.attachment_url)}
+                  aria-label="Gorseli buyuk goster"
+                >
+                  <img
+                    src={message.attachment_url}
+                    alt="Mesaj eki"
+                    className={styles.attachmentImage}
+                    onError={(e) => {
+                      console.error('IMG LOAD ERROR:', e.currentTarget.src);
+                    }}
+                  />
+                </button>
               ) : (
                 <a
                   href={message.attachment_url}
@@ -238,9 +260,7 @@ const handleProfileClick = () => {
           )}
 
           <div className={styles.timestamp}>
-            {message.edited_at && (
-              <span className={styles.editedLabel}>Düzenlendi</span>
-            )}
+            {message.edited_at && <span className={styles.editedLabel}>Düzenlendi</span>}
             {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
@@ -254,6 +274,38 @@ const handleProfileClick = () => {
           userId={message.User?.id || message.user_id}
           onClose={() => setShowProfileModal(false)}
         />
+      )}
+
+      {selectedImage && (
+        <div
+          className={styles.imageModalOverlay}
+          onClick={() => setSelectedImage(null)}
+          role="button"
+          tabIndex={0}
+          aria-label="Gorsel modalini kapat"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setSelectedImage(null);
+            }
+          }}
+        >
+          <div
+            className={styles.imageModalContent}
+            onClick={(e) => e.stopPropagation()}
+            role="presentation"
+          >
+            <button
+              type="button"
+              className={styles.imageModalClose}
+              onClick={() => setSelectedImage(null)}
+              aria-label="Kapat"
+            >
+              ×
+            </button>
+            <img src={selectedImage} alt="Mesaj eki buyuk gorunum" className={styles.imageModalImage} />
+          </div>
+        </div>
       )}
 
       <ConfirmModal

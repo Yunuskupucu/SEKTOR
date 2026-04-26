@@ -721,6 +721,60 @@
   background: linear-gradient(135deg, #e6edf5, #d6e2ee);
   border: 1px solid #c3d1df;
 }
+
+.imageButton {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: zoom-in;
+}
+
+.attachmentImage {
+  max-width: 200px;
+  border-radius: 8px;
+  display: block;
+}
+
+.imageModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.imageModalContent {
+  position: relative;
+  max-width: min(90vw, 1000px);
+  max-height: 90vh;
+}
+
+.imageModalImage {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.imageModalClose {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
 //--------------------------------------------
 // .messageWrapper {
 //   display: flex;
