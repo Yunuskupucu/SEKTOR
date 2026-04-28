@@ -12,16 +12,20 @@ const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 export const checkContentModeration = async (post) => {
   // Prompt'u daha kesin sonuç verecek şekilde optimize ettik.
   const prompt = `
-    Sen bir içerik moderatörüsün. Aşağıdaki metni küfür, ağır argo, hakaret ve nefret söylemi açısından incele.
-    
-    KURALLAR:
-    1. İçerik temiz ve topluluk kurallarına uygunsa sadece "1" yanıtını ver.
-    2. İçerik argo, küfür veya hakaret içeriyorsa sadece "0" yanıtını ver.
-    3. Başka hiçbir açıklama yapma.
+  Sen gelişmiş bir Yapay Zeka içerik moderatörüsün. Görevin, metnin sadece kelimelerine değil, "bağlamına" ve "niyetine" bakarak karar vermektir.
 
-    İncelenecek Metin: "${post}"
-    YANIT:
-  `;
+  ANALİZ KRİTERLERİ:
+  - Kelime tek başına argo olabilir ancak bilimsel, ticari veya teknik bir bağlamda kullanılmışsa (Örn: "Mal sevkiyatı", "Hayvanın dışkısı") TEMİZ kabul et.
+  - Eğer kelime doğrudan bir şahsa, gruba veya inanca yönelik saldırı, aşağılama veya taciz amacı taşıyorsa ZARARLI kabul et.
+  - Sarkazm (alaycılık) yoluyla yapılan hakaretleri tespit et.
+
+  YANIT FORMATI:
+  - İçerik topluluk kurallarına uygun ve zararsızsa (bağlamsal olarak temizse): "1"
+  - İçerik hakaret, nefret söylemi veya kötü niyetli argo içeriyorsa: "0"
+  
+  Metin: "${post}"
+  YANIT:
+`;
 
   try {
     console.log('🟡 Moderasyon analizi yapılıyor...');
@@ -47,30 +51,28 @@ export const extractWeeklyTrends = async (messages) => {
   const combinedText = messages.join('\n');
 
   const prompt = `
-Aşağıdaki mesajları analiz et ve son 7 günün en çok konuşulan 5 ana konusunu çıkar.
+  Sen bir yazılım ekosistemi veri analistisin. Aşağıdaki mesajları inceleyerek son 7 günün en önemli 5 teknik trendini çıkar.
 
-KURALLAR:
-- Sadece JSON döndür. Başka hiçbir şey yazma.
-- "title" 2-5 kelime olsun.
-- Benzer konuları birleştir.
-- Küfür/argo içeren veya kaldırılan içerikleri konu olarak sayma.
-- Kişi isimlerini konu yapma.
+  ANALİZ KURALLARI:
+  1. TEKNİK ODAK: Sadece yazılım dilleri, frameworkler (React, NestJS), araçlar (Docker) veya mimariler (Microservices) hakkında konuşulanları al.
+  2. KONSOLİDASYON: Benzer teknik sorunları veya kütüphaneleri tek bir güçlü başlıkta birleştir.
+  3. GÜRÜLTÜ AYIKLAMA: "Günaydın", "Teşekkürler" gibi teknik olmayan mesajları tamamen yoksay.
 
-ÇIKTI FORMATI:
-{
-  "topics": [
-    { "title": "...", "keywords": ["...","...","..."] },
-    { "title": "...", "keywords": ["...","...","..."] },
-    { "title": "...", "keywords": ["...","...","..."] },
-    { "title": "...", "keywords": ["...","...","..."] },
-    { "title": "...", "keywords": ["...","...","..."] }
-  ]
-}
+  JSON ŞEMASI:
+  {
+    "topics": [
+      {
+        "title": "Kısa teknik başlık (Örn: React 19 Transition Hooks)",
+        "category": "Frontend | Backend | Mobile | DevOps | AI | Genel",
+        "keywords": ["anahtar_kelime1", "anahtar_kelime2"],
+        "sentiment": "positive | neutral | frustrating"
+      }
+    ]
+  }
 
-MESAJLAR:
-${combinedText}
+  MESAJLAR:
+  ${combinedText}
 `;
-
   try {
     const result = await model.generateContent(prompt);
     const raw = result.response.text().trim();
