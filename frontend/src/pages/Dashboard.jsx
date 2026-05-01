@@ -7,8 +7,6 @@ import '../styles/dashboard-globals.css';
 import { useTheme } from '../context/useTheme';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import {
-  Menu,
-  X,
   ArrowRight,
   Sparkles,
   Users,
@@ -33,7 +31,6 @@ import {
 } from 'lucide-react';
 import {
   motion,
-  AnimatePresence,
   useMotionValue,
   useTransform,
   animate,
@@ -349,7 +346,6 @@ const itemVariants = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const approvedPercent = (moderationData.approved / moderationData.totalScanned) * 100;
   const flaggedPercent = (moderationData.flagged / moderationData.totalScanned) * 100;
   const blockedPercent = (moderationData.blocked / moderationData.totalScanned) * 100;
@@ -389,14 +385,6 @@ export default function Dashboard() {
             <span className="dashboard__brand-title">SEKTÖR</span>
           </motion.button>
 
-          <motion.button
-            className="dashboard__mobile-menu-btn"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            whileTap={{ scale: 0.9 }}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </motion.button>
-
           <div className="dashboard__actions">
             <ThemeToggle />
 
@@ -412,36 +400,6 @@ export default function Dashboard() {
             </motion.button>
           </div>
         </div>
-
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="dashboard__mobile-menu"
-            >
-              <div className="dashboard__mobile-menu-content">
-                {['Dashboard', 'Kanallar', 'Mentorluk', 'Kariyer', 'Trendler'].map((item, i) => (
-                  <motion.a
-                    key={item}
-                    href="#"
-                    className="dashboard__mobile-menu-link"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    {item}
-                  </motion.a>
-                ))}
-                <div className="dashboard__mobile-menu-theme">
-                  <span>Tema</span>
-                  <ThemeToggle />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.header>
 
       {/* Main Content */}

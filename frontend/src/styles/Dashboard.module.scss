@@ -75,10 +75,9 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
         }
 
         &--accent {
-          bottom: -50%;
           right: -50%;
-          background: var(--accent);
-          opacity: 0.05;
+          background: #0a0a18;
+          opacity: 0.5;
         }
       }
     }
@@ -180,30 +179,10 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       }
     }
 
-    &__mobile-menu-btn {
-      display: flex;
-      height: 2.25rem;
-      width: 2.25rem;
-      border-radius: $border-radius-md;
-      background: var(--secondary);
-      @include flex-center;
-      border: none;
-      cursor: pointer;
-      color: var(--foreground);
-
-      @media (min-width: 768px) {
-        display: none;
-      }
-    }
-
     &__actions {
-      display: none;
+      display: flex;
       align-items: center;
       gap: 0.75rem;
-
-      @media (min-width: 768px) {
-        display: flex;
-      }
     }
 
     &__icon-btn {
@@ -237,6 +216,7 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
     }
 
     &__login-btn {
+      display: none;
       padding: 0.5rem 1rem;
       background: var(--primary);
       color: var(--primary-foreground);
@@ -257,7 +237,7 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       &-shine {
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, #ffffff33, transparent);
         transform: translateX(-100%);
         transition: transform 0.5s;
       }
@@ -265,40 +245,9 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       &:hover &-shine {
         transform: translateX(100%);
       }
-    }
-
-    &__mobile-menu {
-      border-top: 1px solid var(--border);
 
       @media (min-width: 768px) {
-        display: none;
-      }
-
-      &-content {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: $dash-card-pad $dash-gutter-wide;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      &-link {
-        color: var(--muted-foreground);
-        padding: 0.5rem 0;
-        transition: color $transition-fast;
-
-        &:hover {
-          color: var(--foreground);
-        }
-      }
-
-      &-theme {
-        padding-top: 0.75rem;
-        border-top: 1px solid var(--border);
-        @include flex-between;
-        font-size: 0.875rem;
-        color: var(--muted-foreground);
+        display: inline-flex;
       }
     }
 
@@ -328,9 +277,9 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       border-radius: $border-radius-xl;
       background: linear-gradient(
         135deg,
-        color-mix(in oklch, var(--primary) 20%, transparent),
+        color-mix(in oklch, var(--primary) 5%, transparent),
         var(--card),
-        color-mix(in oklch, var(--accent) 10%, transparent)
+        color-mix(in oklch, var(--accent) 20%, transparent)
       );
       border: 1px solid var(--border);
       padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
@@ -346,7 +295,12 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       &-gradient {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at top right, var(--primary), transparent, transparent);
+        background: radial-gradient(
+          ellipse at top right,
+          color-mix(in oklch, var(--primary) 20%, transparent) 0%,
+          color-mix(in oklch, var(--primary) 30%, transparent) 5%,
+          transparent 48%
+        );
         opacity: 0.2;
       }
 
@@ -479,7 +433,7 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       &-btn-shine {
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, #ffffff33, transparent);
         transform: translateX(-100%);
       }
 
@@ -624,18 +578,18 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       }
 
       &--warning {
-        background: linear-gradient(135deg, rgba(234, 179, 8, 0.1), var(--card));
+        background: linear-gradient(135deg, #eab3081a, var(--card));
       }
 
       &--info {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), var(--card));
+        background: linear-gradient(135deg, #3b82f61a, var(--card));
       }
     }
 
     &__stat-shimmer {
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      background: linear-gradient(90deg, transparent, #ffffff0d, transparent);
       transform: translateX(-100%);
     }
 
