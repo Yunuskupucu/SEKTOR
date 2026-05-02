@@ -6,8 +6,9 @@ import styles from '../../styles/MessageInput.module.scss';
 import { useTheme } from '../../context/useTheme';
 import PropTypes from 'prop-types';
 import { useAuthStore } from '../../store/useAuthStore';
-import socket from '../../lib/socket';
+import { socket } from '../../lib/socket';
 import axiosInstance from '../../lib/axios';
+import { getBackendOrigin } from '../../lib/apiOrigin';
 
 const AI_TRIGGER = '@ai';
 
@@ -80,10 +81,11 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
 
     try {
       const response = await fetch(
-        'http://localhost:5001/api/messages/with-attachment',
+        `${getBackendOrigin()}/api/messages/with-attachment`,
         {
           method: 'POST',
           body: formData,
+          credentials: 'include',
         }
       );
 

@@ -1,7 +1,13 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001/api/',
+  baseURL: '/api/',
   withCredentials: true,
 });
+
+/** resolveBackendOrigin sonrası çağrılır (main.jsx). */
+export function applyBackendConfig(apiBaseURL) {
+  axiosInstance.defaults.baseURL = apiBaseURL;
+}
+
 export default axiosInstance; 

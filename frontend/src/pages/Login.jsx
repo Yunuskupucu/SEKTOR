@@ -9,8 +9,7 @@ import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { useTheme } from '../context/useTheme';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
-
-const API_ORIGIN = 'http://localhost:5001';
+import { getBackendOrigin } from '../lib/apiOrigin';
 
 function Login() {
   const navigate = useNavigate();
@@ -90,7 +89,7 @@ function Login() {
               className={`${styles.socialButton} ${themeClass}`}
               onClick={() => {
                 // Google OAuth akışını başlat
-                window.location.href = `${API_ORIGIN}/api/auth/google`;
+                window.location.href = `${getBackendOrigin()}/api/auth/google`;
               }}
             >
               <FaGoogle />
@@ -100,7 +99,7 @@ function Login() {
               className={`${styles.socialButton} ${themeClass}`}
               onClick={() => {
                 // GitHub OAuth akışını başlat
-                window.location.href = `${API_ORIGIN}/api/auth/github`;
+                window.location.href = `${getBackendOrigin()}/api/auth/github`;
               }}
             >
               <FaGithub />

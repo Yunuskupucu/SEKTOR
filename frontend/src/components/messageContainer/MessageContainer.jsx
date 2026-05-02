@@ -9,7 +9,7 @@ import Message from './Message';
 import NoSelectedChannel from './NoSelectedChannel';
 import { useTheme } from '../../context/useTheme';
 import axiosInstance from '../../lib/axios';
-import socket from '../../lib/socket';
+import { socket } from '../../lib/socket';
 import { useAuthStore } from '../../store/useAuthStore';
 
 const MessageContainer = ({ selectedChannel, onChannelClose }) => {

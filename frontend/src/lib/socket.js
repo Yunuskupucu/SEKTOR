@@ -1,15 +1,20 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
-const socket = io("http://localhost:5001", {
-  withCredentials: true,
-});
+export let socket = null;
 
-socket.on("connect", () => {
-  console.log("✅ Socket bağlantısı kuruldu:", socket.id);
-});
+export function initSocket(origin) {
+  if (socket?.disconnect) {
+    socket.disconnect();
+  }
+  socket = io(origin, {
+    withCredentials: true,
+  });
 
-socket.on("connect_error", (err) => {
-  console.error("❌ Socket bağlantı hatası:", err.message);
-});
+  socket.on('connect', () => {
+    console.log('✅ Socket bağlantısı kuruldu:', socket.id);
+  });
 
-export default socket;
+  socket.on('connect_error', (err) => {
+    console.error('❌ Socket bağlantı hatası:', err.message);
+  });
+}
