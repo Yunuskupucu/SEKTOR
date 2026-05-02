@@ -1,0 +1,14 @@
+# Render Blueprint: repo kökünden Static Site tanımı.
+# Dashboard'da zaten bir Static Site varsa: Redirects/Rewrites ile Source /* → /index.html (Rewrite) ekleyin
+# veya bu dosyayı Blueprint olarak bağlayın (çift servis oluşturmamak için mevcut ayarlarınızla karşılaştırın).
+services:
+  - type: web
+    name: sektor-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

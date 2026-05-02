@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../styles/Login.module.scss';
 import { useAuthStore } from '../store/useAuthStore';
 import LightLogo from '../assets/logo/LightLogo.png';
@@ -109,9 +109,9 @@ function Login() {
 
           <span className={`${styles.navigateSection} ${themeClass}`}>
             Hesabınız yok mu?
-            <a className={styles.navigateLink} href="/register">
+            <Link className={styles.navigateLink} to="/register">
               Kaydol
-            </a>
+            </Link>
           </span>
         </div>
         <div className={styles.logoContainer}>
