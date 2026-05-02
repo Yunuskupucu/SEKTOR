@@ -18,10 +18,37 @@ import { handleAiReply } from './lib/handleAiReply.js';
 import passport from './lib/passport.js';
 dotenv.config();
 
-const allowedOrigins = [
-  'http://localhost:5173', // Yerel geliştirme için
-  'https://sektor.onrender.com', // Canlıdaki frontend adresin
-];
+function normalizeOrigin(url) {
+  if (!url || typeof url !== 'string') return null;
+  const t = url.trim();
+  if (!t) return null;
+  try {
+    const withScheme = /^https?:\/\//i.test(t) ? t : `https://${t}`;
+    return new URL(withScheme).origin;
+  } catch {
+    return null;
+  }
+}
+
+function buildAllowedOrigins() {
+  const list = [
+    'http://localhost:5173',
+    'https://sektor.onrender.com',
+    'https://sektor-app.web.app',
+  ];
+  const add = (o) => {
+    if (o && !list.includes(o)) list.push(o);
+  };
+  add(normalizeOrigin(process.env.FRONTEND_URL));
+  if (process.env.CORS_ORIGINS) {
+    for (const part of process.env.CORS_ORIGINS.split(',')) {
+      add(normalizeOrigin(part.trim()));
+    }
+  }
+  return list;
+}
+
+const allowedOrigins = buildAllowedOrigins();
 
 const corsOptions = {
   origin(origin, callback) {
@@ -119,6 +146,7 @@ app.set('io', io);
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📎 CORS izinli kökenler: ${allowedOrigins.join(', ')}`);
 
   connectDb()
     .then(async () => {
