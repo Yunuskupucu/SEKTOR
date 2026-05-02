@@ -18,15 +18,31 @@ import { handleAiReply } from './lib/handleAiReply.js';
 import passport from './lib/passport.js';
 dotenv.config();
 
+const allowedOrigins = [
+  'http://localhost:5173', // Yerel geliştirme için
+  'https://sektor.onrender.com', // Canlıdaki frontend adresin
+];
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  credentials: true,
+};
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:5173', credentials: true },
+  cors: { origin: allowedOrigins, credentials: true },
 });
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.get('/health', (_, res) => res.send('OK'));
 
