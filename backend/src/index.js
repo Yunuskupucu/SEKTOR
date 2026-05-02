@@ -32,9 +32,10 @@ app.get('/health', (_, res) => res.send('OK'));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/channels', channelRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+
 app.use('/api/jobs', jobRoutes);
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');

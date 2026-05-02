@@ -5,6 +5,10 @@ import Channel from "../models/channel.model.js";
 import Message from "../models/message.model.js";
 import JobPost from "../models/job_post.model.js";
 
+let cachedTrends = null;
+let cachedTrendsAt = null;
+const TREND_CACHE_DURATION = 30 * 60 * 1000; // 30 dakika
+
 export const getPublicGlobalStats = async (req, res) => {
   try {
     const now = new Date();
@@ -119,12 +123,35 @@ export const getMessageGlobalStats = async (req, res) => {
 // Kanal bazlı mesaj sayısı
 export const getMessageStatsPerChannel = async (req, res) => {
   try {
-    const messagesPerChannel = await Message.findAll({
-      attributes: ["channel_id", [fn("COUNT", col("id")), "messageCount"]],
+    const messageCounts = await Message.findAll({
+      attributes: [
+        "channel_id",
+        [fn("COUNT", col("id")), "messageCount"],
+      ],
       group: ["channel_id"],
       order: [[fn("COUNT", col("id")), "DESC"]],
       raw: true,
     });
+
+    const channelIds = messageCounts.map((item) => item.channel_id);
+
+    const channels = await Channel.findAll({
+      attributes: ["id", "name"],
+      where: {
+        id: channelIds,
+      },
+      raw: true,
+    });
+
+    const channelMap = new Map(
+      channels.map((channel) => [channel.id, channel.name])
+    );
+
+    const messagesPerChannel = messageCounts.map((item) => ({
+      channel_id: item.channel_id,
+      channelName: channelMap.get(item.channel_id) || `Kanal ${item.channel_id}`,
+      messageCount: Number(item.messageCount || 0),
+    }));
 
     return res.json({
       success: true,
@@ -142,9 +169,24 @@ export const getMessageStatsPerChannel = async (req, res) => {
   }
 };
   // LLM ile haftalık trend konuları çıkarma
-export const getWeeklyTrends = async (req, res) => {   
-  try { 
+export const getWeeklyTrends = async (req, res) => {
+  try {
     const now = new Date();
+
+    if (
+      cachedTrends &&
+      cachedTrendsAt &&
+      now.getTime() - cachedTrendsAt.getTime() < TREND_CACHE_DURATION
+    ) {
+      return res.json({
+        success: true,
+        data: {
+          fromCache: true,
+          trends: cachedTrends,
+        },
+      });
+    }
+
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
 
@@ -156,30 +198,80 @@ export const getWeeklyTrends = async (req, res) => {
         content: { [Op.ne]: "Mesaj kaldırıldı." },
       },
       order: [["timestamp", "DESC"]],
-      limit: 1500,
+      limit: 100,
     });
 
     const messages = rows
       .map((r) => (r.content || "").trim().slice(0, 300))
       .filter(Boolean)
-      .slice(0, 800);
+      .slice(0, 100);
 
     const trends = await extractWeeklyTrends(messages);
+
+    cachedTrends = trends;
+    cachedTrendsAt = now;
 
     return res.json({
       success: true,
       data: {
         from: sevenDaysAgo,
         to: now,
+        fromCache: false,
         trends,
         sampledMessageCount: messages.length,
       },
     });
   } catch (error) {
-    console.error("getWeeklyTrends error:", error);
+    console.error("getWeeklyTrends error:", error.message);
+
+    return res.json({
+      success: true,
+      data: {
+        fromCache: true,
+        trends: cachedTrends || [],
+        sampledMessageCount: 0,
+      },
+    });
+  }
+};
+
+export const getWeeklyActivityStats = async (req, res) => {
+  try {
+    const now = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    const rows = await Message.findAll({
+      attributes: [
+        [fn("DATE", col("timestamp")), "date"],
+        [fn("COUNT", col("Message.id")), "messageCount"],
+        [fn("COUNT", fn("DISTINCT", col("user_id"))), "activeUsers"],
+      ],
+      where: {
+        timestamp: { [Op.gte]: sevenDaysAgo },
+      },
+      group: [fn("DATE", col("timestamp"))],
+      order: [[fn("DATE", col("timestamp")), "ASC"]],
+      raw: true,
+    });
+
+    const weeklyActivity = rows.map((row) => ({
+      name: row.date,
+      messages: Number(row.messageCount || 0),
+      users: Number(row.activeUsers || 0),
+    }));
+
+    return res.json({
+      success: true,
+      data: {
+        weeklyActivity,
+      },
+    });
+  } catch (error) {
+    console.error("getWeeklyActivityStats error:", error);
     return res.status(500).json({
       success: false,
-      message: "Sunucu hatası. Haftalık trendler alınamadı.",
+      message: "Haftalık aktivite alınamadı",
       error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }

@@ -1,3 +1,4 @@
+import axios from '../lib/axios';
 /* eslint-disable react/prop-types */
 import '@fontsource/geist-sans/400.css';
 import '@fontsource/geist-sans/500.css';
@@ -116,7 +117,6 @@ function ThemeToggle() {
   );
 }
 
-// Animated Counter Component
 function AnimatedCounter({ value, suffix = '', decimals = 0, duration = 2 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
@@ -128,8 +128,9 @@ function AnimatedCounter({ value, suffix = '', decimals = 0, duration = 2 }) {
 
   useEffect(() => {
     if (isInView) {
-      const controls = animate(count, value, { duration, ease: 'easeOut' });
+      const controls = animate(count, Number(value) || 0, { duration, ease: 'easeOut' });
       const unsubscribe = rounded.on('change', (v) => setDisplayValue(v));
+
       return () => {
         controls.stop();
         unsubscribe();
@@ -145,7 +146,6 @@ function AnimatedCounter({ value, suffix = '', decimals = 0, duration = 2 }) {
   );
 }
 
-// Animated Progress Component
 function AnimatedProgress({ value, delay = 0 }) {
   const [progress, setProgress] = useState(0);
   const ref = useRef(null);
@@ -153,7 +153,7 @@ function AnimatedProgress({ value, delay = 0 }) {
 
   useEffect(() => {
     if (isInView) {
-      const timer = setTimeout(() => setProgress(value), delay * 1000);
+      const timer = setTimeout(() => setProgress(Number(value) || 0), delay * 1000);
       return () => clearTimeout(timer);
     }
   }, [value, delay, isInView]);
@@ -165,46 +165,10 @@ function AnimatedProgress({ value, delay = 0 }) {
   );
 }
 
-// Data
 const floatingIcons = [
   { icon: Code, delay: 0, x: '65%', y: '40%', tone: 1 },
   { icon: Terminal, delay: 0.5, x: '80%', y: '15%', tone: 2 },
   { icon: Cpu, delay: 1, x: '85%', y: '60%', tone: 3 },
-];
-
-const stats = [
-  {
-    title: 'Aktif Kullanıcı',
-    value: 12847,
-    change: '+23%',
-    icon: Users,
-    description: 'Son 30 gun',
-    color: 'primary',
-  },
-  {
-    title: 'Günlük Mesaj',
-    value: 45621,
-    change: '+18%',
-    icon: MessageSquare,
-    description: 'Ortalama',
-    color: 'accent',
-  },
-  {
-    title: 'İş İlanları',
-    value: 324,
-    change: '+12%',
-    icon: Briefcase,
-    description: 'Aktif ilanlar',
-    color: 'warning',
-  },
-  {
-    title: 'Trend Konular',
-    value: 58,
-    change: '+45%',
-    icon: TrendingUp,
-    description: 'Bu hafta',
-    color: 'info',
-  },
 ];
 
 const features = [
@@ -252,88 +216,15 @@ const features = [
   },
 ];
 
-const activityData = [
-  { name: 'Pzt', mesajlar: 4200, kullanicilar: 1200 },
-  { name: 'Sal', mesajlar: 3800, kullanicilar: 1100 },
-  { name: 'Car', mesajlar: 5100, kullanicilar: 1450 },
-  { name: 'Per', mesajlar: 4700, kullanicilar: 1350 },
-  { name: 'Cum', mesajlar: 5800, kullanicilar: 1600 },
-  { name: 'Cmt', mesajlar: 3200, kullanicilar: 980 },
-  { name: 'Paz', mesajlar: 2900, kullanicilar: 850 },
-];
-
-const trends = [
-  {
-    topic: 'React Server Components',
-    category: 'Frontend',
-    mentions: 1247,
-    growth: 34,
-    summary: 'Server-side rendering optimizasyonları ve streaming SSR tartışmaları yoğunlandı',
-    hot: true,
-  },
-  {
-    topic: 'AI Kod Asistanları',
-    category: 'AI/ML',
-    mentions: 982,
-    growth: 67,
-    summary: 'GitHub Copilot alternatifleri ve yerel LLM entegrasyonları gündemde',
-    hot: true,
-  },
-  {
-    topic: 'TypeScript 5.4',
-    category: 'Dil',
-    mentions: 756,
-    growth: 28,
-    summary: 'NoInfer tipi ve closure type narrowing özellikleri tartışılıyor',
-    hot: false,
-  },
-  {
-    topic: 'Edge Computing',
-    category: 'Altyapi',
-    mentions: 623,
-    growth: 45,
-    summary: 'Cloudflare Workers ve Vercel Edge Functions karşılaştırmaları',
-    hot: false,
-  },
-  {
-    topic: 'Rust Web Framework',
-    category: 'Backend',
-    mentions: 489,
-    growth: 52,
-    summary: 'Axum ve Actix performans testleri toplulukta ilgi görüyor',
-    hot: false,
-  },
-];
-
-const channels = [
-  { name: 'react', messages: 12400, active: true },
-  { name: 'typescript', messages: 9800, active: true },
-  { name: 'python', messages: 8700, active: true },
-  { name: 'javascript', messages: 11200, active: false },
-  { name: 'rust', messages: 4500, active: true },
-  { name: 'go', messages: 6200, active: false },
-  { name: 'devops', messages: 5100, active: true },
-  { name: 'kariyer', messages: 3400, active: true },
-];
-
-const moderationData = {
-  totalScanned: 45621,
-  approved: 44890,
-  flagged: 687,
-  blocked: 44,
-  accuracy: 99.2,
-  avgResponseTime: 12,
-};
-
 const categoryColors = {
   Frontend: 'category-frontend',
   'AI/ML': 'category-ai',
   Dil: 'category-lang',
   Altyapı: 'category-infra',
+  Altyapi: 'category-infra',
   Backend: 'category-backend',
 };
 
-// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
@@ -346,13 +237,181 @@ const itemVariants = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const approvedPercent = (moderationData.approved / moderationData.totalScanned) * 100;
-  const flaggedPercent = (moderationData.flagged / moderationData.totalScanned) * 100;
-  const blockedPercent = (moderationData.blocked / moderationData.totalScanned) * 100;
+
+  const [stats, setStats] = useState([]);
+  const [activityData, setActivityData] = useState([]);
+  const [trends, setTrends] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [moderationData, setModerationData] = useState({
+    totalScanned: 0,
+    approved: 0,
+    flagged: 0,
+    blocked: 0,
+    accuracy: 0,
+    avgResponseTime: 0,
+  });
+
+useEffect(() => {
+  async function fetchDashboardData() {
+    try {
+      const results = await Promise.allSettled([
+        axios.get('/dashboard/global'),
+        axios.get('/dashboard/messages/global'),
+        axios.get('/dashboard/messages/per-channel'),
+        axios.get('/dashboard/messages/weekly-trends'),
+        axios.get('/dashboard/messages/weekly-activity'),
+      ]);
+
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          console.error(
+            'Dashboard endpoint hatası:',
+            index,
+            result.reason.config?.url,
+            result.reason.response?.status,
+            result.reason.response?.data || result.reason.message
+          );
+        }
+      });
+
+      const global =
+        results[0].status === 'fulfilled'
+          ? results[0].value.data?.data || {}
+          : {};
+
+      const messageGlobal =
+        results[1].status === 'fulfilled'
+          ? results[1].value.data?.data || {}
+          : {};
+
+      const messagesPerChannel =
+        results[2].status === 'fulfilled'
+          ? results[2].value.data?.data?.messagesPerChannel || []
+          : [];
+
+                const trendResponse =
+            results[3].status === 'fulfilled'
+              ? results[3].value.data?.data?.trends || []
+              : [];
+
+          const trendData = Array.isArray(trendResponse)
+            ? trendResponse
+            : trendResponse.topics || [];
+
+      const weeklyActivity =
+        results[4].status === 'fulfilled'
+          ? results[4].value.data?.data?.weeklyActivity || []
+          : [];
+
+      setStats([
+        {
+          title: 'Aktif Kullanıcı',
+          value: Number(global.totalUsers || 0),
+          change: '',
+          icon: Users,
+          description: 'Toplam kullanıcı',
+          color: 'primary',
+        },
+        {
+          title: 'Günlük Mesaj',
+          value: Number(messageGlobal.messagesLast24Hours || 0),
+          change: '',
+          icon: MessageSquare,
+          description: 'Son 24 saat',
+          color: 'accent',
+        },
+        {
+          title: 'İş İlanları',
+          value: Number(global.activeJobPosts || 0),
+          change: '',
+          icon: Briefcase,
+          description: 'Aktif ilanlar',
+          color: 'warning',
+        },
+        {
+          title: 'Trend Konular',
+          value: Number(trendData.length || 0),
+          change: '',
+          icon: TrendingUp,
+          description: 'Bu hafta',
+          color: 'info',
+        },
+      ]);
+
+      setActivityData(
+        weeklyActivity.map((item) => ({
+          name: item.name || item.date || item.day || '',
+          mesajlar: Number(item.messages || item.messageCount || item.totalMessages || 0),
+          kullanicilar: Number(item.users || item.activeUsers || item.totalUsers || 0),
+        }))
+      );
+
+      setTrends(
+        trendData.map((trend, index) => ({
+          topic: trend.topic || trend.title || `Trend ${index + 1}`,
+          category: trend.category || 'Backend',
+          mentions: Number(trend.mentions || trend.count || 0),
+          growth: Number(trend.growth || 0),
+          summary: trend.summary || trend.description || '',
+          hot: Boolean(trend.hot || index === 0),
+        }))
+      );
+
+      setChannels(
+        messagesPerChannel.map((channel, index) => ({
+            name:
+            channel.Channel?.name ||
+            channel.channel?.name ||
+            channel['Channel.name'] ||
+            channel.channelName ||
+            channel.name ||
+            channel.channel_id ||
+            channel.channelId ||
+            `Kanal ${index + 1}`,
+          messages: Number(channel.messageCount || channel.messages || 0),
+          active: index < 5,
+        }))
+      );
+
+      const totalMessages = Number(messageGlobal.totalMessages || 0);
+      const removedMessages = Number(messageGlobal.removedMessagesLast7Days || 0);
+      const approvedMessages = Number(
+        messageGlobal.approvedMessages ?? Math.max(totalMessages - removedMessages, 0)
+      );
+
+      setModerationData({
+        totalScanned: totalMessages,
+        approved: approvedMessages,
+        flagged: removedMessages,
+        blocked: Number(messageGlobal.blockedMessages || removedMessages || 0),
+        accuracy: Number(
+          messageGlobal.accuracy ??
+            (totalMessages ? ((approvedMessages / totalMessages) * 100).toFixed(1) : 0)
+        ),
+        avgResponseTime: Number(messageGlobal.avgResponseTime || 0),
+      });
+    } catch (error) {
+      console.error('Dashboard beklenmeyen hata:', error);
+    }
+  }
+
+  fetchDashboardData();
+}, []);
+
+  const approvedPercent = moderationData.totalScanned
+    ? (moderationData.approved / moderationData.totalScanned) * 100
+    : 0;
+
+  const flaggedPercent = moderationData.totalScanned
+    ? (moderationData.flagged / moderationData.totalScanned) * 100
+    : 0;
+
+  const blockedPercent = moderationData.totalScanned
+    ? (moderationData.blocked / moderationData.totalScanned) * 100
+    : 0;
 
   return (
     <div className="dashboard">
-      {/* Animated Background */}
       <div className="dashboard__background">
         <motion.div
           className="dashboard__background-orb dashboard__background-orb--primary"
@@ -366,7 +425,6 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Header */}
       <motion.header
         className="dashboard__header"
         initial={{ y: -100 }}
@@ -402,9 +460,7 @@ export default function Dashboard() {
         </div>
       </motion.header>
 
-      {/* Main Content */}
       <main className="dashboard__main">
-        {/* Hero Section */}
         <motion.section
           className="dashboard__hero"
           initial={{ opacity: 0, y: 30 }}
@@ -508,7 +564,7 @@ export default function Dashboard() {
                 <Users className="h-5 w-5" />
                 <div>
                   <p className="dashboard__hero-stat-value">
-                    <AnimatedCounter value={12847} suffix="+" />
+                    <AnimatedCounter value={stats[0]?.value || 0} suffix="+" />
                   </p>
                   <p className="dashboard__hero-stat-label">Aktif Geliştirici</p>
                 </div>
@@ -520,7 +576,7 @@ export default function Dashboard() {
                 <MessageSquare className="h-5 w-5" />
                 <div>
                   <p className="dashboard__hero-stat-value">
-                    <AnimatedCounter value={45621} />
+                    <AnimatedCounter value={stats[1]?.value || 0} />
                   </p>
                   <p className="dashboard__hero-stat-label">Günlük Mesaj</p>
                 </div>
@@ -551,12 +607,7 @@ export default function Dashboard() {
           </div>
         </motion.section>
 
-        {/* Stats Section */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <motion.h2
             className="dashboard__section-title"
             initial={{ opacity: 0, x: -20 }}
@@ -621,12 +672,7 @@ export default function Dashboard() {
           </motion.div>
         </motion.section>
 
-        {/* Features Section */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           <motion.h2
             className="dashboard__section-title"
             initial={{ opacity: 0, x: -20 }}
@@ -647,7 +693,9 @@ export default function Dashboard() {
               <motion.div key={feature.title} variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.03, y: -8 }} className="h-full">
                   <Card
-                    className={`dashboard__feature-card ${feature.highlight ? 'dashboard__feature-card--highlight' : ''}`}
+                    className={`dashboard__feature-card ${
+                      feature.highlight ? 'dashboard__feature-card--highlight' : ''
+                    }`}
                   >
                     <motion.div className="dashboard__feature-glow" />
                     <CardHeader className="dashboard__feature-header">
@@ -685,9 +733,7 @@ export default function Dashboard() {
           </motion.div>
         </motion.section>
 
-        {/* Charts Row */}
         <div className="dashboard__charts-row">
-          {/* Activity Chart */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -703,19 +749,10 @@ export default function Dashboard() {
                     >
                       <Activity className="h-5 w-5 dashboard-icon--c1" />
                     </motion.div>
-                    <CardTitle>Haftalik Aktivite</CardTitle>
+                    <CardTitle>Haftalık Aktivite</CardTitle>
                   </div>
-                  <motion.div
-                    className="dashboard__chart-badge"
-                    initial={{ opacity: 0, x: 10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <TrendingUp className="h-4 w-4 dashboard-icon--c2" />
-                    <span>+12%</span>
-                  </motion.div>
                 </div>
-                <CardDescription>Mesaj ve aktif kullanici sayilari</CardDescription>
+                <CardDescription>Mesaj ve aktif kullanıcı sayıları</CardDescription>
               </CardHeader>
               <CardContent className="dashboard__card-body">
                 <motion.div
@@ -738,75 +775,80 @@ export default function Dashboard() {
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
                     />
-                    <span>Kullanicilar</span>
+                    <span>Kullanıcılar</span>
                   </div>
                 </motion.div>
+
                 <motion.div
                   className="dashboard__chart-container"
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                 >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={activityData}>
-                      <defs>
-                        <linearGradient id="colorMesajlar" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--chart-1)" stopOpacity={0.45} />
-                          <stop offset="95%" stopColor="var(--chart-1)" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="colorKullanicilar" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.45} />
-                          <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <XAxis
-                        dataKey="name"
-                        stroke="var(--muted-foreground)"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis
-                        stroke="var(--muted-foreground)"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(v) => `${v / 1000}k`}
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'var(--card)',
-                          border: '1px solid var(--border)',
-                          borderRadius: '12px',
-                          color: 'var(--foreground)',
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="mesajlar"
-                        stroke="var(--chart-1)"
-                        fillOpacity={1}
-                        fill="url(#colorMesajlar)"
-                        strokeWidth={3}
-                        name="Mesajlar"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="kullanicilar"
-                        stroke="var(--chart-2)"
-                        fillOpacity={1}
-                        fill="url(#colorKullanicilar)"
-                        strokeWidth={3}
-                        name="Kullanicilar"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  {activityData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={activityData}>
+                        <defs>
+                          <linearGradient id="colorMesajlar" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="var(--chart-1)" stopOpacity={0.45} />
+                            <stop offset="95%" stopColor="var(--chart-1)" stopOpacity={0} />
+                          </linearGradient>
+                          <linearGradient id="colorKullanicilar" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.45} />
+                            <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <XAxis
+                          dataKey="name"
+                          stroke="var(--muted-foreground)"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          stroke="var(--muted-foreground)"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: 'var(--card)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '12px',
+                            color: 'var(--foreground)',
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="mesajlar"
+                          stroke="var(--chart-1)"
+                          fillOpacity={1}
+                          fill="url(#colorMesajlar)"
+                          strokeWidth={3}
+                          name="Mesajlar"
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="kullanicilar"
+                          stroke="var(--chart-2)"
+                          fillOpacity={1}
+                          fill="url(#colorKullanicilar)"
+                          strokeWidth={3}
+                          name="Kullanıcılar"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="dashboard__empty-state">
+                      Haftalık aktivite verisi bulunamadı.
+                    </div>
+                  )}
                 </motion.div>
               </CardContent>
             </Card>
           </motion.div>
 
-          {/* Moderation Stats */}
           <Card className="dashboard__moderation-card">
             <CardHeader className="dashboard__card-head">
               <div className="dashboard__moderation-header">
@@ -818,10 +860,9 @@ export default function Dashboard() {
                 </motion.div>
                 <CardTitle>AI Moderasyon Sistemi</CardTitle>
               </div>
-              <CardDescription>
-                LLM destekli otonom icerik moderasyonu (son 24 saat)
-              </CardDescription>
+              <CardDescription>LLM destekli otonom içerik moderasyonu</CardDescription>
             </CardHeader>
+
             <CardContent className="dashboard__card-body">
               <div className="dashboard__moderation-content">
                 <motion.div
@@ -849,8 +890,9 @@ export default function Dashboard() {
                     <p className="dashboard__moderation-value">
                       <AnimatedCounter value={moderationData.accuracy} decimals={1} suffix="%" />
                     </p>
-                    <p className="dashboard__moderation-label">Dogruluk Orani</p>
+                    <p className="dashboard__moderation-label">Doğruluk Oranı</p>
                   </motion.div>
+
                   <motion.div
                     className="dashboard__moderation-stat dashboard__moderation-stat--accent"
                     whileHover={{ scale: 1.02 }}
@@ -865,7 +907,7 @@ export default function Dashboard() {
                     <p className="dashboard__moderation-value">
                       <AnimatedCounter value={moderationData.avgResponseTime} suffix="ms" />
                     </p>
-                    <p className="dashboard__moderation-label">Ort. Yanit Suresi</p>
+                    <p className="dashboard__moderation-label">Ort. Yanıt Süresi</p>
                   </motion.div>
                 </motion.div>
 
@@ -879,12 +921,7 @@ export default function Dashboard() {
                   <div className="dashboard__moderation-bar">
                     <div className="dashboard__moderation-bar-header">
                       <motion.div className="dashboard__moderation-bar-label" whileHover={{ x: 5 }}>
-                        <motion.div
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
-                        >
-                          <CheckCircle className="h-4 w-4 dashboard-icon--c2" />
-                        </motion.div>
+                        <CheckCircle className="h-4 w-4 dashboard-icon--c2" />
                         <span>Onaylanan</span>
                       </motion.div>
                       <span className="dashboard__moderation-bar-value">
@@ -897,19 +934,14 @@ export default function Dashboard() {
                   <div className="dashboard__moderation-bar">
                     <div className="dashboard__moderation-bar-header">
                       <motion.div className="dashboard__moderation-bar-label" whileHover={{ x: 5 }}>
-                        <motion.div
-                          animate={{ rotate: [0, 10, -10, 0] }}
-                          transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
-                        >
-                          <AlertTriangle className="h-4 w-4 dashboard-icon--c4" />
-                        </motion.div>
-                        <span>Isaretlenen</span>
+                        <AlertTriangle className="h-4 w-4 dashboard-icon--c4" />
+                        <span>İşaretlenen</span>
                       </motion.div>
                       <span className="dashboard__moderation-bar-value">
                         {moderationData.flagged.toLocaleString()} ({flaggedPercent.toFixed(2)}%)
                       </span>
                     </div>
-                    <AnimatedProgress value={flaggedPercent * 10} delay={0.4} />
+                    <AnimatedProgress value={flaggedPercent} delay={0.4} />
                   </div>
 
                   <div className="dashboard__moderation-bar">
@@ -922,7 +954,7 @@ export default function Dashboard() {
                         {moderationData.blocked.toLocaleString()} ({blockedPercent.toFixed(3)}%)
                       </span>
                     </div>
-                    <AnimatedProgress value={blockedPercent * 100} delay={0.6} />
+                    <AnimatedProgress value={blockedPercent} delay={0.6} />
                   </div>
                 </motion.div>
 
@@ -942,7 +974,7 @@ export default function Dashboard() {
                   <p>
                     <span className="dashboard-text-emphasis">Prompt Engineering</span> ve{' '}
                     <span className="dashboard-text-emphasis">Behavioral Prompting</span> teknikleri
-                    ile optimize edilmis guvenli AI moderasyon sistemi
+                    ile optimize edilmiş güvenli AI moderasyon sistemi
                   </p>
                 </motion.div>
               </div>
@@ -950,9 +982,7 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Trends and Channels Row */}
         <div className="dashboard__trends-channels-row">
-          {/* Trends Panel */}
           <Card className="dashboard__trends-card">
             <CardHeader className="dashboard__card-head">
               <div className="dashboard__trends-header">
@@ -962,10 +992,10 @@ export default function Dashboard() {
                 >
                   <TrendingUp className="h-5 w-5 dashboard-icon--c1" />
                 </motion.div>
-                <CardTitle>Trend Radar & Icgoru Haritasi</CardTitle>
+                <CardTitle>Trend Radar & İçgörü Haritası</CardTitle>
               </div>
               <CardDescription>
-                LLM destekli semantik analiz ile haftalik trend konular
+                LLM destekli semantik analiz ile haftalık trend konular
               </CardDescription>
             </CardHeader>
             <CardContent className="dashboard__card-body">
@@ -976,71 +1006,68 @@ export default function Dashboard() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                {trends.map((trend, index) => (
-                  <motion.div key={trend.topic} variants={itemVariants}>
-                    <motion.div className="dashboard__trend-item" whileHover={{ scale: 1.01 }}>
-                      <motion.div
-                        className="dashboard__trend-progress"
-                        initial={{ width: '0%' }}
-                        whileInView={{ width: `${Math.min(trend.growth * 1.5, 100)}%` }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
-                      />
-                      <div className="dashboard__trend-content">
-                        <div className="dashboard__trend-info">
-                          <div className="dashboard__trend-title-row">
-                            <span className="dashboard__trend-rank">#{index + 1}</span>
-                            <h4 className="dashboard__trend-title">{trend.topic}</h4>
-                            {trend.hot && (
-                              <motion.div
-                                animate={{ scale: [1, 1.2, 1] }}
-                                transition={{ duration: 1, repeat: Infinity }}
+                {trends.length > 0 ? (
+                  trends.map((trend, index) => (
+                    <motion.div key={trend.topic} variants={itemVariants}>
+                      <motion.div className="dashboard__trend-item" whileHover={{ scale: 1.01 }}>
+                        <motion.div
+                          className="dashboard__trend-progress"
+                          initial={{ width: '0%' }}
+                          whileInView={{ width: `${Math.min(trend.growth * 1.5, 100)}%` }}
+                          transition={{ duration: 1, delay: index * 0.1 }}
+                        />
+                        <div className="dashboard__trend-content">
+                          <div className="dashboard__trend-info">
+                            <div className="dashboard__trend-title-row">
+                              <span className="dashboard__trend-rank">#{index + 1}</span>
+                              <h4 className="dashboard__trend-title">{trend.topic}</h4>
+                              {trend.hot && (
+                                <motion.div
+                                  animate={{ scale: [1, 1.2, 1] }}
+                                  transition={{ duration: 1, repeat: Infinity }}
+                                >
+                                  <Flame className="h-4 w-4 dashboard-icon--destructive" />
+                                </motion.div>
+                              )}
+                              <Badge
+                                className={`dashboard__trend-badge ${
+                                  categoryColors[trend.category] || 'category-backend'
+                                }`}
                               >
-                                <Flame className="h-4 w-4 dashboard-icon--destructive" />
-                              </motion.div>
-                            )}
-                            <Badge
-                              className={`dashboard__trend-badge ${categoryColors[trend.category]}`}
-                            >
-                              {trend.category}
-                            </Badge>
+                                {trend.category}
+                              </Badge>
+                            </div>
+                            <p className="dashboard__trend-summary">{trend.summary}</p>
                           </div>
-                          <p className="dashboard__trend-summary">{trend.summary}</p>
-                        </div>
-                        <div className="dashboard__trend-stats">
-                          <motion.div
-                            className="dashboard__trend-growth"
-                            whileHover={{ scale: 1.1 }}
-                          >
-                            <motion.div
-                              animate={{ y: [0, -3, 0] }}
-                              transition={{ duration: 1, repeat: Infinity }}
-                            >
+                          <div className="dashboard__trend-stats">
+                            <motion.div className="dashboard__trend-growth" whileHover={{ scale: 1.1 }}>
                               <ArrowUp className="h-4 w-4 dashboard-icon--c2" />
+                              <span>%{trend.growth}</span>
                             </motion.div>
-                            <span>%{trend.growth}</span>
-                          </motion.div>
-                          <div className="dashboard__trend-mentions">
-                            <MessageSquare className="h-3 w-3 dashboard-icon--c3" />
-                            <span>
-                              <AnimatedCounter value={trend.mentions} />
-                            </span>
+                            <div className="dashboard__trend-mentions">
+                              <MessageSquare className="h-3 w-3 dashboard-icon--c3" />
+                              <span>
+                                <AnimatedCounter value={trend.mentions} />
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                ))}
+                  ))
+                ) : (
+                  <div className="dashboard__empty-state">Trend verisi bulunamadı.</div>
+                )}
               </motion.div>
             </CardContent>
           </Card>
 
-          {/* Channels List */}
           <Card className="dashboard__channels-card">
             <CardHeader className="dashboard__card-head">
               <div className="dashboard__channels-header">
                 <div>
-                  <CardTitle>Populer Kanallar</CardTitle>
-                  <CardDescription>En aktif programlama kanallari</CardDescription>
+                  <CardTitle>Popüler Kanallar</CardTitle>
+                  <CardDescription>En aktif programlama kanalları</CardDescription>
                 </div>
                 <motion.div
                   animate={{ rotate: [0, 15, -15, 0] }}
@@ -1058,53 +1085,60 @@ export default function Dashboard() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                {channels.map((channel, index) => (
-                  <motion.div key={channel.name} variants={itemVariants}>
-                    <motion.div
-                      className="dashboard__channel-item"
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <motion.div className="dashboard__channel-hover-glow" />
-                      <div className="dashboard__channel-info">
-                        <motion.div
-                          className={`dashboard__channel-icon dashboard__channel-icon--tone-${(index % 5) + 1}`}
-                          whileHover={{ rotate: 10 }}
-                        >
-                          <Hash className="h-4 w-4" />
-                        </motion.div>
-                        <div>
-                          <div className="dashboard__channel-name">
-                            <span>{channel.name}</span>
-                            {channel.active && (
-                              <motion.span
-                                className="dashboard__channel-active"
-                                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
-                              />
-                            )}
+                {channels.length > 0 ? (
+                  channels.map((channel, index) => (
+                    <motion.div key={channel.name} variants={itemVariants}>
+                      <motion.div
+                        className="dashboard__channel-item"
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <motion.div className="dashboard__channel-hover-glow" />
+                        <div className="dashboard__channel-info">
+                          <motion.div
+                            className={`dashboard__channel-icon dashboard__channel-icon--tone-${
+                              (index % 5) + 1
+                            }`}
+                            whileHover={{ rotate: 10 }}
+                          >
+                            <Hash className="h-4 w-4" />
+                          </motion.div>
+                          <div>
+                            <div className="dashboard__channel-name">
+                              <span>{channel.name}</span>
+                              {channel.active && (
+                                <motion.span
+                                  className="dashboard__channel-active"
+                                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                                  transition={{ duration: 1.5, repeat: Infinity }}
+                                />
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.05 + 0.2 }}
-                      >
-                        <Badge variant="secondary" className="dashboard__channel-badge">
-                          {(channel.messages / 1000).toFixed(1)}k mesaj
-                        </Badge>
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.05 + 0.2 }}
+                        >
+                          <Badge className="dashboard__channel-badge">
+                            {channel.messages >= 1000
+                              ? `${(channel.messages / 1000).toFixed(1)}k mesaj`
+                              : `${channel.messages} mesaj`}
+                          </Badge>
+                        </motion.div>
                       </motion.div>
                     </motion.div>
-                  </motion.div>
-                ))}
+                  ))
+                ) : (
+                  <div className="dashboard__empty-state">Kanal verisi bulunamadı.</div>
+                )}
               </motion.div>
             </CardContent>
           </Card>
         </div>
       </main>
 
-      {/* Footer */}
       <motion.footer
         className="dashboard__footer"
         initial={{ opacity: 0 }}

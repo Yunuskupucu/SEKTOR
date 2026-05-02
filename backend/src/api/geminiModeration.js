@@ -76,40 +76,73 @@ YANIT:
 /**
  * Haftalık trend konuları
  */
-export const extractWeeklyTrends = async (messages) => {
+export const extractWeeklyTrends = async (messages = []) => {
+  if (!messages.length) {
+    return [];
+  }
+
   const combinedText = messages.join('\n');
 
   const prompt = `
-  Sen bir yazılım ekosistemi veri analistisin. Aşağıdaki mesajları inceleyerek son 7 günün en önemli 5 teknik trendini çıkar.
+Sen bir yazılım ekosistemi veri analistisin. Aşağıdaki mesajları inceleyerek son 7 günün en önemli 5 teknik trendini çıkar.
 
-  ANALİZ KURALLARI:
-  1. TEKNİK ODAK: Sadece yazılım dilleri, frameworkler (React, NestJS), araçlar (Docker) veya mimariler (Microservices) hakkında konuşulanları al.
-  2. KONSOLİDASYON: Benzer teknik sorunları veya kütüphaneleri tek bir güçlü başlıkta birleştir.
-  3. GÜRÜLTÜ AYIKLAMA: "Günaydın", "Teşekkürler" gibi teknik olmayan mesajları tamamen yoksay.
+SADECE geçerli JSON array döndür.
+Markdown kullanma.
+Açıklama yazma.
+Kod bloğu kullanma.
+JSON dışında hiçbir metin yazma.
 
-  JSON ŞEMASI:
+JSON formatı birebir şöyle olmalı:
+[
   {
-    "topics": [
-      {
-        "title": "Kısa teknik başlık (Örn: React 19 Transition Hooks)",
-        "category": "Frontend | Backend | Mobile | DevOps | AI | Genel",
-        "keywords": ["anahtar_kelime1", "anahtar_kelime2"],
-        "sentiment": "positive | neutral | frustrating"
-      }
-    ]
+    "topic": "Kısa teknik başlık",
+    "category": "Frontend",
+    "mentions": 0,
+    "growth": 0,
+    "summary": "Kısa özet",
+    "hot": false
   }
+]
 
-  MESAJLAR:
-  ${combinedText}
+Kurallar:
+- Sadece teknik konuları al.
+- Günaydın, teşekkürler, selam gibi teknik olmayan mesajları yoksay.
+- category sadece şu değerlerden biri olsun: Frontend, Backend, Mobile, DevOps, AI, Genel.
+- mentions sayısal değer olsun.
+- growth 0 ile 100 arasında sayısal değer olsun.
+- hot boolean olsun.
+
+MESAJLAR:
+${combinedText}
 `;
+
   try {
     const result = await model.generateContent(prompt);
     const raw = result.response.text().trim();
 
-    const cleaned = raw.replace(/```json|```/g, '').trim();
-    return JSON.parse(cleaned);
+    const cleaned = raw
+      .replace(/```json/g, '')
+      .replace(/```/g, '')
+      .trim();
+
+    const jsonStart = cleaned.indexOf('[');
+    const jsonEnd = cleaned.lastIndexOf(']');
+
+    if (jsonStart === -1 || jsonEnd === -1) {
+      console.error('❌ Gemini JSON array döndürmedi:', cleaned);
+      return [];
+    }
+
+    const jsonText = cleaned.slice(jsonStart, jsonEnd + 1);
+    const parsed = JSON.parse(jsonText);
+
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed;
   } catch (error) {
     console.error('❌ Trend Analiz Hatası:', error.message);
-    return { topics: [] };
+    return [];
   }
 };
