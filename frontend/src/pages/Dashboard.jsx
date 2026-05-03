@@ -251,152 +251,156 @@ export default function Dashboard() {
     avgResponseTime: 0,
   });
 
-useEffect(() => {
-  async function fetchDashboardData() {
-    try {
-      const results = await Promise.allSettled([
-        axios.get('/dashboard/global'),
-        axios.get('/dashboard/messages/global'),
-        axios.get('/dashboard/messages/per-channel'),
-        axios.get('/dashboard/messages/weekly-trends'),
-        axios.get('/dashboard/messages/weekly-activity'),
-      ]);
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        const results = await Promise.allSettled([
+          axios.get('/dashboard/global'),
+          axios.get('/dashboard/messages/global'),
+          axios.get('/dashboard/messages/per-channel'),
+          axios.get('/dashboard/messages/weekly-trends'),
+          axios.get('/dashboard/messages/weekly-activity'),
+        ]);
 
-      results.forEach((result, index) => {
-        if (result.status === 'rejected') {
-          console.error(
-            'Dashboard endpoint hatası:',
-            index,
-            result.reason.config?.url,
-            result.reason.response?.status,
-            result.reason.response?.data || result.reason.message
-          );
-        }
-      });
+        console.log('RESULTS LENGTH:', results.length);
+        console.log('RESULTS FULL:', results);
 
-      const global =
-        results[0].status === 'fulfilled'
-          ? results[0].value.data?.data || {}
-          : {};
+        results.forEach((result, index) => {
+          console.log(`RESULT ${index}:`, result.status, result);
 
-      const messageGlobal =
-        results[1].status === 'fulfilled'
-          ? results[1].value.data?.data || {}
-          : {};
+          if (result.status === 'rejected') {
+            console.error(
+              'Endpoint hatası:',
+              index,
+              result.reason?.config?.url,
+              result.reason?.response?.status,
+              result.reason?.response?.data || result.reason?.message
+            );
+          }
+        });
 
-      const messagesPerChannel =
-        results[2].status === 'fulfilled'
-          ? results[2].value.data?.data?.messagesPerChannel || []
-          : [];
+        const global =
+          results[0]?.status === 'fulfilled'
+            ? results[0].value.data?.data || {}
+            : {};
 
-                const trendResponse =
-            results[3].status === 'fulfilled'
-              ? results[3].value.data?.data?.trends || []
-              : [];
+        const messageGlobal =
+          results[1]?.status === 'fulfilled'
+            ? results[1].value.data?.data || {}
+            : {};
 
-          const trendData = Array.isArray(trendResponse)
-            ? trendResponse
-            : trendResponse.topics || [];
+        const messagesPerChannel =
+          results[2]?.status === 'fulfilled'
+            ? results[2].value.data?.data?.messagesPerChannel || []
+            : [];
 
-      const weeklyActivity =
-        results[4].status === 'fulfilled'
-          ? results[4].value.data?.data?.weeklyActivity || []
-          : [];
+        const trendResponse =
+          results[3]?.status === 'fulfilled'
+            ? results[3].value.data?.data?.trends || []
+            : [];
 
-      setStats([
-        {
-          title: 'Aktif Kullanıcı',
-          value: Number(global.totalUsers || 0),
-          change: '',
-          icon: Users,
-          description: 'Toplam kullanıcı',
-          color: 'primary',
-        },
-        {
-          title: 'Günlük Mesaj',
-          value: Number(messageGlobal.messagesLast24Hours || 0),
-          change: '',
-          icon: MessageSquare,
-          description: 'Son 24 saat',
-          color: 'accent',
-        },
-        {
-          title: 'İş İlanları',
-          value: Number(global.activeJobPosts || 0),
-          change: '',
-          icon: Briefcase,
-          description: 'Aktif ilanlar',
-          color: 'warning',
-        },
-        {
-          title: 'Trend Konular',
-          value: Number(trendData.length || 0),
-          change: '',
-          icon: TrendingUp,
-          description: 'Bu hafta',
-          color: 'info',
-        },
-      ]);
+        const trendData = Array.isArray(trendResponse)
+          ? trendResponse
+          : trendResponse?.topics || [];
 
-      setActivityData(
-        weeklyActivity.map((item) => ({
-          name: item.name || item.date || item.day || '',
-          mesajlar: Number(item.messages || item.messageCount || item.totalMessages || 0),
-          kullanicilar: Number(item.users || item.activeUsers || item.totalUsers || 0),
-        }))
-      );
+        const weeklyActivity =
+          results[4]?.status === 'fulfilled'
+            ? results[4].value.data?.data?.weeklyActivity || []
+            : [];
+        setStats([
+          {
+            title: 'Aktif Kullanıcı',
+            value: Number(global.totalUsers || 0),
+            change: '',
+            icon: Users,
+            description: 'Toplam kullanıcı',
+            color: 'primary',
+          },
+          {
+            title: 'Günlük Mesaj',
+            value: Number(messageGlobal.messagesLast24Hours || 0),
+            change: '',
+            icon: MessageSquare,
+            description: 'Son 24 saat',
+            color: 'accent',
+          },
+          {
+            title: 'İş İlanları',
+            value: Number(global.activeJobPosts || 0),
+            change: '',
+            icon: Briefcase,
+            description: 'Aktif ilanlar',
+            color: 'warning',
+          },
+          {
+            title: 'Trend Konular',
+            value: Number(trendData.length || 0),
+            change: '',
+            icon: TrendingUp,
+            description: 'Bu hafta',
+            color: 'info',
+          },
+        ]);
 
-      setTrends(
-        trendData.map((trend, index) => ({
-          topic: trend.topic || trend.title || `Trend ${index + 1}`,
-          category: trend.category || 'Backend',
-          mentions: Number(trend.mentions || trend.count || 0),
-          growth: Number(trend.growth || 0),
-          summary: trend.summary || trend.description || '',
-          hot: Boolean(trend.hot || index === 0),
-        }))
-      );
+        setActivityData(
+          weeklyActivity.map((item) => ({
+            name: item.name || item.date || item.day || '',
+            mesajlar: Number(item.messages || item.messageCount || item.totalMessages || 0),
+            kullanicilar: Number(item.users || item.activeUsers || item.totalUsers || 0),
+          }))
+        );
 
-      setChannels(
-        messagesPerChannel.map((channel, index) => ({
+        setTrends(
+          trendData.map((trend, index) => ({
+            topic: trend.topic || trend.title || `Trend ${index + 1}`,
+            category: trend.category || 'Backend',
+            mentions: Number(trend.mentions || trend.count || 0),
+            growth: Number(trend.growth || 0),
+            summary: trend.summary || trend.description || '',
+            hot: Boolean(trend.hot || index === 0),
+          }))
+        );
+
+        setChannels(
+          messagesPerChannel.map((channel, index) => ({
             name:
-            channel.Channel?.name ||
-            channel.channel?.name ||
-            channel['Channel.name'] ||
-            channel.channelName ||
-            channel.name ||
-            channel.channel_id ||
-            channel.channelId ||
-            `Kanal ${index + 1}`,
-          messages: Number(channel.messageCount || channel.messages || 0),
-          active: index < 5,
-        }))
-      );
+              channel.Channel?.name ||
+              channel.channel?.name ||
+              channel['Channel.name'] ||
+              channel.channelName ||
+              channel.name ||
+              channel.channel_id ||
+              channel.channelId ||
+              `Kanal ${index + 1}`,
+            messages: Number(channel.messageCount || channel.messages || 0),
+            active: index < 5,
+          }))
+        );
 
-      const totalMessages = Number(messageGlobal.totalMessages || 0);
-      const removedMessages = Number(messageGlobal.removedMessagesLast7Days || 0);
-      const approvedMessages = Number(
-        messageGlobal.approvedMessages ?? Math.max(totalMessages - removedMessages, 0)
-      );
+        const totalMessages = Number(messageGlobal.totalMessages || 0);
+        const removedMessages = Number(messageGlobal.removedMessagesLast7Days || 0);
+        const approvedMessages = Number(
+          messageGlobal.approvedMessages ?? Math.max(totalMessages - removedMessages, 0)
+        );
 
-      setModerationData({
-        totalScanned: totalMessages,
-        approved: approvedMessages,
-        flagged: removedMessages,
-        blocked: Number(messageGlobal.blockedMessages || removedMessages || 0),
-        accuracy: Number(
-          messageGlobal.accuracy ??
+        setModerationData({
+          totalScanned: totalMessages,
+          approved: approvedMessages,
+          flagged: removedMessages,
+          blocked: Number(messageGlobal.blockedMessages || removedMessages || 0),
+          accuracy: Number(
+            messageGlobal.accuracy ??
             (totalMessages ? ((approvedMessages / totalMessages) * 100).toFixed(1) : 0)
-        ),
-        avgResponseTime: Number(messageGlobal.avgResponseTime || 0),
-      });
-    } catch (error) {
-      console.error('Dashboard beklenmeyen hata:', error);
+          ),
+          avgResponseTime: Number(messageGlobal.avgResponseTime || 0),
+        });
+      } catch (error) {
+        console.error('Dashboard beklenmeyen hata:', error);
+      }
     }
-  }
 
-  fetchDashboardData();
-}, []);
+    fetchDashboardData();
+  }, []);
 
   const approvedPercent = moderationData.totalScanned
     ? (moderationData.approved / moderationData.totalScanned) * 100
@@ -693,9 +697,8 @@ useEffect(() => {
               <motion.div key={feature.title} variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.03, y: -8 }} className="h-full">
                   <Card
-                    className={`dashboard__feature-card ${
-                      feature.highlight ? 'dashboard__feature-card--highlight' : ''
-                    }`}
+                    className={`dashboard__feature-card ${feature.highlight ? 'dashboard__feature-card--highlight' : ''
+                      }`}
                   >
                     <motion.div className="dashboard__feature-glow" />
                     <CardHeader className="dashboard__feature-header">
@@ -1030,9 +1033,8 @@ useEffect(() => {
                                 </motion.div>
                               )}
                               <Badge
-                                className={`dashboard__trend-badge ${
-                                  categoryColors[trend.category] || 'category-backend'
-                                }`}
+                                className={`dashboard__trend-badge ${categoryColors[trend.category] || 'category-backend'
+                                  }`}
                               >
                                 {trend.category}
                               </Badge>
@@ -1096,9 +1098,8 @@ useEffect(() => {
                         <motion.div className="dashboard__channel-hover-glow" />
                         <div className="dashboard__channel-info">
                           <motion.div
-                            className={`dashboard__channel-icon dashboard__channel-icon--tone-${
-                              (index % 5) + 1
-                            }`}
+                            className={`dashboard__channel-icon dashboard__channel-icon--tone-${(index % 5) + 1
+                              }`}
                             whileHover={{ rotate: 10 }}
                           >
                             <Hash className="h-4 w-4" />

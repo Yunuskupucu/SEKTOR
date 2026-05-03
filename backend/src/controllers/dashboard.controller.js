@@ -206,7 +206,10 @@ export const getWeeklyTrends = async (req, res) => {
       .filter(Boolean)
       .slice(0, 100);
 
+      console.log("weekly-trends endpoint çalıştı");
+console.log("Gemini'ye gönderilen mesaj sayısı:", messages.length);
     const trends = await extractWeeklyTrends(messages);
+    console.log("Gemini'den dönen trends:", trends);
 
     cachedTrends = trends;
     cachedTrendsAt = now;
@@ -223,6 +226,7 @@ export const getWeeklyTrends = async (req, res) => {
     });
   } catch (error) {
     console.error("getWeeklyTrends error:", error.message);
+console.error("getWeeklyTrends error full:", error);
 
     return res.json({
       success: true,
