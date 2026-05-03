@@ -44,6 +44,15 @@ const JobPost = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    channel_id: {
+  type: DataTypes.INTEGER,
+  allowNull: false,
+  references: {
+    model: Channel,
+    key: "id",
+  },
+  onDelete: "CASCADE",
+},
      expires_at: { type: DataTypes.DATE, allowNull: true },
     status: { type: DataTypes.ENUM("draft", "active", "expired"), allowNull: false, defaultValue: "active" },
     visibility: { type: DataTypes.ENUM("public", "channel"), allowNull: false, defaultValue: "public" },

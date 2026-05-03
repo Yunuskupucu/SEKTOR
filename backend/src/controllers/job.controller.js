@@ -92,3 +92,135 @@ export const getJobPostsForJobChannel = async (req, res) => {
     res.status(500).json({ message: 'Error fetching job posts', error: err.message });
   }
 };
+
+export const updateJobPost = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const {
+      title,
+      description,
+      salary,
+      location,
+      contact,
+      expires_at,
+      visibility,
+      status,
+    } = req.body;
+
+    const jobPost = await JobPost.findByPk(id);
+
+    if (!jobPost) {
+      return res.status(404).json({
+        success: false,
+        message: "İş ilanı bulunamadı.",
+      });
+    }
+
+    if (jobPost.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Bu iş ilanını düzenleme yetkiniz yok.",
+      });
+    }
+
+    await jobPost.update({
+      title: title ?? jobPost.title,
+      description: description ?? jobPost.description,
+      salary: salary ?? jobPost.salary,
+      location: location ?? jobPost.location,
+      contact: contact ?? jobPost.contact,
+      expires_at: expires_at ?? jobPost.expires_at,
+      visibility: visibility ?? jobPost.visibility,
+      status: status ?? jobPost.status,
+    });
+
+    return res.json({
+      success: true,
+      message: "İş ilanı güncellendi.",
+      data: jobPost,
+    });
+  } catch (error) {
+    console.error("updateJobPost error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "İş ilanı güncellenirken hata oluştu.",
+    });
+  }
+};
+
+export const passiveJobPost = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const jobPost = await JobPost.findByPk(id);
+
+    if (!jobPost) {
+      return res.status(404).json({
+        success: false,
+        message: "İş ilanı bulunamadı.",
+      });
+    }
+
+    if (jobPost.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Bu iş ilanını pasif hale getirme yetkiniz yok.",
+      });
+    }
+
+    await jobPost.update({
+      status: "expired",
+    });
+
+    return res.json({
+      success: true,
+      message: "İş ilanı pasif hale getirildi.",
+      data: jobPost,
+    });
+  } catch (error) {
+    console.error("passiveJobPost error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "İş ilanı pasif hale getirilirken hata oluştu.",
+    });
+  }
+};
+
+export const deleteJobPost = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const jobPost = await JobPost.findByPk(id);
+
+    if (!jobPost) {
+      return res.status(404).json({
+        success: false,
+        message: "İş ilanı bulunamadı.",
+      });
+    }
+
+    if (jobPost.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Bu iş ilanını silme yetkiniz yok.",
+      });
+    }
+
+    await jobPost.destroy();
+
+    return res.json({
+      success: true,
+      message: "İş ilanı silindi.",
+    });
+  } catch (error) {
+    console.error("deleteJobPost error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "İş ilanı silinirken hata oluştu.",
+    });
+  }
+};
