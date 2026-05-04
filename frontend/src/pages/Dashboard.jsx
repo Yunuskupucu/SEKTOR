@@ -218,11 +218,14 @@ const features = [
 
 const categoryColors = {
   Frontend: 'category-frontend',
-  'AI/ML': 'category-ai',
+  Backend: 'category-backend',
+  Mobile: 'category-mobile',
+  DevOps: 'category-infra',
+  AI: 'category-ai',
+  'Yapay Zeka': 'category-ai',
   Dil: 'category-lang',
   Altyapı: 'category-infra',
   Altyapi: 'category-infra',
-  Backend: 'category-backend',
 };
 
 const containerVariants = {
@@ -307,41 +310,53 @@ export default function Dashboard() {
           results[4]?.status === 'fulfilled'
             ? results[4].value.data?.data?.weeklyActivity || []
             : [];
-        setStats([
-          {
-            title: 'Aktif Kullanıcı',
-            value: Number(global.totalUsers || 0),
-            change: '',
-            icon: Users,
-            description: 'Toplam kullanıcı',
-            color: 'primary',
-          },
-          {
-            title: 'Günlük Mesaj',
-            value: Number(messageGlobal.messagesLast24Hours || 0),
-            change: '',
-            icon: MessageSquare,
-            description: 'Son 24 saat',
-            color: 'accent',
-          },
-          {
-            title: 'İş İlanları',
-            value: Number(global.activeJobPosts || 0),
-            change: '',
-            icon: Briefcase,
-            description: 'Aktif ilanlar',
-            color: 'warning',
-          },
-          {
-            title: 'Trend Konular',
-            value: Number(trendData.length || 0),
-            change: '',
-            icon: TrendingUp,
-            description: 'Bu hafta',
-            color: 'info',
-          },
-        ]);
 
+            console.log("GLOBAL:", global);
+console.log("MESSAGE GLOBAL:", messageGlobal);
+console.log("MESSAGES PER CHANNEL:", messagesPerChannel);
+console.log("TREND DATA:", trendData);
+console.log("WEEKLY ACTIVITY:", weeklyActivity);
+        
+
+
+const nextStats = [
+  {
+    title: 'Aktif Kullanıcı',
+    value: Number(global.totalUsers || 0),
+    change: '',
+    icon: Users,
+    description: 'Toplam kullanıcı',
+    color: 'primary',
+  },
+  {
+    title: 'Günlük Mesaj',
+    value: Number(messageGlobal.messagesLast24Hours || 0),
+    change: '',
+    icon: MessageSquare,
+    description: 'Son 24 saat',
+    color: 'accent',
+  },
+  {
+    title: 'İş İlanları',
+    value: Number(global.activeJobPosts || 0),
+    change: '',
+    icon: Briefcase,
+    description: 'Aktif ilanlar',
+    color: 'warning',
+  },
+  {
+    title: 'Aktif Kanal',
+    value: Number(global.activeChannelsLast7Days || 0),
+    change: '',
+    icon: Hash,
+    description: 'Son 7 gün',
+    color: 'info',
+  },
+];
+
+console.log("🧩 NEXT STATS:", nextStats);
+
+setStats(nextStats);
         setActivityData(
           weeklyActivity.map((item) => ({
             name: item.name || item.date || item.day || '',
@@ -625,8 +640,9 @@ export default function Dashboard() {
             className="dashboard__stats"
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+           // whileInView="visible"
+            //viewport={{ once: true }}
+            animate="visible"
           >
             {stats.map((stat, index) => (
               <motion.div key={stat.title} variants={itemVariants}>
@@ -676,7 +692,7 @@ export default function Dashboard() {
           </motion.div>
         </motion.section>
 
-        <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        <motion.section initial={{ opacity: 1 }} animate={{ opacity: 1 }}>
           <motion.h2
             className="dashboard__section-title"
             initial={{ opacity: 0, x: -20 }}

@@ -208,22 +208,39 @@ export const getWeeklyTrends = async (req, res) => {
 
       console.log("weekly-trends endpoint çalıştı");
 console.log("Gemini'ye gönderilen mesaj sayısı:", messages.length);
-    const trends = await extractWeeklyTrends(messages);
-    console.log("Gemini'den dönen trends:", trends);
+  
 
-    cachedTrends = trends;
-    cachedTrendsAt = now;
+// Fallback 
+const trends = await extractWeeklyTrends(messages);
 
-    return res.json({
-      success: true,
-      data: {
-        from: sevenDaysAgo,
-        to: now,
-        fromCache: false,
-        trends,
-        sampledMessageCount: messages.length,
-      },
-    });
+console.log("🟢 TREND:", trends);
+
+const safeTrends = trends && trends.length
+  ? trends
+  : [
+      {
+        topic: "Veri alınamadı",
+        category: "Genel",
+        mentions: 0,
+        growth: 0,
+        summary: "Trend verisi şu anda alınamıyor (API limiti dolmuş olabilir)",
+        hot: false
+      }
+    ];
+
+cachedTrends = safeTrends;
+cachedTrendsAt = now;
+
+return res.json({
+  success: true,
+  data: {
+    from: sevenDaysAgo,
+    to: now,
+    fromCache: false,
+    trends: safeTrends,
+    sampledMessageCount: messages.length,
+  },
+});
   } catch (error) {
     console.error("getWeeklyTrends error:", error.message);
 console.error("getWeeklyTrends error full:", error);
@@ -232,7 +249,16 @@ console.error("getWeeklyTrends error full:", error);
       success: true,
       data: {
         fromCache: true,
-        trends: cachedTrends || [],
+        trends: cachedTrends || [
+  {
+    topic: "Veri alınamadı",
+    category: "Genel",
+    mentions: 0,
+    growth: 0,
+    summary: "Trend verisi şu anda alınamıyor.",
+    hot: false
+  }
+],
         sampledMessageCount: 0,
       },
     });

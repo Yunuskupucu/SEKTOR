@@ -107,7 +107,7 @@ JSON formatı birebir şöyle olmalı:
 Kurallar:
 - Sadece teknik konuları al.
 - Günaydın, teşekkürler, selam gibi teknik olmayan mesajları yoksay.
-- category sadece şu değerlerden biri olsun: Frontend, Backend, Mobile, DevOps, AI, Genel.
+- category sadece şu değerlerden biri olsun: Frontend, Backend, Mobile, DevOps, AI.
 - mentions sayısal değer olsun.
 - growth 0 ile 100 arasında sayısal değer olsun.
 - hot boolean olsun.
