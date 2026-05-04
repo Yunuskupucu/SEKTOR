@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 export let socket = null;
 
 export function initSocket(origin) {
+   console.log("🔌 Socket origin:", origin);
   if (socket?.disconnect) {
     socket.disconnect();
   }

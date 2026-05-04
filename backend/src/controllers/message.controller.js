@@ -132,6 +132,7 @@ export const getMessagesByChannel = async (req, res) => {
 
 
 export const sendMessage = async (req, res) => {
+  console.log("🚀 REST sendMessage endpoint çalıştı", req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });

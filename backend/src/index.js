@@ -103,12 +103,14 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', async (data) => {
+    console.log("📨 BACKEND SOCKET sendMessage geldi:", data);
     const { user_id, channel_id, content } = data;
 
     try {
       const room = String(channel_id);
 
       const fullMessage = await handleSendMessage({ user_id, channel_id, content });
+console.log("🧪 SOCKET FULL MESSAGE:", fullMessage?.toJSON?.() || fullMessage);
 
       io.to(room).emit('newMessage', fullMessage);
 
