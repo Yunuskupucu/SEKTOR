@@ -25,7 +25,11 @@ const Channels = ({ channels, selectedChannel, setSelectedChannel }) => {
           }}
         >
           <div className={styles.avatar}>
-            <img src={channel.channelPic} alt={channel.name} />
+            <img
+              src={channel.channelPic}
+              alt={channel.name}
+              className={channel.imageClassName ? styles[channel.imageClassName] : ''}
+            />
           </div>
           <div className={styles.channelInfo}>
             <div className={styles.channelName}>{channel.name}</div>

@@ -13,6 +13,7 @@ import CppPng from '../../assets/channels/cpp.png';
 import CsPng from '../../assets/channels/cs.png';
 import HtmlSvg from '../../assets/channels/html.svg';
 import JobPng from '../../assets/channels/job.png';
+import DevOpsPng from '../../assets/channels/devops.png';
 import { useTheme } from '../../context/useTheme';
 
 const channelsData = [
@@ -24,8 +25,15 @@ const channelsData = [
   { id: 6, name: 'C#', channelPic: CsPng, type: 'chat' },
   { id: 7, name: 'C++', channelPic: CppPng, type: 'chat' },
   { id: 8, name: 'SQL', channelPic: SqlPng, type: 'chat' },
-  { id: 9, name: 'İş İlanları', channelPic: JobPng, type: 'jobs' },
   { id: 10, name: 'Yapay Zekâ', channelPic: AiPng, type: 'chat' },
+  {
+    id: 21,
+    name: 'DevOps',
+    channelPic: DevOpsPng,
+    type: 'chat',
+    imageClassName: 'avatarImageContainSmall',
+  },
+  { id: 9, name: 'İş İlanları', channelPic: JobPng, type: 'jobs' },
 ];
 
 const Sidebar = ({ selectedChannel, setSelectedChannel }) => {

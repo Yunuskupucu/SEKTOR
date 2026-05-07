@@ -6,6 +6,7 @@ import '@fontsource/geist-sans/600.css';
 import '@fontsource/geist-sans/700.css';
 import '../styles/dashboard-globals.css';
 import { useTheme } from '../context/useTheme';
+import aiAvatar from '../assets/ai-avatar.png';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import {
   ArrowRight,
@@ -30,13 +31,7 @@ import {
   Moon,
   Sun,
 } from 'lucide-react';
-import {
-  motion,
-  useMotionValue,
-  useTransform,
-  animate,
-  useInView,
-} from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.module.scss';
@@ -173,46 +168,49 @@ const floatingIcons = [
 
 const features = [
   {
-    title: 'Gerçek Zamanlı Sohbet',
-    description: 'Socket.IO tabanlı düşük gecikme süreli mesajlaşma altyapısı ile anlık iletişim',
-    icon: MessageSquare,
+    title: 'Yapay Zeka Asistanı',
+    description:
+      'Sohbette "@ai" yazarak yapay zeka asistanından anlık teknik destek, örnek kod ve hızlı çözüm önerileri alabilirsiniz.',
+    icon: aiAvatar,
     highlight: true,
     tone: 1,
   },
   {
     title: 'AI Moderasyon',
-    description: 'LLM destekli otonom moderasyon sistemi ile güvenli içerik filtreleme',
+    description:
+      'Büyük Dil Modeli (LLM) destekli otonom moderasyon sistemi ile toksik içerik ve kötü niyetli iletişimi filtreler.',
     icon: Shield,
     highlight: true,
     tone: 2,
   },
   {
+    title: 'Geliştirici Odaklı Kanallar',
+    description:
+      'Programlama dillerine göre özelleştirilmiş sohbet kanallarında teknik yardımlaşmayı artırarak sosyal öğrenmeyi destekler.',
+    icon: Zap,
+    highlight: false,
+    tone: 6,
+  },
+  {
     title: 'Trend Radar',
-    description: 'Semantik analiz ve konu modelleme ile haftalık trend içgörüleri',
+    description: 'Semantik analiz ve konu modelleme ile haftalık trend içgörüleri.',
     icon: TrendingUp,
     highlight: true,
     tone: 3,
   },
   {
     title: 'E-Mentorluk',
-    description: 'Deneyimli geliştiricilerden bire bir mentorluk desteği alın',
+    description: 'Deneyimli geliştiricilerden mentorluk desteği alın.',
     icon: Users,
     highlight: false,
     tone: 4,
   },
   {
     title: 'Kariyer Fırsatları',
-    description: 'İş ve staj ilanlarına hızlı erişim ile kariyerinizi ilerletin',
+    description: 'İş ve staj ilanlarına hızlı erişim ile kariyerinizi ilerletin.',
     icon: Briefcase,
     highlight: false,
     tone: 5,
-  },
-  {
-    title: 'Programlama Kanalları',
-    description: 'Dil ve teknoloji bazlı özelleştirilmiş sohbet kanalları',
-    icon: Zap,
-    highlight: false,
-    tone: 6,
   },
 ];
 
@@ -282,15 +280,10 @@ export default function Dashboard() {
           }
         });
 
-        const global =
-          results[0]?.status === 'fulfilled'
-            ? results[0].value.data?.data || {}
-            : {};
+        const global = results[0]?.status === 'fulfilled' ? results[0].value.data?.data || {} : {};
 
         const messageGlobal =
-          results[1]?.status === 'fulfilled'
-            ? results[1].value.data?.data || {}
-            : {};
+          results[1]?.status === 'fulfilled' ? results[1].value.data?.data || {} : {};
 
         const messagesPerChannel =
           results[2]?.status === 'fulfilled'
@@ -298,9 +291,7 @@ export default function Dashboard() {
             : [];
 
         const trendResponse =
-          results[3]?.status === 'fulfilled'
-            ? results[3].value.data?.data?.trends || []
-            : [];
+          results[3]?.status === 'fulfilled' ? results[3].value.data?.data?.trends || [] : [];
 
         const trendData = Array.isArray(trendResponse)
           ? trendResponse
@@ -311,52 +302,50 @@ export default function Dashboard() {
             ? results[4].value.data?.data?.weeklyActivity || []
             : [];
 
-            console.log("GLOBAL:", global);
-console.log("MESSAGE GLOBAL:", messageGlobal);
-console.log("MESSAGES PER CHANNEL:", messagesPerChannel);
-console.log("TREND DATA:", trendData);
-console.log("WEEKLY ACTIVITY:", weeklyActivity);
-        
+        console.log('GLOBAL:', global);
+        console.log('MESSAGE GLOBAL:', messageGlobal);
+        console.log('MESSAGES PER CHANNEL:', messagesPerChannel);
+        console.log('TREND DATA:', trendData);
+        console.log('WEEKLY ACTIVITY:', weeklyActivity);
 
+        const nextStats = [
+          {
+            title: 'Aktif Kullanıcı',
+            value: Number(global.totalUsers || 0),
+            change: '',
+            icon: Users,
+            description: 'Toplam kullanıcı',
+            color: 'primary',
+          },
+          {
+            title: 'Günlük Mesaj',
+            value: Number(messageGlobal.messagesLast24Hours || 0),
+            change: '',
+            icon: MessageSquare,
+            description: 'Son 24 saat',
+            color: 'accent',
+          },
+          {
+            title: 'İş İlanları',
+            value: Number(global.activeJobPosts || 0),
+            change: '',
+            icon: Briefcase,
+            description: 'Aktif ilanlar',
+            color: 'warning',
+          },
+          {
+            title: 'Aktif Kanal',
+            value: Number(global.activeChannelsLast7Days || 0),
+            change: '',
+            icon: Hash,
+            description: 'Son 7 gün',
+            color: 'info',
+          },
+        ];
 
-const nextStats = [
-  {
-    title: 'Aktif Kullanıcı',
-    value: Number(global.totalUsers || 0),
-    change: '',
-    icon: Users,
-    description: 'Toplam kullanıcı',
-    color: 'primary',
-  },
-  {
-    title: 'Günlük Mesaj',
-    value: Number(messageGlobal.messagesLast24Hours || 0),
-    change: '',
-    icon: MessageSquare,
-    description: 'Son 24 saat',
-    color: 'accent',
-  },
-  {
-    title: 'İş İlanları',
-    value: Number(global.activeJobPosts || 0),
-    change: '',
-    icon: Briefcase,
-    description: 'Aktif ilanlar',
-    color: 'warning',
-  },
-  {
-    title: 'Aktif Kanal',
-    value: Number(global.activeChannelsLast7Days || 0),
-    change: '',
-    icon: Hash,
-    description: 'Son 7 gün',
-    color: 'info',
-  },
-];
+        console.log('🧩 NEXT STATS:', nextStats);
 
-console.log("🧩 NEXT STATS:", nextStats);
-
-setStats(nextStats);
+        setStats(nextStats);
         setActivityData(
           weeklyActivity.map((item) => ({
             name: item.name || item.date || item.day || '',
@@ -405,7 +394,7 @@ setStats(nextStats);
           blocked: Number(messageGlobal.blockedMessages || removedMessages || 0),
           accuracy: Number(
             messageGlobal.accuracy ??
-            (totalMessages ? ((approvedMessages / totalMessages) * 100).toFixed(1) : 0)
+              (totalMessages ? ((approvedMessages / totalMessages) * 100).toFixed(1) : 0)
           ),
           avgResponseTime: Number(messageGlobal.avgResponseTime || 0),
         });
@@ -626,7 +615,11 @@ setStats(nextStats);
           </div>
         </motion.section>
 
-        <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
           <motion.h2
             className="dashboard__section-title"
             initial={{ opacity: 0, x: -20 }}
@@ -640,7 +633,7 @@ setStats(nextStats);
             className="dashboard__stats"
             variants={containerVariants}
             initial="hidden"
-           // whileInView="visible"
+            // whileInView="visible"
             //viewport={{ once: true }}
             animate="visible"
           >
@@ -713,8 +706,9 @@ setStats(nextStats);
               <motion.div key={feature.title} variants={itemVariants}>
                 <motion.div whileHover={{ scale: 1.03, y: -8 }} className="h-full">
                   <Card
-                    className={`dashboard__feature-card ${feature.highlight ? 'dashboard__feature-card--highlight' : ''
-                      }`}
+                    className={`dashboard__feature-card ${
+                      feature.highlight ? 'dashboard__feature-card--highlight' : ''
+                    }`}
                   >
                     <motion.div className="dashboard__feature-glow" />
                     <CardHeader className="dashboard__feature-header">
@@ -722,7 +716,15 @@ setStats(nextStats);
                         <div
                           className={`dashboard__feature-icon dashboard__feature-icon--tone-${feature.tone}`}
                         >
-                          <feature.icon className="h-5 w-5" />
+                          {typeof feature.icon === 'string' ? (
+                            <img
+                              src={feature.icon}
+                              alt=""
+                              className="dashboard__feature-icon-image"
+                            />
+                          ) : (
+                            <feature.icon className="h-5 w-5" />
+                          )}
                         </div>
                         <CardTitle className="dashboard__feature-title">{feature.title}</CardTitle>
                       </div>
@@ -1049,8 +1051,9 @@ setStats(nextStats);
                                 </motion.div>
                               )}
                               <Badge
-                                className={`dashboard__trend-badge ${categoryColors[trend.category] || 'category-backend'
-                                  }`}
+                                className={`dashboard__trend-badge ${
+                                  categoryColors[trend.category] || 'category-backend'
+                                }`}
                               >
                                 {trend.category}
                               </Badge>
@@ -1058,7 +1061,10 @@ setStats(nextStats);
                             <p className="dashboard__trend-summary">{trend.summary}</p>
                           </div>
                           <div className="dashboard__trend-stats">
-                            <motion.div className="dashboard__trend-growth" whileHover={{ scale: 1.1 }}>
+                            <motion.div
+                              className="dashboard__trend-growth"
+                              whileHover={{ scale: 1.1 }}
+                            >
                               <ArrowUp className="h-4 w-4 dashboard-icon--c2" />
                               <span>%{trend.growth}</span>
                             </motion.div>
@@ -1114,8 +1120,9 @@ setStats(nextStats);
                         <motion.div className="dashboard__channel-hover-glow" />
                         <div className="dashboard__channel-info">
                           <motion.div
-                            className={`dashboard__channel-icon dashboard__channel-icon--tone-${(index % 5) + 1
-                              }`}
+                            className={`dashboard__channel-icon dashboard__channel-icon--tone-${
+                              (index % 5) + 1
+                            }`}
                             whileHover={{ rotate: 10 }}
                           >
                             <Hash className="h-4 w-4" />
