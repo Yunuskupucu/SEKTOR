@@ -1,4 +1,4 @@
-import { MapPin, DollarSign, Mail, User, Briefcase, Plus } from 'lucide-react';
+import { MapPin, Mail, User, Briefcase, Plus } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from '../../styles/JobCard.module.scss';
@@ -62,12 +62,7 @@ const JobCard = ({ selectedChannel }) => {
                   </div>
                 )}
 
-                {job.salary && (
-                  <div className={styles.jobSalary}>
-                    <DollarSign size={16} />
-                    {job.salary}
-                  </div>
-                )}
+                {job.salary && <div className={styles.jobSalary}>{job.salary}</div>}
 
                 {job.contact && (
                   <div className={styles.jobContact}>
