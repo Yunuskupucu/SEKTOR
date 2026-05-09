@@ -8,6 +8,7 @@ import '../styles/dashboard-globals.css';
 import { useTheme } from '../context/useTheme';
 import aiAvatar from '../assets/ai-avatar.png';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { Loader } from 'lucide-react';
 import {
   ArrowRight,
   Sparkles,
@@ -396,8 +397,15 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="dashboard__loading-state">
-        <p>Yükleniyor...</p>
+      <div className="dashboard__loading-state" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <Loader style={{ width: '48px', height: '48px', color: 'var(--primary)', animation: 'spin 1s linear infinite' }} />
+        <span style={{ marginTop: 16, color: 'var(--muted-foreground)', fontSize: 18 }}>Yükleniyor...</span>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
