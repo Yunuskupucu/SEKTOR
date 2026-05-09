@@ -251,9 +251,13 @@ export default function Dashboard() {
     accuracy: 0,
     avgResponseTime: 0,
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchDashboardData() {
+      setLoading(true);
+      setError(null);
       try {
         const results = await Promise.allSettled([
           axios.get('/dashboard/global'),
@@ -263,51 +267,20 @@ export default function Dashboard() {
           axios.get('/dashboard/messages/weekly-activity'),
         ]);
 
-        console.log('RESULTS LENGTH:', results.length);
-        console.log('RESULTS FULL:', results);
-
         results.forEach((result, index) => {
-          console.log(`RESULT ${index}:`, result.status, result);
-
           if (result.status === 'rejected') {
-            console.error(
-              'Endpoint hatası:',
-              index,
-              result.reason?.config?.url,
-              result.reason?.response?.status,
-              result.reason?.response?.data || result.reason?.message
-            );
+            console.error('Endpoint hatası:', index, result.reason?.config?.url, result.reason?.response?.status, result.reason?.response?.data || result.reason?.message);
           }
         });
 
         const global = results[0]?.status === 'fulfilled' ? results[0].value.data?.data || {} : {};
+        const messageGlobal = results[1]?.status === 'fulfilled' ? results[1].value.data?.data || {} : {};
+        const messagesPerChannel = results[2]?.status === 'fulfilled' ? results[2].value.data?.data?.messagesPerChannel || [] : [];
+        const trendResponse = results[3]?.status === 'fulfilled' ? results[3].value.data?.data?.trends || [] : [];
+        const trendData = Array.isArray(trendResponse) ? trendResponse : trendResponse?.topics || [];
+        const weeklyActivity = results[4]?.status === 'fulfilled' ? results[4].value.data?.data?.weeklyActivity || [] : [];
 
-        const messageGlobal =
-          results[1]?.status === 'fulfilled' ? results[1].value.data?.data || {} : {};
-
-        const messagesPerChannel =
-          results[2]?.status === 'fulfilled'
-            ? results[2].value.data?.data?.messagesPerChannel || []
-            : [];
-
-        const trendResponse =
-          results[3]?.status === 'fulfilled' ? results[3].value.data?.data?.trends || [] : [];
-
-        const trendData = Array.isArray(trendResponse)
-          ? trendResponse
-          : trendResponse?.topics || [];
-
-        const weeklyActivity =
-          results[4]?.status === 'fulfilled'
-            ? results[4].value.data?.data?.weeklyActivity || []
-            : [];
-
-        console.log('GLOBAL:', global);
-        console.log('MESSAGE GLOBAL:', messageGlobal);
-        console.log('MESSAGES PER CHANNEL:', messagesPerChannel);
-        console.log('TREND DATA:', trendData);
-        console.log('WEEKLY ACTIVITY:', weeklyActivity);
-
+        // Fallback değerlerle doldur
         const nextStats = [
           {
             title: 'Aktif Kullanıcı',
@@ -343,15 +316,16 @@ export default function Dashboard() {
           },
         ];
 
-        console.log('🧩 NEXT STATS:', nextStats);
-
         setStats(nextStats);
+        console.log('WEEKLY ACTIVITY RAW:', weeklyActivity);
         setActivityData(
-          weeklyActivity.map((item) => ({
-            name: item.name || item.date || item.day || '',
-            mesajlar: Number(item.messages || item.messageCount || item.totalMessages || 0),
-            kullanicilar: Number(item.users || item.activeUsers || item.totalUsers || 0),
-          }))
+          (Array.isArray(weeklyActivity) ? weeklyActivity : []).map((item, idx) => {
+            // API'den gelen alan adları: name, messages, users
+            const name = item.name || item.date || item.day || item._id || `Gün ${idx + 1}`;
+            const mesajlar = Number(item.messages || 0);
+            const kullanicilar = Number(item.users || 0);
+            return { name, mesajlar, kullanicilar };
+          })
         );
 
         setTrends(
@@ -398,11 +372,13 @@ export default function Dashboard() {
           ),
           avgResponseTime: Number(messageGlobal.avgResponseTime || 0),
         });
+        setLoading(false);
       } catch (error) {
+        setError('Dashboard verileri alınamadı. Lütfen tekrar deneyin.');
+        setLoading(false);
         console.error('Dashboard beklenmeyen hata:', error);
       }
     }
-
     fetchDashboardData();
   }, []);
 
@@ -418,6 +394,20 @@ export default function Dashboard() {
     ? (moderationData.blocked / moderationData.totalScanned) * 100
     : 0;
 
+  if (loading) {
+    return (
+      <div className="dashboard__loading-state">
+        <p>Yükleniyor...</p>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="dashboard__error-state">
+        <p>{error}</p>
+      </div>
+    );
+  }
   return (
     <div className="dashboard">
       <div className="dashboard__background">
@@ -807,7 +797,7 @@ export default function Dashboard() {
                   viewport={{ once: true }}
                 >
                   {activityData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={320}>
                       <AreaChart data={activityData}>
                         <defs>
                           <linearGradient id="colorMesajlar" x1="0" y1="0" x2="0" y2="1">
