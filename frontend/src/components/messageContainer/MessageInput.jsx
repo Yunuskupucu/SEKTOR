@@ -143,11 +143,27 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
       return;
     }
 
-    // Yeni mesaj gönderme
+    // Optimistic mesaj objesi oluştur
+    //bileşeninde mesaj gönderildiğinde, mesajı parent’a (üst component) hemen iletecek bir prop
+    const optimisticId = `optimistic-${Date.now()}`;
+    const optimisticMessage = {
+      id: optimisticId,
+      user_id: authUser.id,
+      channel_id: selectedChannel.id,
+      content: message,
+      created_at: new Date().toISOString(),
+      status: 'pending',
+      User: authUser,
+    };
+    if (typeof onOptimisticSend === 'function') {
+      onOptimisticSend(optimisticMessage);
+    }
+
     socket.emit('sendMessage', {
       user_id: authUser.id,
       channel_id: selectedChannel.id,
       content: message,
+      optimisticId,
     });
 
     console.log('📨 Mesaj gönderildi:', message);
@@ -262,6 +278,7 @@ MessageInput.propTypes = {
   editingMessage: PropTypes.object,
   onEditCancel: PropTypes.func,
   onEditComplete: PropTypes.func,
+  onOptimisticSend: PropTypes.func,
 };
 
 export default MessageInput;
