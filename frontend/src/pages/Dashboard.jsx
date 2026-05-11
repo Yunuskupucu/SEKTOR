@@ -247,16 +247,32 @@ export default function Dashboard() {
 
         results.forEach((result, index) => {
           if (result.status === 'rejected') {
-            console.error('Endpoint hatası:', index, result.reason?.config?.url, result.reason?.response?.status, result.reason?.response?.data || result.reason?.message);
+            console.error(
+              'Endpoint hatası:',
+              index,
+              result.reason?.config?.url,
+              result.reason?.response?.status,
+              result.reason?.response?.data || result.reason?.message
+            );
           }
         });
 
         const global = results[0]?.status === 'fulfilled' ? results[0].value.data?.data || {} : {};
-        const messageGlobal = results[1]?.status === 'fulfilled' ? results[1].value.data?.data || {} : {};
-        const messagesPerChannel = results[2]?.status === 'fulfilled' ? results[2].value.data?.data?.messagesPerChannel || [] : [];
-        const trendResponse = results[3]?.status === 'fulfilled' ? results[3].value.data?.data?.trends || [] : [];
-        const trendData = Array.isArray(trendResponse) ? trendResponse : trendResponse?.topics || [];
-        const weeklyActivity = results[4]?.status === 'fulfilled' ? results[4].value.data?.data?.weeklyActivity || [] : [];
+        const messageGlobal =
+          results[1]?.status === 'fulfilled' ? results[1].value.data?.data || {} : {};
+        const messagesPerChannel =
+          results[2]?.status === 'fulfilled'
+            ? results[2].value.data?.data?.messagesPerChannel || []
+            : [];
+        const trendResponse =
+          results[3]?.status === 'fulfilled' ? results[3].value.data?.data?.trends || [] : [];
+        const trendData = Array.isArray(trendResponse)
+          ? trendResponse
+          : trendResponse?.topics || [];
+        const weeklyActivity =
+          results[4]?.status === 'fulfilled'
+            ? results[4].value.data?.data?.weeklyActivity || []
+            : [];
 
         // Fallback değerlerle doldur
         const nextStats = [
@@ -374,9 +390,27 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="dashboard__loading-state" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        <Loader style={{ width: '48px', height: '48px', color: 'var(--primary)', animation: 'spin 1s linear infinite' }} />
-        <span style={{ marginTop: 16, color: 'var(--muted-foreground)', fontSize: 18 }}>Yükleniyor...</span>
+      <div
+        className="dashboard__loading-state"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+        }}
+      >
+        <Loader
+          style={{
+            width: '48px',
+            height: '48px',
+            color: 'var(--primary)',
+            animation: 'spin 1s linear infinite',
+          }}
+        />
+        <span style={{ marginTop: 16, color: 'var(--muted-foreground)', fontSize: 18 }}>
+          Yükleniyor...
+        </span>
         <style>{`
           @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -564,28 +598,6 @@ export default function Dashboard() {
                   <p className="dashboard__hero-stat-label">Günlük Mesaj</p>
                 </div>
               </motion.div>
-              <div className="dashboard__hero-avatars">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="dashboard__hero-avatar"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + i * 0.1 }}
-                    whileHover={{ scale: 1.2, zIndex: 10 }}
-                  >
-                    {String.fromCharCode(64 + i)}
-                  </motion.div>
-                ))}
-                <motion.div
-                  className="dashboard__hero-avatar dashboard__hero-avatar--more"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 }}
-                >
-                  +
-                </motion.div>
-              </div>
             </motion.div>
           </div>
         </motion.section>
