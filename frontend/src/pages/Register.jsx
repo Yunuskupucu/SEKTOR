@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import DarkLogo from '../assets/logo/DarkLogo.png';
 import LightLogo from '../assets/logo/LightLogo.png';
 import { useTheme } from '../context/useTheme';
-import { CgDarkMode } from 'react-icons/cg';
+import ThemeToggleButton from '../components/common/ThemeToggleButton';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 
@@ -18,7 +18,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
   const themeClass = theme === 'dark' ? styles.dark : '';
@@ -41,9 +41,9 @@ function Register() {
     }
   };
   return (
-    <div>
-      <div>
-        <CgDarkMode className={`${styles.themeIcon} ${themeClass}`} onClick={toggleTheme} />
+    <div className={styles.pageRoot}>
+      <div className={styles.themeToggleCorner}>
+        <ThemeToggleButton />
       </div>
       <div className={`${styles.container} ${themeClass}`}>
         <div className={`${styles.form} ${themeClass}`}>

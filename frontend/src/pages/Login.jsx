@@ -4,9 +4,9 @@ import styles from '../styles/Login.module.scss';
 import { useAuthStore } from '../store/useAuthStore';
 import LightLogo from '../assets/logo/LightLogo.png';
 import DarkLogo from '../assets/logo/DarkLogo.png';
-import { CgDarkMode } from 'react-icons/cg';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { useTheme } from '../context/useTheme';
+import ThemeToggleButton from '../components/common/ThemeToggleButton';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 import { getBackendOrigin } from '../lib/apiOrigin';
@@ -17,7 +17,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const logoSrc = theme === 'dark' ? LightLogo : DarkLogo;
 
   const themeClass = theme === 'dark' ? styles.dark : '';
@@ -37,9 +37,9 @@ function Login() {
   };
 
   return (
-    <div>
-      <div>
-        <CgDarkMode className={`${styles.themeIcon} ${themeClass}`} onClick={toggleTheme} />
+    <div className={styles.pageRoot}>
+      <div className={styles.themeToggleCorner}>
+        <ThemeToggleButton />
       </div>
       <div className={`${styles.container} ${themeClass}`}>
         <div className={`${styles.form} ${themeClass}`}>

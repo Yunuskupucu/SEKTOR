@@ -15,6 +15,20 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
+  /* Light app: gradient üzerinde ay ikonu beyaz */
+  &:not(.dark) :global(.theme-toggle-btn) {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.4);
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.65);
+    }
+
+    &:focus-visible {
+      outline-color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
   .logo {
     font-size: 1.5rem;
     font-weight: 600;
@@ -69,17 +83,6 @@
     gap: 1rem;
     transition: 0.5s;
 
-    .themeIcon {
-      color: linear-gradient(80deg, rgb(47, 46, 52) 0%, rgb(11, 11, 13) 100%);
-      font-size: 24px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-
-      &:hover {
-        transform: scale(1.2);
-      }
-    }
-
     .settings {
       position: relative;
 
@@ -133,10 +136,6 @@
   }
 
   &.dark .settingsContainer {
-    .themeIcon {
-      color: #d1d5db;
-    }
-
     .settingsIcon {
       color: #d1d5db;
     }

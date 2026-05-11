@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Plus } from 'lucide-react';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
 import JobBoard from '../job/JobCard';
+import AddJobModal from '../job/AddJobModal';
 import styles from '../../styles/MessageContainer.module.scss';
 import MessageSkeleton from './MessageSkeleton';
 import Message from './Message';
@@ -20,6 +22,8 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const [nextCursor, setNextCursor] = useState(null);
   const [reloadSeq, setReloadSeq] = useState(0);
   const [editingMessage, setEditingMessage] = useState(null);
+  const [jobListRefreshSeq, setJobListRefreshSeq] = useState(0);
+  const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
 
   const { theme } = useTheme();
   const { authUser } = useAuthStore();
@@ -202,7 +206,26 @@ const onMessageDeleted = (deletedData) => {
 
           <div className={styles.contentWrapper}>
             {(selectedChannel?.type || '').toString().trim().toLowerCase() === 'jobs' ? (
-              <JobBoard selectedChannel={selectedChannel} />
+              <div className={styles.jobsChannelRoot}>
+                <JobBoard
+                  selectedChannel={selectedChannel}
+                  listRefreshSeq={jobListRefreshSeq}
+                />
+                <button
+                  type="button"
+                  className={styles.jobAddFab}
+                  onClick={() => setIsAddJobModalOpen(true)}
+                  aria-label="Yeni iş ilanı ekle"
+                >
+                  <Plus size={26} />
+                </button>
+                {isAddJobModalOpen && (
+                  <AddJobModal
+                    onClose={() => setIsAddJobModalOpen(false)}
+                    onCreated={() => setJobListRefreshSeq((n) => n + 1)}
+                  />
+                )}
+              </div>
             ) : (
               <>
                 <div

@@ -5,7 +5,7 @@ import '@fontsource/geist-sans/500.css';
 import '@fontsource/geist-sans/600.css';
 import '@fontsource/geist-sans/700.css';
 import '../styles/dashboard-globals.css';
-import { useTheme } from '../context/useTheme';
+import ThemeToggleButton from '../components/common/ThemeToggleButton';
 import aiAvatar from '../assets/ai-avatar.png';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { Loader } from 'lucide-react';
@@ -29,8 +29,6 @@ import {
   Activity,
   ArrowUp,
   Flame,
-  Moon,
-  Sun,
 } from 'lucide-react';
 import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
@@ -89,27 +87,6 @@ function Progress({ value = 0, className = '' }) {
         style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
       />
     </div>
-  );
-}
-
-function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === 'dark';
-
-  return (
-    <button
-      type="button"
-      className={classNames(
-        'dashboard__icon-btn',
-        'dashboard__theme-btn',
-        isDark ? 'dashboard__theme-btn--dark' : ''
-      )}
-      onClick={toggleTheme}
-      aria-label="Temayi degistir"
-      title="Temayi degistir"
-    >
-      {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </button>
   );
 }
 
@@ -450,7 +427,7 @@ export default function Dashboard() {
           </motion.button>
 
           <div className="dashboard__actions">
-            <ThemeToggle />
+            <ThemeToggleButton />
 
             <motion.button
               type="button"

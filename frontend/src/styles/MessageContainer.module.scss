@@ -81,3 +81,58 @@
   flex: 1 1 auto;
   min-height: 0;
 }
+
+.jobsChannelRoot {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.jobAddFab {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 30;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: #2193b0;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(33, 147, 176, 0.4);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  svg {
+    pointer-events: none;
+  }
+
+  &:hover {
+    background: #1a7a93;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 10px 24px rgba(33, 147, 176, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 4px 12px rgba(33, 147, 176, 0.35);
+  }
+
+  .container.dark & {
+    background: #1a7a93;
+    box-shadow: 0 6px 18px rgba(33, 147, 176, 0.25);
+
+    &:hover {
+      background: #2193b0;
+      box-shadow: 0 10px 24px rgba(96, 165, 250, 0.35);
+    }
+  }
+}

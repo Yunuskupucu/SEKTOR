@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiSettings, FiUser, FiLogOut } from 'react-icons/fi';
+import { FiSettings, FiUser, FiLogOut, FiBarChart2 } from 'react-icons/fi';
 import styles from '../styles/Header.module.scss';
 import { useAuthStore } from '../store/useAuthStore';
 import { useTheme } from '../context/useTheme';
-import { CgDarkMode } from 'react-icons/cg';
-import { FiBarChart2 } from 'react-icons/fi';
+import ThemeToggleButton from './common/ThemeToggleButton';
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(false);
   const navigate = useNavigate();
   const { logout, authUser, isCheckingAuth } = useAuthStore();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   const themeClass = theme === 'dark' ? styles.dark : '';
 
@@ -56,8 +55,6 @@ function Header() {
       handleMenuClose();
     }
   };
-  console.log('Theme:', theme);
-
   return (
     <header className={`${styles.header} ${themeClass}`}>
       <button className={styles.logo} onClick={handleLogoClick}>
@@ -66,9 +63,7 @@ function Header() {
       </button>
 
       <div className={styles.settingsContainer}>
-        <div>
-          <CgDarkMode className={styles.themeIcon} onClick={toggleTheme} />
-        </div>
+        <ThemeToggleButton />
         <div className={styles.settings}>
           <div className={styles.settingsIcon} onClick={handleMenuOpen}>
             <FiSettings size={24} />

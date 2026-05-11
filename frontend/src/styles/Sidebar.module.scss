@@ -72,10 +72,10 @@
 }
 
 .selected {
-  background: linear-gradient(to right, #3182ce, #4299e1);
-  box-shadow: 0 4px 15px rgba(49, 130, 206, 0.3);
+  background: linear-gradient(to right, #1a365d, #2c5282);
+  box-shadow: 0 4px 15px rgba(26, 54, 93, 0.35);
   transform: translateX(5px);
-  border: 3px solid #515151;
+  border: 2px solid #ecececdf;
 
   .channelName {
     color: white;
@@ -85,7 +85,7 @@
   &.darkChannelItem {
     background: linear-gradient(80deg, #3e4c64 20%, #57709a 100%);
     box-shadow: 0 4px 16px rgba(74, 85, 104, 0.3);
-    border: 1px solid #60a5fa;
+    border: 2px solid #60a5fa;
     color: #e6edf3;
   }
 }

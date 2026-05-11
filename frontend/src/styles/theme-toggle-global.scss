@@ -1,0 +1,60 @@
+/**
+ * Tüm sayfalarda Dashboard’daki tema düğmesi ile aynı görünüm.
+ * (.dashboard + dashboard-globals olmadan çalışır; #root.dark ile koyu tema.)
+ */
+
+.theme-toggle-btn {
+  box-sizing: border-box;
+  height: 2.25rem;
+  width: 2.25rem;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: 1px solid oklch(0.84 0.018 258);
+  background: transparent;
+  cursor: pointer;
+  color: oklch(0.255 0.024 259);
+  font: inherit;
+  line-height: 0;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  &:focus-visible {
+    outline: 2px solid oklch(0.52 0.16 259);
+    outline-offset: 2px;
+  }
+}
+
+.theme-toggle-btn__icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+#root.dark .theme-toggle-btn {
+  border: 1px solid color-mix(in oklch, oklch(0.9 0 0) 45%, transparent);
+  background: transparent;
+  color: oklch(0.985 0 0);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, oklch(0.439 0 0) 30%, transparent),
+    0 8px 24px -16px color-mix(in oklch, oklch(0.488 0.243 264.376) 35%, transparent);
+
+  &:hover {
+    opacity: 0.92;
+  }
+
+  &:focus-visible {
+    outline-color: oklch(0.708 0 0);
+  }
+}
