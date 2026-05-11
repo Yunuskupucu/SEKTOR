@@ -221,6 +221,101 @@
   }
 }
 
+.addJobSwitchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+
+  .dark & {
+    background: #1e2530;
+    border-color: #334155;
+  }
+}
+
+.addJobSwitchLabel {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #334155;
+
+  .dark & {
+    color: #e2e8f0;
+  }
+}
+
+.addJobSwitchHint {
+  margin: -4px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #64748b;
+
+  .dark & {
+    color: #94a3b8;
+  }
+}
+
+.addJobSwitch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+  input:checked + .addJobSwitchSlider {
+    background: #64748b;
+
+    &::before {
+      transform: translateX(20px);
+    }
+
+    .dark & {
+      background: #475569;
+    }
+  }
+
+  input:focus-visible + .addJobSwitchSlider {
+    box-shadow: 0 0 0 2px rgba(33, 147, 176, 0.35);
+  }
+}
+
+.addJobSwitchSlider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #cbd5e1;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+  }
+
+  .dark & {
+    background: #334155;
+  }
+}
+
 .addJobError {
   margin-top: 4px;
   color: #b91c1c;
@@ -228,6 +323,48 @@
 
   .dark & {
     color: #fb7185;
+  }
+}
+
+/* Düzenleme modalı: form alanı kayar, hata + Güncelle en altta sabit */
+.addJobModalEdit {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.addJobFormEdit {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 4px;
+  gap: 0;
+}
+
+.addJobFormEdit .addJobModalBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.addJobFormEdit > .addJobError {
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+
+.addJobFooterEdit {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #e2e8f0;
+
+  .dark & {
+    border-top-color: #334155;
   }
 }
 

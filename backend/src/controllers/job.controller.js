@@ -7,7 +7,10 @@ import User from '../models/user.model.js';
 import Channel from '../models/channel.model.js';
 
 export const createJobPostInChannel = async (req, res) => {
-  const user_id = req.user?.id || req.body.user_id;
+  const user_id = req.user?.id;
+  if (!user_id) {
+    return res.status(401).json({ message: 'Yetkisiz erişim' });
+  }
   const { title, description, salary, location, contact, expires_at } = req.body;
   const jobChannelId = await getOrCreateJobChannelId();
 
@@ -70,13 +73,25 @@ export const getJobPostsForJobChannel = async (req, res) => {
     const jobChannelId = await getOrCreateJobChannelId();
 
     const now = new Date();
+    const viewerId = req.user?.id;
+
+    const visibleToEveryone = {
+      channel_id: jobChannelId,
+      status: 'active',
+      [Op.or]: [{ expires_at: null }, { expires_at: { [Op.gte]: now } }],
+    };
+
+    const whereOr = [visibleToEveryone];
+    if (viewerId != null) {
+      whereOr.push({
+        channel_id: jobChannelId,
+        user_id: viewerId,
+        status: 'expired',
+      });
+    }
 
     const jobs = await JobPost.findAll({
-      where: {
-        channel_id: jobChannelId,
-        status: 'active',
-        [Op.or]: [{ expires_at: null }, { expires_at: { [Op.gte]: now } }],
-      },
+      where: { [Op.or]: whereOr },
       include: [
         {
           model: User,
@@ -86,7 +101,14 @@ export const getJobPostsForJobChannel = async (req, res) => {
       order: [['created_at', 'DESC']],
     });
 
-    res.json(jobs);
+    const sorted = [...jobs].sort((a, b) => {
+      const aPassive = a.status === 'expired' ? 1 : 0;
+      const bPassive = b.status === 'expired' ? 1 : 0;
+      if (aPassive !== bPassive) return aPassive - bPassive;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    res.json(sorted);
   } catch (err) {
     console.error('❌ getJobPostsForJobChannel:', err);
     res.status(500).json({ message: 'Error fetching job posts', error: err.message });

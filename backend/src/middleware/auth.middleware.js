@@ -44,4 +44,39 @@ export const protectRoute = async (req, res, next) => {
   }
 };
 
+/**
+ * Varsa JWT ile req.user doldurur; token yoksa veya geçersizse 401 dönmeden devam eder.
+ */
+export const optionalAuth = async (req, res, next) => {
+  try {
+    const token = req.cookies?.jwt;
+    if (!token) {
+      req.user = undefined;
+      return next();
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      req.user = undefined;
+      return next();
+    }
+
+    const userId = decoded.id ?? decoded.uid;
+    if (!userId) {
+      req.user = undefined;
+      return next();
+    }
+
+    const user = await User.findByPk(userId);
+    req.user = user || undefined;
+    return next();
+  } catch (error) {
+    console.log('Error in optionalAuth middleware:', error);
+    req.user = undefined;
+    return next();
+  }
+};
+
 export default protectRoute;

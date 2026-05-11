@@ -7,13 +7,13 @@ import {
   passiveJobPost,
 } from '../controllers/job.controller.js';
 
-import { protectRoute } from '../middleware/auth.middleware.js';
+import { protectRoute, optionalAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 router.post('/job-posts', protectRoute, createJobPostInChannel);
 
-router.get('/job-posts', getJobPostsForJobChannel);
+router.get('/job-posts', optionalAuth, getJobPostsForJobChannel);
 
 // ilan düzenleme
 router.put('/job-posts/:id', protectRoute, updateJobPost);

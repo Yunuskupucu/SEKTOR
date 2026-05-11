@@ -5,8 +5,18 @@
   justify-content: center;
   transition: background 0.3s;
 
+  .jobCardsList > p {
+    width: 100%;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+
   &.dark {
-    background: linear-gradient(135deg, #1C2128 0%, #161B22 50%, #21262D 100%);
+    background: linear-gradient(135deg, #1c2128 0%, #161b22 50%, #21262d 100%);
+
+    .jobCardsList > p {
+      color: #94a3b8;
+    }
   }
 }
 
@@ -14,19 +24,20 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  background: #ffffff;
-  border: 1px solid rgba(207, 207, 207, 0.3);
-
-  box-shadow: 0 4px 24px 0 rgba(33, 147, 176, 0.08);
+  background: #fafbfc;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  transition: background 0.3s;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
 
   .dark & {
-    background: #21262D;
-    border: 1px solid #3D434C;
+    background: #21262d;
+    border: 1px solid #3d434c;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   }
 }
@@ -42,7 +53,7 @@
     margin: 0;
 
     .dark & {
-      color: #60A5FA;
+      color: #60a5fa;
     }
   }
 }
@@ -51,69 +62,220 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-
-  .addJobButton {
-    position: absolute;
-    bottom: 30px;
-    right: 60px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: none;
-    background: #2193b0;
-    color: #ffffff;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(33, 147, 176, 0.4);
-    transition:
-      background 0.2s ease,
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-
-    svg {
-      pointer-events: none;
-    }
-
-    &:hover {
-      background: #1a7a93;
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 10px 24px rgba(33, 147, 176, 0.5);
-    }
-
-    &:active {
-      transform: translateY(0) scale(0.97);
-      box-shadow: 0 4px 12px rgba(33, 147, 176, 0.35);
-    }
-  }
 }
 
 .jobCard {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  /* Light: kartı arka plandan net ayır, sınır ve gölge ile okunabilirlik */
+  background: #ffffff;
+  border: 1px solid #c5d0dc;
+  border-radius: 14px;
   padding: 20px 18px;
-  box-shadow: 0 2px 8px 0 rgba(33, 147, 176, 0.06);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 2px 10px rgba(33, 147, 176, 0.07);
   display: flex;
   flex-direction: column;
   gap: 12px;
   transition:
-    background 0.3s,
-    box-shadow 0.3s;
+    background 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
   flex: 1 1 280px; /* min kutu genişliği */
   max-width: calc(33.333% - 16px);
+  position: relative;
 
   &:hover {
-    box-shadow: 0 6px 24px 0 rgba(33, 147, 176, 0.13);
-    background: #f7f7f7;
+    border-color: rgba(33, 147, 176, 0.42);
+    box-shadow:
+      0 2px 4px rgba(15, 23, 42, 0.05),
+      0 10px 32px rgba(33, 147, 176, 0.14);
+    background: #ffffff;
+  }
+
+  &.jobCardPassive {
+    background: #f4f7fa;
+    border-color: #94a3b8;
+    border-style: dashed;
+    box-shadow:
+      0 1px 2px rgba(15, 23, 42, 0.04),
+      0 2px 8px rgba(15, 23, 42, 0.06);
+
+    &:hover {
+      border-color: rgba(33, 147, 176, 0.48);
+      background: #f8fafc;
+      box-shadow:
+        0 2px 4px rgba(15, 23, 42, 0.05),
+        0 8px 26px rgba(33, 147, 176, 0.11);
+    }
   }
 
   .dark & {
-    background: #21262D;
-    border: 1px solid #3D434C;
+    background: #21262d;
+    border: 1px solid #3d434c;
+    box-shadow: 0 2px 8px 0 rgba(33, 147, 176, 0.06);
 
     &:hover {
-      background: #2D333B;
+      background: #2d333b;
       box-shadow: 0 4px 16px 0 rgba(96, 165, 250, 0.12);
-      border-color: #60A5FA;
+      border-color: #60a5fa;
+    }
+
+    &.jobCardPassive {
+      opacity: 0.88;
+      border-style: dashed;
+    }
+  }
+}
+
+.jobCardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.jobCardTopRight {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.jobCardMenuWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.passiveBadge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #e2e8f0;
+  color: #3f4f63;
+
+  .dark & {
+    background: #334155;
+    color: #94a3b8;
+  }
+}
+
+.jobCardMenuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(33, 147, 176, 0.1);
+  color: #156f82;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    background: rgba(33, 147, 176, 0.22);
+    transform: scale(1.04);
+  }
+
+  &[aria-expanded='true'] {
+    background: rgba(33, 147, 176, 0.22);
+  }
+
+  .dark & {
+    background: rgba(96, 165, 250, 0.12);
+    color: #60a5fa;
+
+    &:hover,
+    &[aria-expanded='true'] {
+      background: rgba(96, 165, 250, 0.26);
+    }
+  }
+}
+
+.jobCardMenuDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 148px;
+  padding: 6px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+
+  .dark & {
+    background: #1e2530;
+    border-color: #334155;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.jobCardMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #000000;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s ease;
+
+  svg {
+    flex-shrink: 0;
+    color: #0f343e;
+  }
+
+  &:hover {
+    background: #f1f5f9;
+  }
+
+  .dark & {
+    color: #e2e8f0;
+
+    svg {
+      color: #60a5fa;
+    }
+
+    &:hover {
+      background: #2d3748;
+    }
+  }
+}
+
+.jobCardMenuItemDanger {
+  color: #b91c1c;
+
+  svg {
+    color: #b91c1c;
+  }
+
+  &:hover {
+    background: #fef2f2;
+  }
+
+  .dark & {
+    color: #fb7185;
+
+    svg {
+      color: #fb7185;
+    }
+
+    &:hover {
+      background: rgba(251, 113, 133, 0.12);
     }
   }
 }
@@ -137,17 +299,20 @@
   gap: 8px;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #1e293b;
+  color: #0f172a;
+  flex: 1;
+  min-width: 0;
 
   svg {
-    color: #2193b0;
+    flex-shrink: 0;
+    color: #0c363e;
   }
 
   .dark & {
-    color: #D1D5DB;
+    color: #d1d5db;
 
     svg {
-      color: #60A5FA;
+      color: #60a5fa;
     }
   }
 }
@@ -162,24 +327,79 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 1rem;
-  color: #475569;
+  font-size: 1.1rem;
+  color: #1e293b;
 
   svg {
-    color: #2193b0;
+    color: #004e62;
   }
 
   .dark & {
-    color: #A8B0BA;
+    color: #a8b0ba;
 
     svg {
-      color: #60A5FA;
+      color: #60a5fa;
     }
   }
 }
 
 .company {
   font-weight: 500;
+}
+
+.jobDescriptionBlock {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+
+  .dark & {
+    border-top-color: #3d434c;
+  }
+}
+
+.jobDescriptionHeading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #000000;
+  margin-bottom: 6px;
+
+  svg {
+    color: #176f85;
+  }
+
+  .dark & {
+    color: #94a3b8;
+
+    svg {
+      color: #60a5fa;
+    }
+  }
+}
+
+.jobDescription {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #1e293b;
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  .dark & {
+    color: #cbd5e1;
+  }
+}
+
+.jobSalaryInline {
+  color: #242424;
+
+  .dark & {
+    color: #60a5fa;
+  }
 }
 
 .jobFooter {
@@ -194,18 +414,18 @@
   align-items: center;
   gap: 6px;
   font-size: 1rem;
-  color: #2193b0;
+  color: #424242;
   font-weight: 500;
 
   svg {
-    color: #2193b0;
+    color: #004e62;
   }
 
   .dark & {
-    color: #60A5FA;
+    color: #60a5fa;
 
     svg {
-      color: #60A5FA;
+      color: #60a5fa;
     }
   }
 }
