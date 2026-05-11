@@ -153,7 +153,7 @@ export const sendMessage = async (req, res) => {
     const payload = withAttachmentUrl(req, fullMessage);
 
     const io = req.app.get('io');
-    io.to(channel_id).emit('newMessage', payload);
+io.to(String(channel_id)).emit("newMessage", payload);
 
     res.status(201).json(payload);
 
@@ -218,7 +218,7 @@ export const sendMessageWithAttachment = async (req, res) => {
     const payload = withAttachmentUrl(req, fullMessage);
 
     const io = req.app.get("io");
-    io.to(channel_id).emit("newMessage", payload);
+   io.to(String(channel_id)).emit("newMessage", payload);
 
     res.status(201).json(payload);
   } catch (error) {
