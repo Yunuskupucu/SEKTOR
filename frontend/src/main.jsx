@@ -4,23 +4,18 @@ import './styles/theme-toggle-global.scss';
 import App from './App.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext.jsx';
-import { resolveBackendOrigin, REMOTE_BACKEND } from './lib/apiOrigin';
 import { applyBackendConfig } from './lib/axios';
 import { initSocket } from './lib/socket';
 
-resolveBackendOrigin().then((origin) => {
-  const apiBase =
-    origin === REMOTE_BACKEND
-      ? `${REMOTE_BACKEND.replace(/\/$/, '')}/api/`
-      : '/api/';
-  applyBackendConfig(apiBase);
-  initSocket(origin);
+const backendOrigin = 'http://localhost:5001';
 
-  createRoot(document.getElementById('root')).render(
-    <BrowserRouter>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
-  );
-});
+applyBackendConfig(`${backendOrigin}/api/`);
+initSocket(backendOrigin);
+
+createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </BrowserRouter>
+);

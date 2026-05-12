@@ -38,8 +38,8 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     const map = new Map();
     for (const m of arr) map.set(m.id, m);
     return Array.from(map.values()).sort((a, b) => {
-      const ta = new Date(a.created_at || a.ts || a.createdAt).getTime();
-      const tb = new Date(b.created_at || b.ts || b.createdAt).getTime();
+        const ta = new Date(a.timestamp || a.created_at || a.createdAt || a.ts).getTime();
+        const tb = new Date(b.timestamp || b.created_at || b.createdAt || b.ts).getTime();
       return ta - tb;
     });
   }, []);
@@ -145,10 +145,20 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         setLoading(false);
       }
     };
+    const room = String(selectedChannel.id);
+    
+     const joinRoom = () => {
+      console.log('📡 FRONTEND joinChannel:', room, 'socket:', socket.id);
+      socket.emit('joinChannel', room);
+    };
 
-    fetchMessages();
+  fetchMessages();
 
-    socket.emit('joinChannel', selectedChannel.id);
+    if (socket.connected) {
+    joinRoom();
+  }
+
+  socket.on('connect', joinRoom);
 
 const onNewMessage = (message) => {
   // Number() ile normalize et

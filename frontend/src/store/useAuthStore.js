@@ -6,29 +6,40 @@ export const useAuthStore = create((set, get) => ({
   isCheckingAuth: true,
 
   checkAuth: async () => {
-    try {
-      const res = await axiosInstance.get('/auth/check');
-      set({ authUser: res.data });
-    } catch (error) {
-      console.log('Auth check error:', error);
-      set({ authUser: null });
-    } finally {
-      set({ isCheckingAuth: false });
-    }
-  },
+  try {
+    console.log("🔍 checkAuth çalıştı");
 
-  fetchProfile: async () => {
-    set({ isCheckingAuth: true });
-    try {
-      const res = await axiosInstance.get('/auth/profile');
-      set({ authUser: res.data });
-    } catch (err) {
-      console.error('❌ Profil verisi alınamadı:', err);
-      set({ authUser: null });
-    } finally {
-      set({ isCheckingAuth: false });
-    }
-  },
+    const res = await axiosInstance.get('/auth/profile');
+
+    console.log("✅ checkAuth profile response:", res.data);
+
+    set({ authUser: res.data });
+  } catch (error) {
+    console.log('❌ Auth check error:', error.response?.status, error.response?.data);
+    set({ authUser: null });
+  } finally {
+    set({ isCheckingAuth: false });
+  }
+},
+
+fetchProfile: async () => {
+  set({ isCheckingAuth: true });
+
+  try {
+    console.log("🔍 fetchProfile çalıştı");
+
+    const res = await axiosInstance.get('/auth/profile');
+
+    console.log("✅ fetchProfile response:", res.data);
+
+    set({ authUser: res.data });
+  } catch (err) {
+    console.error('❌ Profil verisi alınamadı:', err.response?.status, err.response?.data);
+    set({ authUser: null });
+  } finally {
+    set({ isCheckingAuth: false });
+  }
+},
 
   login: async (email, password) => {
     try {

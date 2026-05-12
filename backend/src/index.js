@@ -33,8 +33,8 @@ function normalizeOrigin(url) {
 function buildAllowedOrigins() {
   const list = [
     'http://localhost:5173',
-    'https://sektor.onrender.com',
-    'https://sektor-app.web.app',
+    // 'https://sektor.onrender.com',
+    // 'https://sektor-app.web.app',
   ];
   const add = (o) => {
     if (o && !list.includes(o)) list.push(o);
