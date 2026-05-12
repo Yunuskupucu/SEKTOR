@@ -1,7 +1,7 @@
 import express from "express";
 import Channel from "../models/channel.model.js";
 import { getMessagesByChannel } from "../controllers/message.controller.js";
-
+import { getChannelStats } from "../controllers/channel.controller.js";
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Error fetching channels", error: error.message });
   }
 });
+
+router.get("/:channel_id(\\d+)/stats", getChannelStats);
 router.get("/:channel_id/messages", getMessagesByChannel);
 export default router;

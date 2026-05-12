@@ -19,23 +19,6 @@
   top: 0;
   z-index: 100;
 
-  h1 {
-    flex: 1;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-right: 40px;
-    text-transform: uppercase;
-    display: inline-block;
-  }
-
-  &.dark h1 {
-    color: #D1D5DB;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
   .closeButton {
     position: absolute;
     right: 10px;
@@ -62,9 +45,172 @@
   }
 
   &.dark {
-    background: linear-gradient(to right, #363D47, #222830);
+    background: linear-gradient(to right, #363d47, #222830);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
+}
+
+.chatHeaderMain {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-width: 0;
+  padding-right: 2.75rem;
+}
+
+.chatHeader h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  text-transform: uppercase;
+  flex: 0 1 auto;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.chatHeader.dark h1 {
+  color: #d1d5db;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.infoAnchor {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.infoButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+
+  svg {
+    font-size: 1.15rem;
+    display: block;
+  }
+}
+
+.chatHeader.dark .infoButton {
+  color: #e5e7eb;
+  background: transparent;
+}
+
+.channelInfoPopover {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120;
+  width: min(320px, calc(100vw - 2rem));
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+  text-align: left;
+  text-transform: none;
+  font-weight: 400;
+}
+
+.channelInfoPopoverDark {
+  background: #1f2937;
+  color: #e5e7eb;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.channelInfoSummary {
+  margin: 0 0 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #374151;
+}
+
+.channelInfoPopoverDark .channelInfoSummary {
+  color: #d1d5db;
+}
+
+.channelInfoSection {
+  margin-bottom: 0.85rem;
+}
+
+.channelInfoSectionTitle {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.channelInfoPopoverDark .channelInfoSectionTitle {
+  color: #9ca3af;
+}
+
+.channelInfoTrendList {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #4b5563;
+
+  li {
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.channelInfoPopoverDark .channelInfoTrendList {
+  color: #cbd5e1;
+}
+
+.channelInfoFooter {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.8125rem;
+}
+
+.channelInfoPopoverDark .channelInfoFooter {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.channelInfoFooterLabel {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.channelInfoPopoverDark .channelInfoFooterLabel {
+  color: #9ca3af;
+}
+
+.channelInfoFooterValue {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #111827;
+}
+
+.channelInfoPopoverDark .channelInfoFooterValue {
+  color: #f9fafb;
 }
 
 .messagesArea {
