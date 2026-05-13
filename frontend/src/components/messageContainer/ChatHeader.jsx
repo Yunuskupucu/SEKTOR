@@ -5,22 +5,40 @@ import styles from '../../styles/MessageContainer.module.scss';
 import { useTheme } from '../../context/useTheme';
 import axiosInstance from '../../lib/axios';
 
-/** İleride API ile değiştirilecek; şimdilik tüm kanallar için sabit örnek liste */
-const STATIC_TREND_TOPICS = [
-  'Yapay zekâ destekli geliştirme',
-  'Bulut maliyet ve ölçeklenebilirlik',
-  'Tip güvenliği ve otomatik test',
-];
+
 
 const ChatHeader = ({ selectedChannel, onClose }) => {
   const { theme } = useTheme();
   const themeClass = theme === 'dark' ? styles.dark : '';
+
 
   const [infoOpen, setInfoOpen] = useState(false);
   const [messageCount, setMessageCount] = useState(null);
   const [serverDescription, setServerDescription] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
   const [statsError, setStatsError] = useState(false);
+
+  // Trend konuları için state
+  const [trendTopics, setTrendTopics] = useState([]);
+  const [trendLoading, setTrendLoading] = useState(false);
+  const [trendError, setTrendError] = useState(false);
+  // Kanal trendlerini yükle
+  const loadChannelTrends = useCallback(async () => {
+    if (!selectedChannel?.id) return;
+    setTrendLoading(true);
+    setTrendError(false);
+    try {
+      const res = await axiosInstance.get(`channels/${selectedChannel.id}/weekly-trends`);
+      const payload = res.data?.data;
+      setTrendTopics(Array.isArray(payload?.trends) ? payload.trends : []);
+    } catch (e) {
+      console.error('Kanal trendleri alınamadı:', e);
+      setTrendError(true);
+      setTrendTopics([]);
+    } finally {
+      setTrendLoading(false);
+    }
+  }, [selectedChannel?.id]);
 
   const headerRef = useRef(null);
 
@@ -44,17 +62,23 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
     }
   }, [selectedChannel?.id]);
 
+
   useEffect(() => {
     setInfoOpen(false);
     setMessageCount(null);
     setServerDescription(null);
     setStatsError(false);
+    setTrendTopics([]);
+    setTrendError(false);
+    setTrendLoading(false);
   }, [selectedChannel?.id]);
+
 
   useEffect(() => {
     if (!infoOpen) return;
     loadChannelStats();
-  }, [infoOpen, loadChannelStats]);
+    loadChannelTrends();
+  }, [infoOpen, loadChannelStats, loadChannelTrends]);
 
   useEffect(() => {
     if (!infoOpen) return;
@@ -105,8 +129,18 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
                 <div className={styles.channelInfoSection}>
                   <h2 className={styles.channelInfoSectionTitle}>Trend konular</h2>
                   <ul className={styles.channelInfoTrendList}>
-                    {STATIC_TREND_TOPICS.map((topic) => (
-                      <li key={topic}>{topic}</li>
+                    {trendLoading && <li>Yükleniyor…</li>}
+                    {trendError && <li>Trend konular alınamadı.</li>}
+                    {!trendLoading && !trendError && trendTopics.length === 0 && (
+                      <li>Bu hafta için trend konu bulunamadı.</li>
+                    )}
+                    {!trendLoading && !trendError && trendTopics.map((trend, idx) => (
+                      <li key={`${trend?.topic || 'trend'}-${idx}`}>
+                        <strong>{trend?.topic || 'Bilinmeyen konu'}</strong>
+                        {trend?.summary && (
+                          <p>{trend.summary}</p>
+                        )}
+                      </li>
                     ))}
                   </ul>
                 </div>
