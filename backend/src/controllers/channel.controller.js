@@ -59,22 +59,22 @@ export const getChannelWeeklyTrends = async (req, res) => {
   try {
     const now = new Date();
 
-    const cached = channelTrendCache.get(channelId);
+     const cached = channelTrendCache.get(channelId);
 
-    if (
-      cached &&
-      now.getTime() - cached.createdAt.getTime() < CHANNEL_TREND_CACHE_DURATION
-    ) {
-      return res.status(200).json({
-        success: true,
-        data: {
-          fromCache: true,
-          channelId,
-          trends: cached.trends,
-          sampledMessageCount: cached.sampledMessageCount,
-        },
-      });
-    }
+     if (
+       cached &&
+       now.getTime() - cached.createdAt.getTime() < CHANNEL_TREND_CACHE_DURATION
+     ) {
+       return res.status(200).json({
+         success: true,
+         data: {
+           fromCache: true,
+           channelId,
+           trends: cached.trends,
+           sampledMessageCount: cached.sampledMessageCount,
+         },
+       });
+     }
 
     const channel = await Channel.findByPk(channelId, {
       attributes: ["id", "name"],
@@ -87,15 +87,15 @@ export const getChannelWeeklyTrends = async (req, res) => {
       });
     }
 
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(now.getDate() - 7);
+const last24Hours = new Date();
+last24Hours.setHours(now.getHours() - 24);
 
     const rows = await Message.findAll({
-      attributes: ["content"],
+      attributes: ["content", "timestamp"],
       where: {
         channel_id: channelId,
         status: "active",
-        timestamp: { [Op.gte]: sevenDaysAgo },
+        timestamp: { [Op.gte]: last24Hours },
         content: { [Op.ne]: "Mesaj kaldırıldı." },
       },
       order: [["timestamp", "DESC"]],
@@ -115,7 +115,7 @@ export const getChannelWeeklyTrends = async (req, res) => {
           channelName: channel.name,
           trends: [],
           sampledMessageCount: 0,
-          message: "Bu kanal için son 7 günde analiz edilecek mesaj bulunamadı.",
+          message: "Bu kanal için son 24 saat içinde analiz edilecek mesaj bulunamadı.",
         },
       });
     }
@@ -148,7 +148,7 @@ export const getChannelWeeklyTrends = async (req, res) => {
         fromCache: false,
         channelId,
         channelName: channel.name,
-        from: sevenDaysAgo,
+        from: last24Hours,
         to: now,
         trends: safeTrends,
         sampledMessageCount: messages.length,

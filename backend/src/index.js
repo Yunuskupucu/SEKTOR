@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
   socket.on('joinChannel', (channel_id) => {
     const room = String(channel_id);
     socket.join(room);
-    console.log(`📡 Joined channel: ${room}`);
+
   });
 
   socket.on('leaveChannel', (channel_id) => {
