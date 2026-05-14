@@ -959,151 +959,117 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
       margin-top: 0.25rem;
     }
 
-    // Moderation Card
-    &__moderation-card {
+    // İş ilanları — donut pasta
+    &__job-posts-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: $border-radius-lg;
       overflow: hidden;
     }
 
-    &__moderation-header {
+    &__job-posts-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    &__moderation-avatar {
-      width: 1.25rem;
-      height: 1.25rem;
-      object-fit: contain;
-      display: block;
-    }
-
-    &__moderation-content {
-      display: flex;
-      flex-direction: column;
-      gap: clamp(1.25rem, 3vw, 1.75rem);
-    }
-
-    &__moderation-stats {
+    &__job-posts-body {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      grid-template-columns: 1fr;
+      gap: clamp(1rem, 3vw, 1.5rem);
+      align-items: center;
+
+      @media (min-width: 640px) {
+        grid-template-columns: minmax(200px, 1.1fr) minmax(11rem, 0.9fr);
+      }
     }
 
-    &__moderation-stat {
-      text-align: center;
-      padding: 1rem;
-      border-radius: $border-radius-md;
+    &__job-pie-chart-wrap {
       position: relative;
-      overflow: hidden;
-
-      &--primary {
-        background: linear-gradient(
-          135deg,
-          color-mix(in oklch, var(--primary) 10%, transparent),
-          transparent
-        );
-      }
-
-      &--accent {
-        background: linear-gradient(
-          135deg,
-          color-mix(in oklch, var(--accent) 10%, transparent),
-          transparent
-        );
-      }
+      height: clamp(220px, 36vw, 280px);
+      width: 100%;
     }
 
-    &__moderation-pulse {
+    &__job-pie-center {
       position: absolute;
       inset: 0;
-      border: 2px solid var(--primary);
-      border-radius: $border-radius-md;
-      opacity: 0.3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      text-align: center;
+      padding: 0 1.5rem;
     }
 
-    &__moderation-icon {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      opacity: 0.5;
-    }
-
-    .dashboard__moderation-stat--primary .dashboard__moderation-icon {
-      color: var(--chart-2);
-    }
-
-    .dashboard__moderation-stat--accent .dashboard__moderation-icon {
-      color: var(--chart-1);
-    }
-
-    &__moderation-value {
-      font-size: 1.875rem;
+    &__job-pie-center-value {
+      font-size: clamp(1.5rem, 4.5vw, 1.875rem);
       font-weight: 700;
+      color: var(--foreground);
+      line-height: 1.1;
+    }
+
+    &__job-pie-center-label {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      margin-top: 0.125rem;
+      letter-spacing: 0.02em;
+    }
+
+    &__job-posts-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    &__job-posts-legend-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.75rem 1rem;
+      border-radius: $border-radius-md;
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      transition:
+        transform $transition-fast,
+        border-color $transition-fast;
+    }
+
+    &__job-posts-legend-top {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
       color: var(--foreground);
     }
 
-    &__moderation-label {
+    &__job-posts-legend-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    &__job-posts-legend-stat {
       font-size: 0.875rem;
       color: var(--muted-foreground);
-      margin-top: 0.25rem;
+      padding-left: 1.125rem;
     }
 
-    &__moderation-bars {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    &__moderation-bar {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      &-header {
-        @include flex-between;
-      }
-
-      &-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        color: var(--foreground);
-      }
-
-      &-value {
-        font-size: 0.875rem;
-        color: var(--muted-foreground);
-      }
-    }
-
-    &__moderation-info {
-      padding: clamp(0.875rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.25rem);
+    &__job-posts-footnote {
+      margin-top: clamp(1rem, 2.5vw, 1.25rem);
+      padding: clamp(0.75rem, 2vw, 0.875rem) 1rem;
       border-radius: $border-radius-md;
-      background: color-mix(in oklch, var(--primary) 10%, transparent);
-      border: 1px solid color-mix(in oklch, var(--primary) 20%, transparent);
-      position: relative;
-      overflow: hidden;
+      background: color-mix(in oklch, var(--chart-2) 8%, transparent);
+      border: 1px solid color-mix(in oklch, var(--chart-2) 18%, transparent);
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      line-height: 1.45;
+    }
 
-      p {
-        font-size: 0.75rem;
-        color: var(--muted-foreground);
-        position: relative;
-      }
-
-      &-shine {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          color-mix(in oklch, var(--primary) 10%, transparent),
-          transparent
-        );
-      }
+    &__job-posts-empty {
+      margin-bottom: 0.75rem;
     }
 
     // Trends and Channels Row
@@ -1473,7 +1439,7 @@ $dash-card-pad-x: clamp(1.375rem, 3.5vw, 1.75rem);
     .dashboard__stat-card,
     .dashboard__feature-card,
     .dashboard__chart-card,
-    .dashboard__moderation-card,
+    .dashboard__job-posts-card,
     .dashboard__trends-card,
     .dashboard__channels-card {
       border-color: color-mix(in oklch, var(--border) 84%, var(--chart-3));

@@ -7,7 +7,17 @@ import '@fontsource/geist-sans/700.css';
 import '../styles/dashboard-globals.css';
 import ThemeToggleButton from '../components/common/ThemeToggleButton';
 import aiAvatar from '../assets/ai-avatar.png';
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import {
+  Area,
+  AreaChart,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { Loader } from 'lucide-react';
 import {
   ArrowRight,
@@ -22,16 +32,14 @@ import {
   TrendingUp,
   Hash,
   Shield,
-  CheckCircle,
-  AlertTriangle,
-  XCircle,
-  Brain,
+  CheckCircle2,
+  Archive,
   Activity,
   ArrowUp,
   Flame,
 } from 'lucide-react';
 import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.module.scss';
 
@@ -79,17 +87,6 @@ function Badge({ className = '', children }) {
   return <span className={classNames('dashboard__badge', className)}>{children}</span>;
 }
 
-function Progress({ value = 0, className = '' }) {
-  return (
-    <div className={classNames('dashboard-progress', className)}>
-      <div
-        className="dashboard-progress__value"
-        style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
-      />
-    </div>
-  );
-}
-
 function AnimatedCounter({ value, suffix = '', decimals = 0, duration = 2 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
@@ -116,25 +113,6 @@ function AnimatedCounter({ value, suffix = '', decimals = 0, duration = 2 }) {
       {displayValue}
       {suffix}
     </span>
-  );
-}
-
-function AnimatedProgress({ value, delay = 0 }) {
-  const [progress, setProgress] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (isInView) {
-      const timer = setTimeout(() => setProgress(Number(value) || 0), delay * 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [value, delay, isInView]);
-
-  return (
-    <div ref={ref}>
-      <Progress value={progress} className="dashboard-progress" />
-    </div>
   );
 }
 
@@ -221,13 +199,10 @@ export default function Dashboard() {
   const [activityData, setActivityData] = useState([]);
   const [trends, setTrends] = useState([]);
   const [channels, setChannels] = useState([]);
-  const [moderationData, setModerationData] = useState({
-    totalScanned: 0,
-    approved: 0,
-    flagged: 0,
-    blocked: 0,
-    accuracy: 0,
-    avgResponseTime: 0,
+  const [jobListingStats, setJobListingStats] = useState({
+    total: 0,
+    active: 0,
+    passive: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -311,6 +286,15 @@ export default function Dashboard() {
         ];
 
         setStats(nextStats);
+
+        const totalJobPosts = Number(global.totalJobPosts || 0);
+        const activeJobPosts = Number(global.activeJobPosts || 0);
+        setJobListingStats({
+          total: totalJobPosts,
+          active: activeJobPosts,
+          passive: Math.max(0, totalJobPosts - activeJobPosts),
+        });
+
         console.log('WEEKLY ACTIVITY RAW:', weeklyActivity);
         setActivityData(
           (Array.isArray(weeklyActivity) ? weeklyActivity : []).map((item, idx) => {
@@ -349,23 +333,6 @@ export default function Dashboard() {
           }))
         );
 
-        const totalMessages = Number(messageGlobal.totalMessages || 0);
-        const removedMessages = Number(messageGlobal.removedMessagesLast7Days || 0);
-        const approvedMessages = Number(
-          messageGlobal.approvedMessages ?? Math.max(totalMessages - removedMessages, 0)
-        );
-
-        setModerationData({
-          totalScanned: totalMessages,
-          approved: approvedMessages,
-          flagged: removedMessages,
-          blocked: Number(messageGlobal.blockedMessages || removedMessages || 0),
-          accuracy: Number(
-            messageGlobal.accuracy ??
-              (totalMessages ? ((approvedMessages / totalMessages) * 100).toFixed(1) : 0)
-          ),
-          avgResponseTime: Number(messageGlobal.avgResponseTime || 0),
-        });
         setLoading(false);
       } catch (error) {
         setError('Dashboard verileri alınamadı. Lütfen tekrar deneyin.');
@@ -376,16 +343,33 @@ export default function Dashboard() {
     fetchDashboardData();
   }, []);
 
-  const approvedPercent = moderationData.totalScanned
-    ? (moderationData.approved / moderationData.totalScanned) * 100
-    : 0;
+  const jobPieData = useMemo(() => {
+    const { active, passive } = jobListingStats;
+    const rows = [];
+    if (active > 0) {
+      rows.push({
+        name: 'Aktif',
+        value: active,
+        fill: 'var(--chart-2)',
+        key: 'active',
+      });
+    }
+    if (passive > 0) {
+      rows.push({
+        name: 'Pasif',
+        value: passive,
+        fill: 'var(--chart-3)',
+        key: 'passive',
+      });
+    }
+    return rows;
+  }, [jobListingStats]);
 
-  const flaggedPercent = moderationData.totalScanned
-    ? (moderationData.flagged / moderationData.totalScanned) * 100
+  const activeSharePct = jobListingStats.total
+    ? (jobListingStats.active / jobListingStats.total) * 100
     : 0;
-
-  const blockedPercent = moderationData.totalScanned
-    ? (moderationData.blocked / moderationData.totalScanned) * 100
+  const passiveSharePct = jobListingStats.total
+    ? (jobListingStats.passive / jobListingStats.total) * 100
     : 0;
 
   if (loading) {
@@ -857,137 +841,146 @@ export default function Dashboard() {
             </Card>
           </motion.div>
 
-          <Card className="dashboard__moderation-card">
-            <CardHeader className="dashboard__card-head">
-              <div className="dashboard__moderation-header">
-                <motion.div
-                  animate={{ rotateY: [0, 360] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 5 }}
-                >
-                  <Shield className="h-5 w-5 dashboard-icon--c3" />
-                </motion.div>
-                <CardTitle>AI Moderasyon Sistemi</CardTitle>
-              </div>
-              <CardDescription>LLM destekli otonom içerik moderasyonu</CardDescription>
-            </CardHeader>
-
-            <CardContent className="dashboard__card-body">
-              <div className="dashboard__moderation-content">
-                <motion.div
-                  className="dashboard__moderation-stats"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Card className="dashboard__job-posts-card">
+              <CardHeader className="dashboard__card-head">
+                <div className="dashboard__job-posts-header">
                   <motion.div
-                    className="dashboard__moderation-stat dashboard__moderation-stat--primary"
-                    whileHover={{ scale: 1.02 }}
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
                   >
-                    <motion.div
-                      className="dashboard__moderation-pulse"
-                      animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    <motion.div
-                      className="dashboard__moderation-icon"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-                    >
-                      <Brain className="h-4 w-4" />
-                    </motion.div>
-                    <p className="dashboard__moderation-value">
-                      <AnimatedCounter value={moderationData.accuracy} decimals={1} suffix="%" />
-                    </p>
-                    <p className="dashboard__moderation-label">Doğruluk Oranı</p>
+                    <Briefcase className="h-5 w-5 dashboard-icon--c2" />
                   </motion.div>
+                  <CardTitle>İş İlanları Dağılımı</CardTitle>
+                </div>
+                <CardDescription>
+                  Yayında olan ve pasif (süresi dolmuş, taslak veya yayından kalkmış) ilanların
+                  oranı
+                </CardDescription>
+              </CardHeader>
 
-                  <motion.div
-                    className="dashboard__moderation-stat dashboard__moderation-stat--accent"
-                    whileHover={{ scale: 1.02 }}
-                  >
+              <CardContent className="dashboard__card-body">
+                {jobListingStats.total > 0 && jobPieData.length > 0 ? (
+                  <div className="dashboard__job-posts-body">
                     <motion.div
-                      className="dashboard__moderation-icon"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1 }}
+                      className="dashboard__job-pie-chart-wrap"
+                      initial={{ opacity: 0, scale: 0.92 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ type: 'spring', stiffness: 120, damping: 18 }}
                     >
-                      <Zap className="h-4 w-4" />
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={jobPieData}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            innerRadius="58%"
+                            outerRadius="82%"
+                            paddingAngle={jobPieData.length > 1 ? 4 : 0}
+                            cornerRadius={6}
+                            stroke="var(--card)"
+                            strokeWidth={2}
+                            animationDuration={900}
+                          >
+                            {jobPieData.map((entry) => (
+                              <Cell key={entry.key} fill={entry.fill} />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            formatter={(value, name) => {
+                              const n = Number(value) || 0;
+                              const pct = jobListingStats.total
+                                ? ((n / jobListingStats.total) * 100).toFixed(1)
+                                : '0';
+                              return [`${n.toLocaleString('tr-TR')} ilan (%${pct})`, name];
+                            }}
+                            contentStyle={{
+                              backgroundColor: 'var(--card)',
+                              border: '1px solid var(--border)',
+                              borderRadius: '12px',
+                              color: 'var(--foreground)',
+                            }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                      <div className="dashboard__job-pie-center">
+                        <span className="dashboard__job-pie-center-value">
+                          <AnimatedCounter value={jobListingStats.total} duration={1.4} />
+                        </span>
+                        <span className="dashboard__job-pie-center-label">toplam ilan</span>
+                      </div>
                     </motion.div>
-                    <p className="dashboard__moderation-value">
-                      <AnimatedCounter value={moderationData.avgResponseTime} suffix="ms" />
-                    </p>
-                    <p className="dashboard__moderation-label">Ort. Yanıt Süresi</p>
-                  </motion.div>
-                </motion.div>
 
-                <motion.div
-                  className="dashboard__moderation-bars"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <div className="dashboard__moderation-bar">
-                    <div className="dashboard__moderation-bar-header">
-                      <motion.div className="dashboard__moderation-bar-label" whileHover={{ x: 5 }}>
-                        <CheckCircle className="h-4 w-4 dashboard-icon--c2" />
-                        <span>Onaylanan</span>
+                    <motion.div
+                      className="dashboard__job-posts-legend"
+                      initial={{ opacity: 0, x: 16 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.15 }}
+                    >
+                      <motion.div
+                        className="dashboard__job-posts-legend-item"
+                        whileHover={{
+                          scale: 1.02,
+                          borderColor: 'color-mix(in oklch, var(--chart-2) 35%, var(--border))',
+                        }}
+                      >
+                        <div className="dashboard__job-posts-legend-top">
+                          <span
+                            className="dashboard__job-posts-legend-dot"
+                            style={{ background: 'var(--chart-2)' }}
+                          />
+                          <CheckCircle2 className="h-4 w-4 dashboard-icon--c2" aria-hidden />
+                          <span>Aktif</span>
+                        </div>
+                        <div className="dashboard__job-posts-legend-stat">
+                          <AnimatedCounter value={jobListingStats.active} duration={1.2} /> ilan — %
+                          {activeSharePct.toFixed(1)}
+                        </div>
                       </motion.div>
-                      <span className="dashboard__moderation-bar-value">
-                        {moderationData.approved.toLocaleString()} ({approvedPercent.toFixed(1)}%)
-                      </span>
-                    </div>
-                    <AnimatedProgress value={approvedPercent} delay={0.2} />
-                  </div>
-
-                  <div className="dashboard__moderation-bar">
-                    <div className="dashboard__moderation-bar-header">
-                      <motion.div className="dashboard__moderation-bar-label" whileHover={{ x: 5 }}>
-                        <AlertTriangle className="h-4 w-4 dashboard-icon--c4" />
-                        <span>İşaretlenen</span>
+                      <motion.div
+                        className="dashboard__job-posts-legend-item"
+                        whileHover={{
+                          scale: 1.02,
+                          borderColor: 'color-mix(in oklch, var(--chart-3) 35%, var(--border))',
+                        }}
+                      >
+                        <div className="dashboard__job-posts-legend-top">
+                          <span
+                            className="dashboard__job-posts-legend-dot"
+                            style={{ background: 'var(--chart-3)' }}
+                          />
+                          <Archive className="h-4 w-4 dashboard-icon--c3" aria-hidden />
+                          <span>Pasif</span>
+                        </div>
+                        <div className="dashboard__job-posts-legend-stat">
+                          <AnimatedCounter value={jobListingStats.passive} duration={1.2} /> ilan —
+                          %{passiveSharePct.toFixed(1)}
+                        </div>
                       </motion.div>
-                      <span className="dashboard__moderation-bar-value">
-                        {moderationData.flagged.toLocaleString()} ({flaggedPercent.toFixed(2)}%)
-                      </span>
-                    </div>
-                    <AnimatedProgress value={flaggedPercent} delay={0.4} />
+                    </motion.div>
                   </div>
-
-                  <div className="dashboard__moderation-bar">
-                    <div className="dashboard__moderation-bar-header">
-                      <motion.div className="dashboard__moderation-bar-label" whileHover={{ x: 5 }}>
-                        <XCircle className="h-4 w-4 dashboard-icon--destructive" />
-                        <span>Engellenen</span>
-                      </motion.div>
-                      <span className="dashboard__moderation-bar-value">
-                        {moderationData.blocked.toLocaleString()} ({blockedPercent.toFixed(3)}%)
-                      </span>
-                    </div>
-                    <AnimatedProgress value={blockedPercent} delay={0.6} />
+                ) : (
+                  <div className="dashboard__empty-state dashboard__job-posts-empty">
+                    Henüz kayıtlı iş ilanı yok veya dağılım hesaplanamıyor.
                   </div>
-                </motion.div>
+                )}
 
-                <motion.div
-                  className="dashboard__moderation-info"
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5 }}
-                  whileHover={{ scale: 1.01 }}
-                >
-                  <motion.div
-                    className="dashboard__moderation-info-shine"
-                    animate={{ x: ['-100%', '200%'] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                  />
-                  <p>
-                    <span className="dashboard-text-emphasis">Prompt Engineering</span> ve{' '}
-                    <span className="dashboard-text-emphasis">Behavioral Prompting</span> teknikleri
-                    ile optimize edilmiş güvenli AI moderasyon sistemi
-                  </p>
-                </motion.div>
-              </div>
-            </CardContent>
-          </Card>
+                <p className="dashboard__job-posts-footnote">
+                  <span className="dashboard-text-emphasis">Aktif</span> ilanlar kanalda herkese
+                  açık yayında olanlar; <span className="dashboard-text-emphasis">pasif</span>{' '}
+                  kalanlar toplam kayıt içinde yayında olmayan ilanları ifade eder.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
 
         <div className="dashboard__trends-channels-row">
