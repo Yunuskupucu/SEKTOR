@@ -138,6 +138,8 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
     }
   };
 
+  const messageDate = new Date(message.timestamp || message.createdAt);
+
   return (
     <div
       className={`${styles.messageWrapper} ${isOwnMessage ? styles.ownMessage : ''} ${isRemoved ? styles.removed : ''} ${isUserRemoved ? styles.removedByUser : ''} ${isAiBot ? styles.aiMessage : ''} ${themeClass}`}
@@ -260,11 +262,22 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
           )}
 
           <div className={styles.timestamp}>
-            {message.edited_at && <span className={styles.editedLabel}>Düzenlendi</span>}
-            {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+            <div className={styles.timestampRow}>
+              {message.edited_at && <span className={styles.editedLabel}>Düzenlendi</span>}
+              <span className={styles.timestampTime}>
+                {messageDate.toLocaleTimeString('tr-TR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
+            </div>
+            <span className={styles.timestampDate}>
+              {messageDate.toLocaleDateString('tr-TR', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })}
+            </span>
           </div>
         </div>
       </div>
