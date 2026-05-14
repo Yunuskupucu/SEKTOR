@@ -113,6 +113,7 @@
   z-index: 120;
   width: min(320px, calc(100vw - 2rem));
   padding: 1rem 1.1rem;
+  padding-right: 2.5rem;
   border-radius: 12px;
   background: #ffffff;
   color: #1f2937;
@@ -122,6 +123,53 @@
   text-align: left;
   text-transform: none;
   font-weight: 400;
+}
+
+.channelInfoPopoverClose {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #111827;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+  }
+
+  svg {
+    font-size: 1rem;
+  }
+}
+
+.channelInfoPopoverDark .channelInfoPopoverClose {
+  color: #9ca3af;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f9fafb;
+  }
+
+  &:focus-visible {
+    outline-color: #60a5fa;
+  }
 }
 
 .channelInfoPopoverDark {

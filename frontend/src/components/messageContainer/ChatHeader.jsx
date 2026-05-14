@@ -40,7 +40,8 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
     }
   }, [selectedChannel?.id]);
 
-  const headerRef = useRef(null);
+  /** Bilgi butonu + popover; dışına tıklanınca pencere kapanır */
+  const infoPanelRef = useRef(null);
 
   const themeClassPopover = theme === 'dark' ? styles.channelInfoPopoverDark : '';
 
@@ -84,16 +85,17 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
     if (!infoOpen) return;
 
     const onPointerDown = (e) => {
-      if (headerRef.current && !headerRef.current.contains(e.target)) {
+      const panel = infoPanelRef.current;
+      if (panel && !panel.contains(e.target)) {
         setInfoOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', onPointerDown);
-    document.addEventListener('touchstart', onPointerDown);
+    document.addEventListener('mousedown', onPointerDown, true);
+    document.addEventListener('touchstart', onPointerDown, true);
     return () => {
-      document.removeEventListener('mousedown', onPointerDown);
-      document.removeEventListener('touchstart', onPointerDown);
+      document.removeEventListener('mousedown', onPointerDown, true);
+      document.removeEventListener('touchstart', onPointerDown, true);
     };
   }, [infoOpen]);
 
@@ -103,11 +105,11 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
     'Bu kanal için kısa bir tanım henüz eklenmedi.';
 
   return (
-    <div ref={headerRef} className={`${styles.chatHeader} ${themeClass}`}>
+    <div className={`${styles.chatHeader} ${themeClass}`}>
       <div className={styles.chatHeaderMain}>
         <h1>{selectedChannel?.name}</h1>
         {selectedChannel && (
-          <div className={styles.infoAnchor}>
+          <div ref={infoPanelRef} className={styles.infoAnchor}>
             <button
               type="button"
               className={styles.infoButton}
@@ -124,6 +126,14 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
                 role="dialog"
                 aria-label={`${selectedChannel.name} bilgisi`}
               >
+                <button
+                  type="button"
+                  className={styles.channelInfoPopoverClose}
+                  onClick={() => setInfoOpen(false)}
+                  aria-label="Bilgi penceresini kapat"
+                >
+                  <FaTimes aria-hidden />
+                </button>
                 <p className={styles.channelInfoSummary}>{summaryText}</p>
 
                 <div className={styles.channelInfoSection}>
