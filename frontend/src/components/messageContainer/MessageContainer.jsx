@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Plus } from 'lucide-react';
 import ChatHeader from './ChatHeader';
@@ -29,9 +29,12 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   const { authUser } = useAuthStore();
   const themeClass = theme === 'dark' ? styles.dark : '';
 
-  const messagesEndRef = useRef(null);
   const messagesAreaRef = useRef(null);
   const isLoadingMoreRef = useRef(false);
+  /** Üstten eski mesaj yüklenirken listeyi en alta zorlamayı atla */
+  const skipNextBottomScrollRef = useRef(false);
+  /** Önceki mesaj sayısı — tek adet eklemeyi (yeni mesaj) smooth kaydırmak için */
+  const prevMessageCountRef = useRef(0);
 
   //  eski → yeni
   const mergeUniqueById = useCallback((arr) => {
@@ -45,22 +48,41 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
   }, []);
 
   const scrollToBottom = (behavior = 'auto') => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior });
+    const area = messagesAreaRef.current;
+    if (!area) return;
+    const top = area.scrollHeight;
+    if (behavior === 'smooth' && typeof area.scrollTo === 'function') {
+      area.scrollTo({ top, behavior: 'smooth' });
+    } else {
+      area.scrollTop = top;
     }
   };
 
-  const isNearBottom = () => {
+  // Mesaj listesi değişince en alta: kanal açılışında anında (auto) + sonradan büyüyen layout için tekrar;
+  // ardışık tek mesaj eklemelerinde smooth.
+  useLayoutEffect(() => {
     const area = messagesAreaRef.current;
-    if (!area) return true;
-    const { scrollTop, scrollHeight, clientHeight } = area;
-    return scrollHeight - scrollTop - clientHeight < 100;
-  };
+    if (!area || messages.length === 0) {
+      prevMessageCountRef.current = 0;
+      return;
+    }
+    if (skipNextBottomScrollRef.current) return;
 
-  // Yeni mesaj eklendiğinde kullanıcı alttaysa otomatik kaydır
-  useEffect(() => {
-    if (!messagesAreaRef.current || messages.length === 0) return;
-    if (isNearBottom()) scrollToBottom('smooth');
+    const prev = prevMessageCountRef.current;
+    prevMessageCountRef.current = messages.length;
+
+    const appendedOne = prev > 0 && messages.length === prev + 1;
+    const behavior = appendedOne ? 'smooth' : 'auto';
+    scrollToBottom(behavior);
+
+    if (!appendedOne) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (!messagesAreaRef.current || skipNextBottomScrollRef.current) return;
+          scrollToBottom('auto');
+        });
+      });
+    }
   }, [messages]);
 
   // Eski mesajları yükle (üstten)
@@ -85,6 +107,8 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         const area = messagesAreaRef.current;
         const oldScrollHeight = area.scrollHeight;
 
+        skipNextBottomScrollRef.current = true;
+
         // Overlap'ları at, sonra tekilleştir ve sırala
         setMessages((prev) => {
           const existing = new Set(prev.map((m) => m.id));
@@ -99,6 +123,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         requestAnimationFrame(() => {
           const newScrollHeight = area.scrollHeight;
           area.scrollTop = newScrollHeight - oldScrollHeight;
+          skipNextBottomScrollRef.current = false;
         });
       }
     } catch (err) {
@@ -124,6 +149,8 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     if (!selectedChannel || channelType === 'jobs') return;
 
     const fetchMessages = async () => {
+      skipNextBottomScrollRef.current = false;
+      prevMessageCountRef.current = 0;
       setLoading(true);
       setMessages([]);
       setHasMore(false);
@@ -136,9 +163,6 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         setMessages(mergeUniqueById(items));
         setNextCursor(next);
         setHasMore(more);
-
-        // En alta (en yeni) git
-        requestAnimationFrame(() => scrollToBottom('auto'));
       } catch (err) {
         console.error('❌ [INIT] Mesajlar alınamadı:', err);
       } finally {
@@ -299,9 +323,6 @@ const onMessageDeleted = (deletedData) => {
                   ) : (
                     <p>Henüz mesaj yok.</p>
                   )}
-
-                  {/* En alta konumlandırma hedefi (en yeni) */}
-                  <div ref={messagesEndRef} />
                 </div>
 
                 <div className={`${styles.messageInput} ${themeClass}`}>
