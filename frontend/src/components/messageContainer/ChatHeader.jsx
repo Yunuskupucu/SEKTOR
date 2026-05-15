@@ -142,7 +142,7 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
                     {trendLoading && <li>Yükleniyor…</li>}
                     {trendError && <li>Trend konular alınamadı.</li>}
                     {!trendLoading && !trendError && trendTopics.length === 0 && (
-                      <li>Bu hafta için trend konu bulunamadı.</li>
+                      <li>Bu gün için trend konu bulunamadı.</li>
                     )}
                     {!trendLoading && !trendError && trendTopics.map((trend, idx) => (
                       <li key={`${trend?.topic || 'trend'}-${idx}`}>
