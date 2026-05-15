@@ -308,9 +308,56 @@
 .content {
   color: #333;
   font-size: 16px;
-  line-height: 1.4;
+  line-height: 1.5;
   word-wrap: break-word;
   word-break: break-word;
+  max-width: 480px;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* AI mesaj markdown stilleri */
+.aiBubble .content {
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.content ul,
+.content ol {
+  margin: 0 0 0 1.5em;
+  padding: 0 0 0 1.2em;
+  max-width: 100%;
+}
+.content li {
+  word-break: break-word;
+  margin-bottom: 0.2em;
+}
+.content pre {
+  background: #f3f4f6;
+  color: #1e293b;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 15px;
+  overflow-x: auto;
+  margin: 8px 0;
+  max-width: 100%;
+}
+.content code {
+  background: #f1f5f9;
+  color: #be185d;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 15px;
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+  word-break: break-all;
+}
+.content pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: 15px;
 }
 
 .removedContent {

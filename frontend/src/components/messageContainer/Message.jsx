@@ -7,6 +7,7 @@ import ConfirmModal from '../common/ConfirmModal';
 import { IoInformationCircleOutline, IoTrashOutline, IoWarning } from 'react-icons/io5';
 import axiosInstance from '../../lib/axios';
 import robotAvatar from '../../assets/ai-avatar.png';
+import ReactMarkdown from 'react-markdown';
 
 const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
   const isOwnMessage = message.User?.id === currentUser.id || message.user_id === currentUser.id;
@@ -227,7 +228,13 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
               <span>{removedNotice.text}</span>
             </div>
           ) : (
-            <div className={styles.content}>{message.content}</div>
+            <div className={styles.content}>
+              {isAiBot ? (
+                <ReactMarkdown>{message.content}</ReactMarkdown>
+              ) : (
+                message.content
+              )}
+            </div>
           )}
 
           {!isRemoved && message.attachment_url && (

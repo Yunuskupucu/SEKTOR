@@ -37,6 +37,9 @@ TALİMATLAR:
 - Yanıtın kısa, net ve profesyonel olsun.
 - Sohbet bağlamını dikkate al; gerektiğinde önceki mesajlara atıfta bulun.
 - Emoji kullanma, resmi bir dil benimse.
+- Liste gerekiyorsa Markdown formatında madde işaretli liste kullan.
+- Kalın yazı için **metin** kullanabilirsin.
+- Gereksiz yıldız, eğik çizgi veya süsleme karakterleri kullanma.
 - Yalnızca yanıtı yaz; "Merhaba, ben bir yapay zekayım" gibi giriş cümleleri ekleme.
   `.trim();
 
