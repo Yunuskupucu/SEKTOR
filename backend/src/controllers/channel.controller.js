@@ -1,7 +1,7 @@
 import Channel from "../models/channel.model.js";
 import Message from "../models/message.model.js";
-import { extractWeeklyTrends } from "../api/geminiModeration.js";
 import { Op } from "sequelize";
+import { extractChannelDailySummary } from "../api/geminiModeration.js";
 
 /** Kanal için DB’deki açıklama ve toplam mesaj sayısı */
 export const getChannelStats = async (req, res) => {
@@ -9,7 +9,10 @@ export const getChannelStats = async (req, res) => {
   const channelId = Number(rawId);
 
   if (!Number.isFinite(channelId)) {
-    return res.status(400).json({ success: false, message: "Geçersiz kanal kimliği." });
+    return res.status(400).json({
+      success: false,
+      message: "Geçersiz kanal kimliği.",
+    });
   }
 
   try {
@@ -18,10 +21,15 @@ export const getChannelStats = async (req, res) => {
     });
 
     if (!channel) {
-      return res.status(404).json({ success: false, message: "Kanal bulunamadı." });
+      return res.status(404).json({
+        success: false,
+        message: "Kanal bulunamadı.",
+      });
     }
 
-    const messageCount = await Message.count({ where: { channel_id: channelId } });
+    const messageCount = await Message.count({
+      where: { channel_id: channelId },
+    });
 
     return res.status(200).json({
       success: true,
@@ -33,6 +41,7 @@ export const getChannelStats = async (req, res) => {
     });
   } catch (error) {
     console.error("getChannelStats error:", error);
+
     return res.status(500).json({
       success: false,
       message: "Kanal bilgisi alınamadı.",
@@ -41,9 +50,10 @@ export const getChannelStats = async (req, res) => {
   }
 };
 
-
 const channelTrendCache = new Map();
-const CHANNEL_TREND_CACHE_DURATION = 24 * 60 * 60 * 1000; //24 saat az token harcasın diye
+
+// Token harcamamak için aynı kanal özetini 24 saat cache'liyoruz.
+const CHANNEL_TREND_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
 export const getChannelWeeklyTrends = async (req, res) => {
   const rawId = req.params.channel_id;
@@ -59,23 +69,8 @@ export const getChannelWeeklyTrends = async (req, res) => {
   try {
     const now = new Date();
 
-     const cached = channelTrendCache.get(channelId);
-
-     if (
-       cached &&
-       now.getTime() - cached.createdAt.getTime() < CHANNEL_TREND_CACHE_DURATION
-     ) {
-       return res.status(200).json({
-         success: true,
-         data: {
-           fromCache: true,
-           channelId,
-           trends: cached.trends,
-           sampledMessageCount: cached.sampledMessageCount,
-         },
-       });
-     }
-
+    // Önce channel bilgisi alınmalı.
+    // Çünkü cache response içinde channel.name kullanıyoruz.
     const channel = await Channel.findByPk(channelId, {
       attributes: ["id", "name"],
     });
@@ -87,58 +82,100 @@ export const getChannelWeeklyTrends = async (req, res) => {
       });
     }
 
-const last24Hours = new Date();
-last24Hours.setHours(now.getHours() - 24);
+    const cached = channelTrendCache.get(channelId);
+
+    if (
+      cached &&
+      cached.createdAt &&
+      now.getTime() - cached.createdAt.getTime() < CHANNEL_TREND_CACHE_DURATION
+    ) {
+      return res.status(200).json({
+        success: true,
+        data: {
+          fromCache: true,
+          channelId,
+          channelName: channel.name,
+          from: cached.from,
+          to: cached.to,
+          summary: cached.summary,
+          sampledMessageCount: cached.sampledMessageCount,
+        },
+      });
+    }
+
+    const last24Hours = new Date();
+    last24Hours.setHours(now.getHours() - 24);
 
     const rows = await Message.findAll({
       attributes: ["content", "timestamp"],
       where: {
         channel_id: channelId,
         status: "active",
-        timestamp: { [Op.gte]: last24Hours },
-        content: { [Op.ne]: "Mesaj kaldırıldı." },
+        timestamp: {
+          [Op.gte]: last24Hours,
+        },
+        content: {
+          [Op.ne]: "Mesaj kaldırıldı.",
+        },
       },
       order: [["timestamp", "DESC"]],
       limit: 100,
     });
 
+    console.log("========== KANAL 24 SAAT ÖZET DEBUG ==========");
+console.log("Kanal ID:", channelId);
+console.log("Kanal Adı:", channel.name);
+console.log("Şu an:", now);
+console.log("Son 24 saat başlangıcı:", last24Hours);
+console.log("DB'den gelen satır sayısı:", rows.length);
+console.log(
+  "DB'den gelen mesajlar:",
+  rows.map((row) => ({
+    content: row.content,
+    timestamp: row.timestamp,
+  }))
+);
+
     const messages = rows
       .map((row) => (row.content || "").trim().slice(0, 300))
       .filter(Boolean);
-
+  
     if (messages.length === 0) {
+      const emptySummary = {
+        title: "Son 24 Saat Özeti",
+        content: "Bu kanal için son 24 saat içinde analiz edilecek mesaj bulunamadı.",
+        mentions: 0,
+        hot: false,
+      };
+
       return res.status(200).json({
         success: true,
         data: {
           fromCache: false,
           channelId,
           channelName: channel.name,
-          trends: [],
+          from: last24Hours,
+          to: now,
+          summary: emptySummary,
           sampledMessageCount: 0,
-          message: "Bu kanal için son 24 saat içinde analiz edilecek mesaj bulunamadı.",
         },
       });
     }
 
-    const trends = await extractWeeklyTrends(messages);
+    const summary = await extractChannelDailySummary(messages);
 
-    const safeTrends =
-      trends && trends.length
-        ? trends
-        : [
-            {
-              topic: "Veri alınamadı",
-              category: channel.name || "Genel",
-              mentions: 0,
-              growth: 0,
-              summary: "Bu kanal için trend verisi şu anda alınamıyor.",
-              hot: false,
-            },
-          ];
+    const safeSummary = summary || {
+      title: "Son 24 Saat Özeti",
+      content: "Bu kanal için son 24 saate ait özet şu anda alınamıyor.",
+      mentions: 0,
+      hot: false,
+    };
 
     channelTrendCache.set(channelId, {
       createdAt: now,
-      trends: safeTrends,
+      from: last24Hours,
+      to: now,
+      summary: safeSummary,
       sampledMessageCount: messages.length,
     });
 
@@ -150,7 +187,7 @@ last24Hours.setHours(now.getHours() - 24);
         channelName: channel.name,
         from: last24Hours,
         to: now,
-        trends: safeTrends,
+        summary: safeSummary,
         sampledMessageCount: messages.length,
       },
     });

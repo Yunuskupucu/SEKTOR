@@ -307,15 +307,17 @@ export default function Dashboard() {
         );
 
         setTrends(
-          trendData.map((trend, index) => ({
-            topic: trend.topic || trend.title || `Trend ${index + 1}`,
-            category: trend.category || 'Backend',
-            mentions: Number(trend.mentions || trend.count || 0),
-            growth: Number(trend.growth || 0),
-            summary: trend.summary || trend.description || '',
-            hot: Boolean(trend.hot || index === 0),
-          }))
-        );
+        trendData.map((trend, index) => ({
+          title: trend.title || trend.topic || `Trend ${index + 1}`,
+          content:
+            trend.content ||
+            trend.summary ||
+            trend.description ||
+            'Bu kanalda öne çıkan teknik konular analiz edildi.',
+          mentions: Number(trend.mentions || trend.count || 0),
+          hot: Boolean(trend.hot || index === 0),
+        }))
+      );
 
         setChannels(
           messagesPerChannel.map((channel, index) => ({
@@ -1008,60 +1010,44 @@ export default function Dashboard() {
                 viewport={{ once: true }}
               >
                 {trends.length > 0 ? (
-                  trends.map((trend, index) => (
-                    <motion.div key={trend.topic} variants={itemVariants}>
-                      <motion.div className="dashboard__trend-item" whileHover={{ scale: 1.01 }}>
-                        <motion.div
-                          className="dashboard__trend-progress"
-                          initial={{ width: '0%' }}
-                          whileInView={{ width: `${Math.min(trend.growth * 1.5, 100)}%` }}
-                          transition={{ duration: 1, delay: index * 0.1 }}
-                        />
-                        <div className="dashboard__trend-content">
-                          <div className="dashboard__trend-info">
-                            <div className="dashboard__trend-title-row">
-                              <span className="dashboard__trend-rank">#{index + 1}</span>
-                              <h4 className="dashboard__trend-title">{trend.topic}</h4>
-                              {trend.hot && (
-                                <motion.div
-                                  animate={{ scale: [1, 1.2, 1] }}
-                                  transition={{ duration: 1, repeat: Infinity }}
-                                >
-                                  <Flame className="h-4 w-4 dashboard-icon--destructive" />
-                                </motion.div>
-                              )}
-                              <Badge
-                                className={`dashboard__trend-badge ${
-                                  categoryColors[trend.category] || 'category-backend'
-                                }`}
-                              >
-                                {trend.category}
-                              </Badge>
-                            </div>
-                            <p className="dashboard__trend-summary">{trend.summary}</p>
-                          </div>
-                          <div className="dashboard__trend-stats">
-                            <motion.div
-                              className="dashboard__trend-growth"
-                              whileHover={{ scale: 1.1 }}
-                            >
-                              <ArrowUp className="h-4 w-4 dashboard-icon--c2" />
-                              <span>%{trend.growth}</span>
-                            </motion.div>
-                            <div className="dashboard__trend-mentions">
-                              <MessageSquare className="h-3 w-3 dashboard-icon--c3" />
-                              <span>
-                                <AnimatedCounter value={trend.mentions} />
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="dashboard__empty-state">Trend verisi bulunamadı.</div>
-                )}
+  trends.map((trend, index) => (
+    <motion.div key={`${trend.title}-${index}`} variants={itemVariants}>
+      <motion.div className="dashboard__trend-item" whileHover={{ scale: 1.01 }}>
+        <div className="dashboard__trend-content">
+          <div className="dashboard__trend-info">
+            <div className="dashboard__trend-title-row">
+              <span className="dashboard__trend-rank">#{index + 1}</span>
+
+              <h4 className="dashboard__trend-title">{trend.title}</h4>
+
+              {trend.hot && (
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  <Flame className="h-4 w-4 dashboard-icon--destructive" />
+                </motion.div>
+              )}
+            </div>
+
+            <p className="dashboard__trend-summary">{trend.content}</p>
+          </div>
+
+          <div className="dashboard__trend-stats">
+            <div className="dashboard__trend-mentions">
+              <MessageSquare className="h-3 w-3 dashboard-icon--c3" />
+              <span>
+                <AnimatedCounter value={trend.mentions} />
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  ))
+) : (
+  <div className="dashboard__empty-state">Trend verisi bulunamadı.</div>
+)}
               </motion.div>
             </CardContent>
           </Card>
