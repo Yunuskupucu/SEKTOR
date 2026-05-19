@@ -19,26 +19,30 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
   const [statsError, setStatsError] = useState(false);
 
   // Trend konuları için state
-  const [trendTopics, setTrendTopics] = useState([]);
+  const [channelSummary, setChannelSummary] = useState(null);
   const [trendLoading, setTrendLoading] = useState(false);
   const [trendError, setTrendError] = useState(false);
+
   // Kanal trendlerini yükle
-  const loadChannelTrends = useCallback(async () => {
-    if (!selectedChannel?.id) return;
-    setTrendLoading(true);
-    setTrendError(false);
-    try {
-      const res = await axiosInstance.get(`channels/${selectedChannel.id}/weekly-trends`);
-      const payload = res.data?.data;
-      setTrendTopics(Array.isArray(payload?.trends) ? payload.trends : []);
-    } catch (e) {
-      console.error('Kanal trendleri alınamadı:', e);
-      setTrendError(true);
-      setTrendTopics([]);
-    } finally {
-      setTrendLoading(false);
-    }
-  }, [selectedChannel?.id]);
+const loadChannelTrends = useCallback(async () => {
+  if (!selectedChannel?.id) return;
+
+  setTrendLoading(true);
+  setTrendError(false);
+
+  try {
+    const res = await axiosInstance.get(`channels/${selectedChannel.id}/weekly-trends`);
+    const payload = res.data?.data;
+
+    setChannelSummary(payload?.summary || null);
+  } catch (e) {
+    console.error('Kanal özeti alınamadı:', e);
+    setTrendError(true);
+    setChannelSummary(null);
+  } finally {
+    setTrendLoading(false);
+  }
+}, [selectedChannel?.id]);
 
   /** Bilgi butonu + popover; dışına tıklanınca pencere kapanır */
   const infoPanelRef = useRef(null);
@@ -69,7 +73,7 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
     setMessageCount(null);
     setServerDescription(null);
     setStatsError(false);
-    setTrendTopics([]);
+      setChannelSummary(null);
     setTrendError(false);
     setTrendLoading(false);
   }, [selectedChannel?.id]);
@@ -134,25 +138,34 @@ const ChatHeader = ({ selectedChannel, onClose }) => {
                 >
                   <FaTimes aria-hidden />
                 </button>
-                <p className={styles.channelInfoSummary}>{summaryText}</p>
+                {/* <p className={styles.channelInfoSummary}>{summaryText}</p> */}
 
-                <div className={styles.channelInfoSection}>
-                  <h2 className={styles.channelInfoSectionTitle}>Trend konular</h2>
-                  <ul className={styles.channelInfoTrendList}>
-                    {trendLoading && <li>Yükleniyor…</li>}
-                    {trendError && <li>Trend konular alınamadı.</li>}
-                    {!trendLoading && !trendError && trendTopics.length === 0 && (
-                      <li>Bu gün için trend konu bulunamadı.</li>
+                  <div className={styles.channelInfoSection}>
+                  <h2 className={styles.channelInfoSectionTitle}>Son 24 Saat Özeti</h2>
+
+                  <div className={styles.channelInfoTrendList}>
+                    {trendLoading && <p>Yükleniyor…</p>}
+
+                    {trendError && <p>Son 24 saat özeti alınamadı.</p>}
+
+                    {!trendLoading && !trendError && !channelSummary && (
+                      <p>Bu kanal için son 24 saat özeti bulunamadı.</p>
                     )}
-                    {!trendLoading && !trendError && trendTopics.map((trend, idx) => (
-                      <li key={`${trend?.topic || 'trend'}-${idx}`}>
-                        <strong>{trend?.topic || 'Bilinmeyen konu'}</strong>
-                        {trend?.summary && (
-                          <p>{trend.summary}</p>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+
+                    {!trendLoading && !trendError && channelSummary && (
+                    <div>
+                      {Array.isArray(channelSummary.items) && channelSummary.items.length > 0 ? (
+                        <ul className={styles.channelSummaryList}>
+                          {channelSummary.items.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>{channelSummary.content || 'Bu kanal için özet oluşturulamadı.'}</p>
+                      )}
+                    </div>
+                  )}
+                  </div>
                 </div>
 
                 <div className={styles.channelInfoFooter}>

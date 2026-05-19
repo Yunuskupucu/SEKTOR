@@ -330,3 +330,17 @@
     }
   }
 }
+
+.channelSummaryList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.channelSummaryList li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #000000;
+}

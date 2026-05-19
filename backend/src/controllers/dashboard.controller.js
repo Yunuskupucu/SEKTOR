@@ -190,43 +190,77 @@ export const getWeeklyTrends = async (req, res) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
 
+    console.log("[getWeeklyTrends] Haftalık trendler için mesajlar çekiliyor...");
     const rows = await Message.findAll({
-      attributes: ["content"],
+      attributes: ["id", "content", "timestamp", "channel_id"],
       where: {
         status: "active",
-        timestamp: { [Op.gte]: sevenDaysAgo },
         content: { [Op.ne]: "Mesaj kaldırıldı." },
       },
+      include: [
+        {
+          model: Channel,
+          attributes: ["id", "name"],
+        },
+      ],
       order: [["timestamp", "DESC"]],
       limit: 100,
     });
-
     const messages = rows
-      .map((r) => (r.content || "").trim().slice(0, 300))
-      .filter(Boolean)
-      .slice(0, 100);
+  .map((r) => ({
+    channelName: r.Channel?.name || "Bilinmeyen Kanal",
+    content: (r.content || "").trim().slice(0, 300),
+  }))
+  .filter((message) => message.content)
+  .slice(0, 100);
+  const channelMessageCounts = {};
 
-      console.log("weekly-trends endpoint çalıştı");
+  messages.forEach((message) => {
+    const channelName = message.channelName || "Bilinmeyen Kanal";
+    channelMessageCounts[channelName] = (channelMessageCounts[channelName] || 0) + 1;
+  });
+  console.log("========== DASHBOARD TREND MESAJ SAYILARI ==========");
+console.log("Toplam analiz edilen mesaj sayısı:", messages.length);
+console.table(channelMessageCounts);
+
+console.log("weekly-trends endpoint çalıştı");
 console.log("Gemini'ye gönderilen mesaj sayısı:", messages.length);
-  
 
-// Fallback 
-const trends = await extractWeeklyTrends(messages);
+// Daha detaylı loglama
+console.log(
+  "[getWeeklyTrends] extractWeeklyTrends fonksiyonu çağrılıyor. Mesaj örnekleri:",
+  messages.slice(0, 2)
+);
 
-console.log("🟢 TREND:", trends);
+let rawTrends = [];
 
-const safeTrends = trends && trends.length
-  ? trends
-  : [
-      {
-        topic: "Veri alınamadı",
-        category: "Genel",
-        mentions: 0,
-        growth: 0,
-        summary: "Trend verisi şu anda alınamıyor (API limiti dolmuş olabilir)",
-        hot: false
-      }
-    ];
+try {
+  rawTrends = await extractWeeklyTrends(messages);
+  console.log("[getWeeklyTrends] extractWeeklyTrends API yanıtı:", rawTrends);
+} catch (err) {
+  console.error("[getWeeklyTrends] extractWeeklyTrends çağrısı hata verdi:", err);
+}
+
+const trends = Array.isArray(rawTrends)
+  ? rawTrends.map((trend) => ({
+      ...trend,
+      mentions: channelMessageCounts[trend.title] || 0,
+    }))
+  : [];
+
+console.log("🟢 TREND (işlenmiş):", trends);
+
+const safeTrends =
+  trends && trends.length
+    ? trends
+    : [
+        {
+          title: "Veri alınamadı",
+          content: "Trend verisi şu anda alınamıyor. API limiti dolmuş olabilir.",
+          mentions: 0,
+          hot: false,
+        },
+      ];
 
 cachedTrends = safeTrends;
 cachedTrendsAt = now;
@@ -241,24 +275,25 @@ return res.json({
     sampledMessageCount: messages.length,
   },
 });
+
   } catch (error) {
     console.error("getWeeklyTrends error:", error.message);
-console.error("getWeeklyTrends error full:", error);
-
+    console.error("getWeeklyTrends error full:", error);
+    // Hata durumunda fallback trend dizisi döndür
     return res.json({
       success: true,
       data: {
         fromCache: true,
-        trends: cachedTrends || [
-  {
-    topic: "Veri alınamadı",
-    category: "Genel",
-    mentions: 0,
-    growth: 0,
-    summary: "Trend verisi şu anda alınamıyor.",
-    hot: false
-  }
-],
+        trends: [
+          {
+            topic: "Veri alınamadı",
+            category: "Genel",
+            mentions: 0,
+            growth: 0,
+            summary: "Trend verisi şu anda alınamıyor.",
+            hot: false
+          }
+        ],
         sampledMessageCount: 0,
       },
     });
