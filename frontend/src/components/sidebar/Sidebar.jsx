@@ -14,6 +14,7 @@ import CsPng from '../../assets/channels/cs.png';
 import HtmlSvg from '../../assets/channels/html.svg';
 import JobPng from '../../assets/channels/job.png';
 import DevOpsPng from '../../assets/channels/devops.png';
+import HomeSvg from '../../assets/channels/home.svg';
 import { useTheme } from '../../context/useTheme';
 
 const channelsData = [
@@ -30,7 +31,8 @@ const channelsData = [
     name: 'HTML / CSS',
     channelPic: HtmlSvg,
     type: 'chat',
-    summary: 'Arayüz yapısı, stiller, erişilebilirlik ve duyarlı tasarım konularında pratik tartışmalar.',
+    summary:
+      'Arayüz yapısı, stiller, erişilebilirlik ve duyarlı tasarım konularında pratik tartışmalar.',
   },
   {
     id: 3,
@@ -79,7 +81,8 @@ const channelsData = [
     name: 'Yapay Zekâ',
     channelPic: AiPng,
     type: 'chat',
-    summary: 'LLM’ler, modelleme ve üretken yapay zekâ araçlarının geliştirici perspektifinden kullanımı.',
+    summary:
+      'LLM’ler, modelleme ve üretken yapay zekâ araçlarının geliştirici perspektifinden kullanımı.',
   },
   {
     id: 21,
@@ -94,7 +97,15 @@ const channelsData = [
     name: 'İş İlanları',
     channelPic: JobPng,
     type: 'jobs',
-    summary: 'Yazılım ve teknoloji alanındaki ilanların listelendiği kanal; ilan detayları kartlarda yer alır.',
+    summary:
+      'Yazılım ve teknoloji alanındaki ilanların listelendiği kanal; ilan detayları kartlarda yer alır.',
+  },
+  {
+    id: 22,
+    name: 'Genel',
+    channelPic: HomeSvg,
+    type: 'chat',
+    summary: 'Platform üzerindeki genel sohbet ve tartışma kanalı.',
   },
 ];
 

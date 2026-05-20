@@ -35,8 +35,6 @@ import {
   CheckCircle2,
   Archive,
   Activity,
-  ArrowUp,
-  Flame,
 } from 'lucide-react';
 import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -170,18 +168,6 @@ const features = [
   },
 ];
 
-const categoryColors = {
-  Frontend: 'category-frontend',
-  Backend: 'category-backend',
-  Mobile: 'category-mobile',
-  DevOps: 'category-infra',
-  AI: 'category-ai',
-  'Yapay Zeka': 'category-ai',
-  Dil: 'category-lang',
-  Altyapı: 'category-infra',
-  Altyapi: 'category-infra',
-};
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
@@ -307,17 +293,17 @@ export default function Dashboard() {
         );
 
         setTrends(
-        trendData.map((trend, index) => ({
-          title: trend.title || trend.topic || `Trend ${index + 1}`,
-          content:
-            trend.content ||
-            trend.summary ||
-            trend.description ||
-            'Bu kanalda öne çıkan teknik konular analiz edildi.',
-          mentions: Number(trend.mentions || trend.count || 0),
-          hot: Boolean(trend.hot || index === 0),
-        }))
-      );
+          trendData.map((trend, index) => ({
+            title: trend.title || trend.topic || `Trend ${index + 1}`,
+            content:
+              trend.content ||
+              trend.summary ||
+              trend.description ||
+              'Bu kanalda öne çıkan teknik konular analiz edildi.',
+            mentions: Number(trend.mentions || trend.count || 0),
+            hot: Boolean(trend.hot || index === 0),
+          }))
+        );
 
         setChannels(
           messagesPerChannel.map((channel, index) => ({
@@ -1010,44 +996,35 @@ export default function Dashboard() {
                 viewport={{ once: true }}
               >
                 {trends.length > 0 ? (
-  trends.map((trend, index) => (
-    <motion.div key={`${trend.title}-${index}`} variants={itemVariants}>
-      <motion.div className="dashboard__trend-item" whileHover={{ scale: 1.01 }}>
-        <div className="dashboard__trend-content">
-          <div className="dashboard__trend-info">
-            <div className="dashboard__trend-title-row">
-              <span className="dashboard__trend-rank">#{index + 1}</span>
+                  trends.map((trend, index) => (
+                    <motion.div key={`${trend.title}-${index}`} variants={itemVariants}>
+                      <motion.div className="dashboard__trend-item" whileHover={{ scale: 1.01 }}>
+                        <div className="dashboard__trend-content">
+                          <div className="dashboard__trend-info">
+                            <div className="dashboard__trend-title-row">
+                              <span className="dashboard__trend-rank">#{index + 1}</span>
 
-              <h4 className="dashboard__trend-title">{trend.title}</h4>
+                              <h4 className="dashboard__trend-title">{trend.title}</h4>
+                            </div>
 
-              {trend.hot && (
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <Flame className="h-4 w-4 dashboard-icon--destructive" />
-                </motion.div>
-              )}
-            </div>
+                            <p className="dashboard__trend-summary">{trend.content}</p>
+                          </div>
 
-            <p className="dashboard__trend-summary">{trend.content}</p>
-          </div>
-
-          <div className="dashboard__trend-stats">
-            <div className="dashboard__trend-mentions">
-              <MessageSquare className="h-3 w-3 dashboard-icon--c3" />
-              <span>
-                <AnimatedCounter value={trend.mentions} />
-              </span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  ))
-) : (
-  <div className="dashboard__empty-state">Trend verisi bulunamadı.</div>
-)}
+                          <div className="dashboard__trend-stats">
+                            <div className="dashboard__trend-mentions">
+                              <MessageSquare className="h-3 w-3 dashboard-icon--c3" />
+                              <span>
+                                <AnimatedCounter value={trend.mentions} />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="dashboard__empty-state">Trend verisi bulunamadı.</div>
+                )}
               </motion.div>
             </CardContent>
           </Card>
