@@ -102,8 +102,7 @@ const JobCard = ({ selectedChannel, listRefreshSeq = 0 }) => {
 
   return (
     <div className={`${styles.jobCardContainer} ${themeClass}`}>
-      <div className={styles.jobCardWrapper}>
-        <div className={styles.jobCardsList}>
+      <div className={styles.jobCardsList}>
           {loading && <p>İş ilanları yükleniyor...</p>}
           {!loading && error && <p>{error}</p>}
           {!loading && !error && jobs.length === 0 && <p>Henüz iş ilanı yok.</p>}
@@ -218,7 +217,6 @@ const JobCard = ({ selectedChannel, listRefreshSeq = 0 }) => {
                 </div>
               );
             })}
-        </div>
       </div>
 
       {editingJob && (
