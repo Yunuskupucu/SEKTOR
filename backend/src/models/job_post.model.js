@@ -54,7 +54,7 @@ const JobPost = sequelize.define(
   onDelete: "CASCADE",
 },
      expires_at: { type: DataTypes.DATE, allowNull: true },
-    status: { type: DataTypes.ENUM("draft", "active", "expired"), allowNull: false, defaultValue: "active" },
+    status: { type: DataTypes.ENUM("draft", "active", "passive", "expired"), allowNull: false, defaultValue: "active" },
     visibility: { type: DataTypes.ENUM("public", "channel"), allowNull: false, defaultValue: "public" },
   },
   {

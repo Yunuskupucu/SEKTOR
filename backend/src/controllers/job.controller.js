@@ -193,8 +193,9 @@ export const passiveJobPost = async (req, res) => {
       });
     }
 
+
     await jobPost.update({
-      status: "expired",
+      status: "passive",
     });
 
     return res.json({

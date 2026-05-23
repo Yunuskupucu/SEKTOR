@@ -1,3 +1,6 @@
+import { startJobPostExpirationCron } from '../jobPostExpirationCron.js';
+// Günü dolan ilanları expired yapan cron job'u başlat
+startJobPostExpirationCron();
 import express from 'express';
 import dotenv from 'dotenv';
 import http from 'http';
