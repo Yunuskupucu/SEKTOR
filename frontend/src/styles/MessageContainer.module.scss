@@ -215,6 +215,11 @@
   line-height: 1.4;
   color: #4b5563;
 
+  p {
+    margin: 0;
+    color: inherit;
+  }
+
   li {
     margin-bottom: 0.25rem;
 
@@ -343,5 +348,9 @@
 .channelSummaryList li {
   font-size: 13px;
   line-height: 1.5;
-  color: #000000;
+  color: #374151;
+}
+
+.channelInfoPopoverDark .channelSummaryList li {
+  color: #e5e7eb;
 }

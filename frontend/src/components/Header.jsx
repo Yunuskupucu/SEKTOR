@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSettings, FiUser, FiLogOut, FiBarChart2 } from 'react-icons/fi';
 import styles from '../styles/Header.module.scss';
@@ -8,6 +8,7 @@ import ThemeToggleButton from './common/ThemeToggleButton';
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(false);
+  const settingsRef = useRef(null);
   const navigate = useNavigate();
   const { logout, authUser, isCheckingAuth } = useAuthStore();
   const { theme } = useTheme();
@@ -21,6 +22,24 @@ function Header() {
   const handleMenuClose = () => {
     setAnchorEl(false);
   };
+
+  useEffect(() => {
+    if (!anchorEl) return undefined;
+
+    const handleOutsideClick = (event) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target)) {
+        setAnchorEl(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick, true);
+    document.addEventListener('touchstart', handleOutsideClick, true);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick, true);
+      document.removeEventListener('touchstart', handleOutsideClick, true);
+    };
+  }, [anchorEl]);
 
   const handleProfile = () => {
     navigate('/profile');
@@ -64,7 +83,7 @@ function Header() {
 
       <div className={styles.settingsContainer}>
         <ThemeToggleButton />
-        <div className={styles.settings}>
+        <div ref={settingsRef} className={styles.settings}>
           <div className={styles.settingsIcon} onClick={handleMenuOpen}>
             <FiSettings size={24} />
           </div>
