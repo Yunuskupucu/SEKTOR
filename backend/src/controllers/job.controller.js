@@ -75,23 +75,13 @@ export const getJobPostsForJobChannel = async (req, res) => {
     const now = new Date();
     const viewerId = req.user?.id;
 
-    const visibleToEveryone = {
-      channel_id: jobChannelId,
-      status: 'active',
-      [Op.or]: [{ expires_at: null }, { expires_at: { [Op.gte]: now } }],
-    };
-
-    const whereOr = [visibleToEveryone];
-    if (viewerId != null) {
-      whereOr.push({
-        channel_id: jobChannelId,
-        user_id: viewerId,
-        status: 'expired',
-      });
-    }
-
+    // Hem aktif hem pasif ilanları getir
     const jobs = await JobPost.findAll({
-      where: { [Op.or]: whereOr },
+      where: {
+        channel_id: jobChannelId,
+        status: { [Op.in]: ['active', 'passive', 'expired'] },
+        [Op.or]: [{ expires_at: null }, { expires_at: { [Op.gte]: now } }],
+      },
       include: [
         {
           model: User,
@@ -101,14 +91,7 @@ export const getJobPostsForJobChannel = async (req, res) => {
       order: [['created_at', 'DESC']],
     });
 
-    const sorted = [...jobs].sort((a, b) => {
-      const aPassive = a.status === 'expired' ? 1 : 0;
-      const bPassive = b.status === 'expired' ? 1 : 0;
-      if (aPassive !== bPassive) return aPassive - bPassive;
-      return new Date(b.created_at) - new Date(a.created_at);
-    });
-
-    res.json(sorted);
+    res.json(jobs);
   } catch (err) {
     console.error('❌ getJobPostsForJobChannel:', err);
     res.status(500).json({ message: 'Error fetching job posts', error: err.message });

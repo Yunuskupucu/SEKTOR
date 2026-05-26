@@ -52,7 +52,7 @@ const EditJobModal = ({ job, onClose, onSaved }) => {
         location: location.trim() || null,
         contact: contact.trim() || null,
         expires_at: expiresAt || null,
-        status: isPassive ? 'expired' : 'active',
+        status: isPassive ? 'passive' : 'active',
       });
 
       if (onSaved) onSaved();

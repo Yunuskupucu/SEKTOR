@@ -20,7 +20,7 @@ export const getPublicGlobalStats = async (req, res) => {
       totalUsers,
       totalChannels,
       totalJobPosts,
-      activeJobPosts,
+      allJobPosts,
       activeChannelsLast7Days,
     ] = await Promise.all([
       User.count(),
@@ -28,7 +28,7 @@ export const getPublicGlobalStats = async (req, res) => {
       JobPost.count(),
       JobPost.count({
         where: {
-          status: "active",
+          status: { [Op.in]: ["active", "passive", "expired"] },
           [Op.or]: [
             { expires_at: null },
             { expires_at: { [Op.gte]: now } },
@@ -50,7 +50,7 @@ export const getPublicGlobalStats = async (req, res) => {
         totalUsers,
         totalChannels,
         totalJobPosts,
-        activeJobPosts,
+        allJobPosts, // aktif+pasif+expired
         activeChannelsLast7Days,
       },
     });
