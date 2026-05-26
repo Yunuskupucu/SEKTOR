@@ -275,10 +275,13 @@ export default function Dashboard() {
 
         const totalJobPosts = Number(global.totalJobPosts || 0);
         const activeJobPosts = Number(global.activeJobPosts || 0);
+        const passiveJobPosts = Number(global.passiveJobPosts || 0);
+        const expiredJobPosts = Number(global.expiredJobPosts || 0);
         setJobListingStats({
           total: totalJobPosts,
           active: activeJobPosts,
-          passive: Math.max(0, totalJobPosts - activeJobPosts),
+          passive: passiveJobPosts,
+          expired: expiredJobPosts,
         });
 
         console.log('WEEKLY ACTIVITY RAW:', weeklyActivity);

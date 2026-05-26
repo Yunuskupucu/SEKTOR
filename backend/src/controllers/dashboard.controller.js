@@ -16,44 +16,58 @@ export const getPublicGlobalStats = async (req, res) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
 
-    const [
-      totalUsers,
-      totalChannels,
-      totalJobPosts,
-      allJobPosts,
-      activeChannelsLast7Days,
-    ] = await Promise.all([
-      User.count(),
-      Channel.count(),
-      JobPost.count(),
-      JobPost.count({
-        where: {
-          status: { [Op.in]: ["active", "passive", "expired"] },
-          [Op.or]: [
-            { expires_at: null },
-            { expires_at: { [Op.gte]: now } },
-          ],
-        },
-      }),
-      Message.count({
-        distinct: true,
-        col: "channel_id",
-        where: {
-          timestamp: { [Op.gte]: sevenDaysAgo },
-        },
-      }),
-    ]);
+  const [
+  totalUsers,
+  totalChannels,
+  totalJobPosts,
+  activeJobPosts,
+  passiveJobPosts,
+  activeChannelsLast7Days,
+] = await Promise.all([
+  User.count(),
+  Channel.count(),
+  JobPost.count(),
 
-    return res.json({
-      success: true,
-      data: {
-        totalUsers,
-        totalChannels,
-        totalJobPosts,
-        allJobPosts, // aktif+pasif+expired
-        activeChannelsLast7Days,
+  // Aktif ilanlar: status active ve süresi dolmamış olanlar
+  JobPost.count({
+    where: {
+      status: "active",
+      [Op.or]: [
+        { expires_at: null },
+        { expires_at: { [Op.gte]: now } },
+      ],
+    },
+  }),
+
+  // Pasif ilanlar: passive veya expired olanlar
+  JobPost.count({
+    where: {
+      status: {
+        [Op.in]: ["passive", "expired"],
       },
-    });
+    },
+  }),
+
+  Message.count({
+    distinct: true,
+    col: "channel_id",
+    where: {
+      timestamp: { [Op.gte]: sevenDaysAgo },
+    },
+  }),
+]);
+
+return res.json({
+  success: true,
+  data: {
+    totalUsers,
+    totalChannels,
+    totalJobPosts,
+    activeJobPosts,
+    passiveJobPosts,
+    activeChannelsLast7Days,
+  },
+});
   } catch (error) {
     console.error("getPublicGlobalStats error:", error);
     return res.status(500).json({
