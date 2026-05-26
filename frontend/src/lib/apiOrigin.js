@@ -32,5 +32,6 @@ export async function resolveBackendOrigin() {
 }
 
 export function getBackendOrigin() {
-  return resolvedOrigin;
+  // Eğer resolvedOrigin henüz atanmadıysa local fallback kullan
+  return resolvedOrigin || getLocalFallbackOrigin();
 }
