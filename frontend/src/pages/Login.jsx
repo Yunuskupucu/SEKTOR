@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../styles/Login.module.scss';
-import { useAuthStore } from '../store/useAuthStore';
-import LightLogo from '../assets/logo/LightLogo.png';
-import DarkLogo from '../assets/logo/DarkLogo.png';
+import styles from './Login.module.scss';
+import { useAuthStore } from '@/store/useAuthStore';
+import LightLogo from '@/assets/logo/LightLogo.png';
+import DarkLogo from '@/assets/logo/DarkLogo.png';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
-import { useTheme } from '../context/useTheme';
-import ThemeToggleButton from '../components/common/ThemeToggleButton';
+import { useTheme } from '@/hooks/useTheme';
+import ThemeToggleButton from '@/components/ui/ThemeToggleButton/ThemeToggleButton';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
-import { getBackendOrigin } from '../lib/apiOrigin';
+import { getBackendOrigin } from '@/services/api/apiOrigin';
 
 function Login() {
   const navigate = useNavigate();

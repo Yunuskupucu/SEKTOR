@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuthStore } from '../store/useAuthStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import {
   FaCamera,
   FaEnvelope,
@@ -7,11 +7,11 @@ import {
   FaLinkedin,
   FaGithub,
 } from 'react-icons/fa';
-import styles from '../styles/Profile.module.scss';
-import Header from '../components/Header';
+import styles from './Profile.module.scss';
+import Header from '@/components/layout/Header/Header';
 import { toast } from 'react-hot-toast';
-import defaultAvatar from '../assets/avatar.png';
-import { useTheme } from '../context/useTheme';
+import defaultAvatar from '@/assets/avatar.png';
+import { useTheme } from '@/hooks/useTheme';
 
 const Profile = () => {
   const { authUser, updateProfile, updateAvatar } = useAuthStore();

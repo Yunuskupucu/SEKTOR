@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/Register.module.scss';
-import { useAuthStore } from '../store/useAuthStore';
-import DarkLogo from '../assets/logo/DarkLogo.png';
-import LightLogo from '../assets/logo/LightLogo.png';
-import { useTheme } from '../context/useTheme';
-import ThemeToggleButton from '../components/common/ThemeToggleButton';
+import styles from './Register.module.scss';
+import { useAuthStore } from '@/store/useAuthStore';
+import DarkLogo from '@/assets/logo/DarkLogo.png';
+import LightLogo from '@/assets/logo/LightLogo.png';
+import { useTheme } from '@/hooks/useTheme';
+import ThemeToggleButton from '@/components/ui/ThemeToggleButton/ThemeToggleButton';
 import { FaRegEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 

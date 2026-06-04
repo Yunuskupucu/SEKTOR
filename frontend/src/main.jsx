@@ -3,9 +3,9 @@ import './index.scss';
 import './styles/theme-toggle-global.scss';
 import App from './App.jsx';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext.jsx';
-import { applyBackendConfig } from './lib/axios';
-import { initSocket } from './lib/socket';
+import { ThemeProvider } from './providers/ThemeContext.jsx';
+import { applyBackendConfig } from './services/api/axios';
+import { initSocket } from './services/socket/socket';
 
 const backendOrigin = 'http://localhost:5001';
 

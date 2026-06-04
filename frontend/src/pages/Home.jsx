@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import MessageContainer from '../components/messageContainer/MessageContainer';
-import Sidebar from '../components/sidebar/Sidebar';
-import styles from '../styles/Home.module.scss';
-import Header from '../components/Header';
+import MessageContainer from '@/features/chat/components/MessageContainer/MessageContainer';
+import Sidebar from '@/features/channels/components/Sidebar/Sidebar';
+import styles from './Home.module.scss';
+import Header from '@/components/layout/Header/Header';
 
 function Home() {
   const [selectedChannel, setSelectedChannel] = useState(null);

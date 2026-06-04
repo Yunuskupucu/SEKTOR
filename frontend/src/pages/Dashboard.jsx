@@ -1,12 +1,12 @@
-import axios from '../lib/axios';
+import axios from '@/services/api/axios';
 /* eslint-disable react/prop-types */
 import '@fontsource/geist-sans/400.css';
 import '@fontsource/geist-sans/500.css';
 import '@fontsource/geist-sans/600.css';
 import '@fontsource/geist-sans/700.css';
-import '../styles/dashboard-globals.css';
-import ThemeToggleButton from '../components/common/ThemeToggleButton';
-import aiAvatar from '../assets/ai-avatar.png';
+import '@/styles/dashboard-globals.css';
+import ThemeToggleButton from '@/components/ui/ThemeToggleButton/ThemeToggleButton';
+import aiAvatar from '@/assets/ai-avatar.png';
 import {
   Area,
   AreaChart,
@@ -39,7 +39,7 @@ import {
 import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Dashboard.module.scss';
+import '@/styles/Dashboard.module.scss';
 
 function classNames(...values) {
   return values.filter(Boolean).join(' ');

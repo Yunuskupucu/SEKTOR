@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 /** Bazı CDN/host ortamlarında stylesheet + crossorigin CORS/cache yüzünden CSS yüklenmez (boş sayfa gibi görünür). */
 function stripStylesheetCrossOrigin() {
@@ -27,6 +28,7 @@ export default defineConfig({
   plugins: [react(), stripStylesheetCrossOrigin()],
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, './src'),
       'react-is': 'react-is',
     },
   },
