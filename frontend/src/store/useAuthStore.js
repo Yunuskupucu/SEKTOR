@@ -7,15 +7,14 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
   try {
-    console.log("checkAuth çalıştı");
 
     const res = await axiosInstance.get('/auth/profile');
 
-    console.log("checkAuth profile response:", res.data);
+
 
     set({ authUser: res.data });
   } catch (error) {
-    console.log('Auth check error:', error.response?.status, error.response?.data);
+
     set({ authUser: null });
   } finally {
     set({ isCheckingAuth: false });
@@ -26,11 +25,11 @@ fetchProfile: async () => {
   set({ isCheckingAuth: true });
 
   try {
-    console.log("fetchProfile çalıştı");
+
 
     const res = await axiosInstance.get('/auth/profile');
 
-    console.log("fetchProfile response:", res.data);
+
 
     set({ authUser: res.data });
   } catch (err) {
@@ -46,7 +45,7 @@ fetchProfile: async () => {
       await axiosInstance.post('/auth/login', { email, password });
       await useAuthStore.getState().fetchProfile();
     } catch (error) {
-      console.log('Login error:', error);
+
       throw error;
     }
   },
