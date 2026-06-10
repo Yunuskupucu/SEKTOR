@@ -47,7 +47,7 @@ router.get("/google/callback",
  (req,res)=>{
    generateToken(req.user.id, res);
    res.set('Cache-Control', 'no-store');
-  return res.redirect(303, "http://localhost:5173/");
+  return res.redirect(303, "http://localhost:5173/app");
 });
 
 /* ============= OAuth: GitHub ============= */
@@ -57,7 +57,7 @@ router.get("/github/callback",
   (req,res)=>{
     generateToken(req.user.id, res);
     res.set('Cache-Control', 'no-store');
-    return res.redirect(303, "http://localhost:5173/");
+    return res.redirect(303, "http://localhost:5173/app");
   }
 );
 
