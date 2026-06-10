@@ -1,9 +1,10 @@
 import { Op, fn, col } from "sequelize";
-import { extractWeeklyTrends } from "../api/geminiModeration.js"; 
+import { extractWeeklyTrends } from "../api/geminiModeration.js";
 import User from "../models/user.model.js";
 import Channel from "../models/channel.model.js";
 import Message from "../models/message.model.js";
 import JobPost from "../models/job_post.model.js";
+import { getOrCreateJobChannelId } from "../lib/jobChannel.js";
 
 let cachedTrends = null;
 let cachedTrendsAt = null;
@@ -205,11 +206,14 @@ export const getWeeklyTrends = async (req, res) => {
     sevenDaysAgo.setDate(now.getDate() - 7);
 
     console.log("[getWeeklyTrends] Haftalık trendler için mesajlar çekiliyor...");
+    const jobChannelId = await getOrCreateJobChannelId();
     const rows = await Message.findAll({
       attributes: ["id", "content", "timestamp", "channel_id"],
       where: {
         status: "active",
         content: { [Op.ne]: "Mesaj kaldırıldı." },
+        type: { [Op.ne]: "job_post" },
+        channel_id: { [Op.ne]: jobChannelId },
       },
       include: [
         {
