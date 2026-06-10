@@ -53,9 +53,9 @@ export const handleAiReply = async ({
   const cleanQuestion = question.replace(/@ai\b/gi, '').trim();
 
   // ── 4. Gemini'den yanıt al ──────────────────────────────────────────────
-  console.log(`🤖 [handleAiReply] Gemini'ye gönderiliyor | channel=${channel_id} | soru="${cleanQuestion}"`);
+  console.log(` [handleAiReply] Gemini'ye gönderiliyor | channel=${channel_id} | soru="${cleanQuestion}"`);
   const aiText = await geminiChat(cleanQuestion, history);
-  console.log(`✅ [handleAiReply] Gemini yanıtı alındı (${aiText.length} karakter)`);
+  console.log(` [handleAiReply] Gemini yanıtı alındı (${aiText.length} karakter)`);
 
   // ── 5. Yanıtı DB'ye kaydet ──────────────────────────────────────────────
   const newMsg = await Message.create({

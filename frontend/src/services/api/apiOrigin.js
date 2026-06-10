@@ -1,6 +1,6 @@
 export const REMOTE_BACKEND = 'https://sektor-backend.onrender.com';
 
-/** Render erişilemezse tarayıcıdaki origin (dev’de genelde http://localhost:5173). */
+
 export function getLocalFallbackOrigin() {
   if (typeof window !== 'undefined' && window.location?.origin) {
     return window.location.origin;
@@ -24,9 +24,7 @@ export async function resolveBackendOrigin() {
       resolvedOrigin = REMOTE_BACKEND;
       return resolvedOrigin;
     }
-  } catch {
-    /* Render uyuyorsa veya ağ yoksa yerel fallback */
-  }
+  } catch {}
   resolvedOrigin = getLocalFallbackOrigin();
   return resolvedOrigin;
 }

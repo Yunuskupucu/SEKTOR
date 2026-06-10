@@ -46,7 +46,7 @@ YANIT:
 `;
 
   try {
-    console.log('🟡 Moderasyon analizi yapılıyor...');
+    console.log(' Moderasyon analizi yapılıyor...');
 
     const result = await model.generateContent({
   contents: [
@@ -62,12 +62,12 @@ YANIT:
 });
     const output = result.response.text().trim();
 
-    console.log('🟢 Model Yanıtı:', output);
+    console.log(' Model Yanıtı:', output);
 
     // Sadece "0" içerip içermediğini kontrol etmek daha güvenlidir.
     return output.includes('0') ? '0' : '1';
   } catch (error) {
-    console.error('❌ Gemini API Hatası:', error.message);
+    console.error(' Gemini API Hatası:', error.message);
     // Hata durumunda (örneğin limit aşımı) mesajı onaylamak güvenli bir varsayılandır.
     return '1';
   }
@@ -152,7 +152,7 @@ ${combinedText}
     const jsonEnd = cleaned.lastIndexOf("]");
 
     if (jsonStart === -1 || jsonEnd === -1) {
-      console.error("❌ Gemini JSON array döndürmedi:", cleaned);
+      console.error(" Gemini JSON array döndürmedi:", cleaned);
       return [];
     }
 
@@ -170,7 +170,7 @@ ${combinedText}
   }));
 
   } catch (error) {
-    console.error("❌ Trend Analiz Hatası:", error.message);
+    console.error(" Trend Analiz Hatası:", error.message);
     return [];
   }
 };
@@ -259,7 +259,7 @@ ${combinedText}
     const jsonEnd = cleaned.lastIndexOf("}");
 
     if (jsonStart === -1 || jsonEnd === -1) {
-      console.error("❌ Gemini JSON object döndürmedi:", cleaned);
+      console.error(" Gemini JSON object döndürmedi:", cleaned);
 
       return {
         title: "Son 24 Saat Özeti",
@@ -289,7 +289,7 @@ ${combinedText}
       hot: Boolean(parsed.hot),
     };
   } catch (error) {
-    console.error("❌ Kanal 24 saat özet hatası:", error.message);
+    console.error(" Kanal 24 saat özet hatası:", error.message);
 
     return {
       title: "Son 24 Saat Özeti",

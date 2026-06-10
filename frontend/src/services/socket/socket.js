@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 export let socket = null;
 
 export function initSocket(origin) {
-   console.log("🔌 Socket origin:", origin);
+   console.log(" Socket origin:", origin);
   if (socket?.disconnect) {
     socket.disconnect();
   }
@@ -16,6 +16,6 @@ export function initSocket(origin) {
   });
 
   socket.on('connect_error', (err) => {
-    console.error('❌ Socket bağlantı hatası:', err.message);
+    console.error(' Socket bağlantı hatası:', err.message);
   });
 }
