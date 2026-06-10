@@ -14,7 +14,7 @@ function App() {
   const { authUser, fetchProfile, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
-    fetchProfile(); // ✅ Tam profil bilgisini çeker
+    fetchProfile();
   }, [fetchProfile]);
 
   console.log({ authUser });

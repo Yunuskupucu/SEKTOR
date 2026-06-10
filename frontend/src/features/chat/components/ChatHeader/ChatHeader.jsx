@@ -44,7 +44,7 @@ const loadChannelTrends = useCallback(async () => {
   }
 }, [selectedChannel?.id]);
 
-  /** Bilgi butonu + popover; dışına tıklanınca pencere kapanır */
+
   const infoPanelRef = useRef(null);
 
   const themeClassPopover = theme === 'dark' ? styles.channelInfoPopoverDark : '';
@@ -138,7 +138,7 @@ const loadChannelTrends = useCallback(async () => {
                 >
                   <FaTimes aria-hidden />
                 </button>
-                {/* <p className={styles.channelInfoSummary}>{summaryText}</p> */}
+
 
                   <div className={styles.channelInfoSection}>
                   <h2 className={styles.channelInfoSectionTitle}>Son 24 Saat Özeti</h2>

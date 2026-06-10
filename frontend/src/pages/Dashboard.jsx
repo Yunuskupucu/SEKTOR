@@ -287,7 +287,7 @@ export default function Dashboard() {
         console.log('WEEKLY ACTIVITY RAW:', weeklyActivity);
         setActivityData(
           (Array.isArray(weeklyActivity) ? weeklyActivity : []).map((item, idx) => {
-            // API'den gelen alan adları: name, messages, users
+
             const name = item.name || item.date || item.day || item._id || `Gün ${idx + 1}`;
             const mesajlar = Number(item.messages || 0);
             const kullanicilar = Number(item.users || 0);

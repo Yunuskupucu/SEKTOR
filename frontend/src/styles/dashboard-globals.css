@@ -1,8 +1,3 @@
-/**
- * Dashboard tema tokenları — kaynak: shadcn/v4 globals (oklch).
- * .dashboard altında açık tema, #root.dark .dashboard altında koyu tema.
- */
-
 .dashboard {
   --background: oklch(0.985 0.008 258);
   --foreground: oklch(0.255 0.024 259);

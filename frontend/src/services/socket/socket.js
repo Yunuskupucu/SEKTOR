@@ -12,7 +12,7 @@ export function initSocket(origin) {
   });
 
   socket.on('connect', () => {
-    console.log('✅ Socket bağlantısı kuruldu:', socket.id);
+    console.log('Socket bağlantısı kuruldu:', socket.id);
   });
 
   socket.on('connect_error', (err) => {

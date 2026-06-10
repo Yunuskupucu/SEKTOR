@@ -33,7 +33,7 @@ const AddJobModal = ({ onClose, onCreated }) => {
         expires_at: expiresAt || null,
       });
 
-      // Backend, iş ilanını ilgili "İş İlanları" kanalına mesaj olarak da yayınlıyor.
+
       if (onCreated) onCreated();
       onClose();
     } catch (err) {
