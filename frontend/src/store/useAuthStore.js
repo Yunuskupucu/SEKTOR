@@ -7,15 +7,14 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
   try {
-    console.log("🔍 checkAuth çalıştı");
 
     const res = await axiosInstance.get('/auth/profile');
 
-    console.log("✅ checkAuth profile response:", res.data);
+
 
     set({ authUser: res.data });
   } catch (error) {
-    console.log('❌ Auth check error:', error.response?.status, error.response?.data);
+
     set({ authUser: null });
   } finally {
     set({ isCheckingAuth: false });
@@ -26,15 +25,15 @@ fetchProfile: async () => {
   set({ isCheckingAuth: true });
 
   try {
-    console.log("🔍 fetchProfile çalıştı");
+
 
     const res = await axiosInstance.get('/auth/profile');
 
-    console.log("✅ fetchProfile response:", res.data);
+
 
     set({ authUser: res.data });
   } catch (err) {
-    console.error('❌ Profil verisi alınamadı:', err.response?.status, err.response?.data);
+    console.error('Profil verisi alınamadı:', err.response?.status, err.response?.data);
     set({ authUser: null });
   } finally {
     set({ isCheckingAuth: false });
@@ -46,7 +45,7 @@ fetchProfile: async () => {
       await axiosInstance.post('/auth/login', { email, password });
       await useAuthStore.getState().fetchProfile();
     } catch (error) {
-      console.log('Login error:', error);
+
       throw error;
     }
   },
@@ -55,8 +54,7 @@ logout: async () => {
   try {
     await axiosInstance.post('/auth/logout');
     set({ authUser: null });
-    // localStorage/sessionStorage vs. temizliyorsan burada da yapabilirsin
-    return true;                    // ← çağırana “başarılı” de
+    return true;        
   } catch (error) {
     console.log('Logout error:', error);
     return false;
@@ -89,7 +87,7 @@ logout: async () => {
   },
 
   updateAvatar: async (avatarFile) => {
-    // (Opsiyonel) Basit istemci doğrulaması:
+
     if (!avatarFile) throw new Error('Dosya seçilmedi');
     if (!/^image\//.test(avatarFile.type)) throw new Error('Sadece görsel yükleyebilirsiniz.');
     const max = 10 * 1024 * 1024; // 10MB
@@ -101,8 +99,8 @@ logout: async () => {
 
       const res = await axiosInstance.post('/auth/avatar', formData, {
         withCredentials: true,
-        // ÖNEMLİ: Content-Type'ı ELLE AYARLAMA! Axios FormData için boundary'yi otomatik ekler.
-        headers: { /* 'Content-Type': 'multipart/form-data' koyma */ },
+
+        headers: {},
       });
 
       const newUrl = res.data?.avatar;
@@ -112,7 +110,7 @@ logout: async () => {
       const current = get().authUser || {};
       set({ authUser: { ...current, profile_picture_url: newUrl } });
 
-      return newUrl; // UI tarafında setAvatar için kullanabilirsiniz
+      return newUrl;
     } catch (error) {
       console.log('Update avatar error:', error);
       throw error;

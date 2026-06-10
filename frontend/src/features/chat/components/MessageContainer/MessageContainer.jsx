@@ -31,12 +31,10 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
 
   const messagesAreaRef = useRef(null);
   const isLoadingMoreRef = useRef(false);
-  /** Üstten eski mesaj yüklenirken listeyi en alta zorlamayı atla */
   const skipNextBottomScrollRef = useRef(false);
-  /** Önceki mesaj sayısı — tek adet eklemeyi (yeni mesaj) smooth kaydırmak için */
   const prevMessageCountRef = useRef(0);
 
-  //  eski → yeni
+
   const mergeUniqueById = useCallback((arr) => {
     const map = new Map();
     for (const m of arr) map.set(m.id, m);
@@ -58,8 +56,6 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     }
   };
 
-  // Mesaj listesi değişince en alta: kanal açılışında anında (auto) + sonradan büyüyen layout için tekrar;
-  // ardışık tek mesaj eklemelerinde smooth.
   useLayoutEffect(() => {
     const area = messagesAreaRef.current;
     if (!area || messages.length === 0) {
@@ -85,7 +81,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     }
   }, [messages]);
 
-  // Eski mesajları yükle (üstten)
+
   const loadMoreMessages = useCallback(async () => {
     if (!selectedChannel || !hasMore || isLoadingMoreRef.current) return;
 
@@ -109,7 +105,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
 
         skipNextBottomScrollRef.current = true;
 
-        // Overlap'ları at, sonra tekilleştir ve sırala
+
         setMessages((prev) => {
           const existing = new Set(prev.map((m) => m.id));
           const fresh = items.filter((m) => !existing.has(m.id));
@@ -119,7 +115,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         setNextCursor(next);
         setHasMore(more);
 
-        // Scroll pozisyonunu koru
+
         requestAnimationFrame(() => {
           const newScrollHeight = area.scrollHeight;
           area.scrollTop = newScrollHeight - oldScrollHeight;
@@ -127,7 +123,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         });
       }
     } catch (err) {
-      console.error('❌ [LAZY LOAD] Eski mesajlar yüklenemedi:', err);
+      console.error(' [LAZY LOAD] Eski mesajlar yüklenemedi:', err);
     } finally {
       setLoadingMore(false);
       isLoadingMoreRef.current = false;
@@ -164,7 +160,7 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
         setNextCursor(next);
         setHasMore(more);
       } catch (err) {
-        console.error('❌ [INIT] Mesajlar alınamadı:', err);
+        console.error(' [INIT] Mesajlar alınamadı:', err);
       } finally {
         setLoading(false);
       }
@@ -172,7 +168,6 @@ const MessageContainer = ({ selectedChannel, onChannelClose }) => {
     const room = String(selectedChannel.id);
 
      const joinRoom = () => {
-      console.log('📡 FRONTEND joinChannel:', room, 'socket:', socket.id);
       socket.emit('joinChannel', room);
     };
 

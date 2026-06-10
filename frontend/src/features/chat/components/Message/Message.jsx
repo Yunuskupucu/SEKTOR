@@ -91,7 +91,7 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
         setShowDeleteModal(false);
       }
     } catch (error) {
-      console.error('❌ Mesaj silinirken hata:', error);
+      console.error(' Mesaj silinirken hata:', error);
       setDeleteError(error.response?.data?.message || 'Mesaj silinirken bir hata oluştu');
     } finally {
       setDeleteLoading(false);
@@ -102,7 +102,7 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
   const removalReason = message.removal_reason;
   const isUserRemoved = isRemoved && removalReason === 'user';
 
-  /** Kaldırılmış mesajda yalnızca bu üç uyarı tipinden biri gösterilir. */
+
   const removedNotice = !isRemoved
     ? null
     : removalReason === 'moderation'
@@ -262,7 +262,7 @@ const Message = ({ message, currentUser, onEdit, onMessageDelete }) => {
                   rel="noopener noreferrer"
                   className={styles.fileLink}
                 >
-                  📎 Dosya indir
+                   Dosya indir
                 </a>
               )}
             </div>

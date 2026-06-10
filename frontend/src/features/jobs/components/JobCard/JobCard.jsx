@@ -59,7 +59,7 @@ const JobCard = ({ selectedChannel, listRefreshSeq = 0 }) => {
       const res = await axiosInstance.get('/jobs/job-posts');
       setJobs(res.data || []);
     } catch (err) {
-      console.error('❌ İş ilanları alınamadı:', err);
+      console.error('İş ilanları alınamadı:', err);
       setError('İş ilanları yüklenirken bir hata oluştu.');
     } finally {
       setLoading(false);

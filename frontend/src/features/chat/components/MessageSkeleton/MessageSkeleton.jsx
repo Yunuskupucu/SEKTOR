@@ -4,10 +4,10 @@ const MessageSkeleton = () => {
   return (
     <div className={styles.skeletonContainer}>
       <div className={styles.contentWrapper}>
-        {/* İsim placeholder */}
+
         <div className={styles.nameSkeleton}></div>
 
-        {/* Mesaj içerik placeholder */}
+
         <div className={styles.messageContent}>
           <div className={styles.messageLine}></div>
           <div className={`${styles.messageLine} ${styles.shortLine}`}></div>

@@ -53,7 +53,6 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
   useEffect(() => {
     if (editingMessage) {
       setMessage(editingMessage.content || '');
-      // Input'a focus
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();
@@ -93,17 +92,17 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
 
       if (response.ok) {
         const data = JSON.parse(rawText);
-        console.log('✅ Dosya gönderildi:', data);
+        console.log(' Dosya gönderildi:', data);
         // Backend zaten newMessage yayınlar; listeyi kesin tazelemek için callback tetikle
         if (typeof onAttachmentUploaded === 'function') onAttachmentUploaded();
         setMessage('');
       } else {
-        console.error('❌ Backend dosya hatası:', rawText);
+        console.error(' Backend dosya hatası:', rawText);
         // İsteğe bağlı: kullanıcıya da gösterebilirsin
         alert(`Sunucu hatası: ${rawText}`);
       }
     } catch (err) {
-      console.error('❌ Dosya gönderilirken hata:', err);
+      console.error('Dosya gönderilirken hata:', err);
       alert(`İstemci hatası: ${err.message}`);
     }
 
@@ -135,7 +134,7 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
 
         setMessage('');
       } catch (error) {
-        console.error('❌ Mesaj düzenlenirken hata:', error);
+        console.error(' Mesaj düzenlenirken hata:', error);
         alert(error.response?.data?.message || 'Mesaj düzenlenirken bir hata oluştu');
       } finally {
         setIsUpdating(false);
@@ -166,7 +165,7 @@ const MessageInput = ({ selectedChannel, onAttachmentUploaded, editingMessage, o
       optimisticId,
     });
 
-    console.log('📨 Mesaj gönderildi:', message);
+    console.log(' Mesaj gönderildi:', message);
     setMessage('');
   };
 

@@ -5,7 +5,7 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-/** resolveBackendOrigin sonrası çağrılır (main.jsx). */
+
 export function applyBackendConfig(apiBaseURL) {
   axiosInstance.defaults.baseURL = apiBaseURL;
 }
