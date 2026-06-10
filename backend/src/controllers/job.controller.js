@@ -63,7 +63,7 @@ export const createJobPostInChannel = async (req, res) => {
 
     res.status(201).json({ job: result.job, message: result.msg });
   } catch (err) {
-    console.error('❌ createJobPostInChannel:', err);
+    console.error('createJobPostInChannel:', err);
     res.status(500).json({ message: 'Error creating job post', error: err.message });
   }
 };
@@ -75,7 +75,7 @@ export const getJobPostsForJobChannel = async (req, res) => {
     const now = new Date();
     const viewerId = req.user?.id;
 
-    // Hem aktif hem pasif ilanları getir
+    //aktif - pasif
     const jobs = await JobPost.findAll({
       where: {
         channel_id: jobChannelId,
@@ -93,7 +93,7 @@ export const getJobPostsForJobChannel = async (req, res) => {
 
     res.json(jobs);
   } catch (err) {
-    console.error('❌ getJobPostsForJobChannel:', err);
+    console.error(' getJobPostsForJobChannel:', err);
     res.status(500).json({ message: 'Error fetching job posts', error: err.message });
   }
 };

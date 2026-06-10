@@ -44,7 +44,7 @@ const FilterLog = sequelize.define(
   }
 );
 
-// İlişkileri tanımlama
+
 FilterLog.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 User.hasMany(FilterLog, { foreignKey: "user_id", onDelete: "CASCADE" });
 

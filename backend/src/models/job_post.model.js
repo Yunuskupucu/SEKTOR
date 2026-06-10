@@ -64,7 +64,7 @@ const JobPost = sequelize.define(
   }
 );
 
-// Kullanıcı ile ilişkilendirme
+
 JobPost.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 User.hasMany(JobPost, { foreignKey: "user_id", onDelete: "CASCADE" });
 

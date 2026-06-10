@@ -7,12 +7,13 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 /**
- * Kanal sohbet geçmişine bakarak @ai sorusuna cevap üretir.
+ * Kullanıcının @ai sorusuna, kanal geçmişini bağlam olarak kullanarak yanıt üretir.
  *
- * @param {string} question      - Kullanıcının @ai'ye yönelttiği soru/istek
- * @param {Array}  history       - Son mesajlar: [{ sender: string, content: string }]
- * @returns {Promise<string>}    - Gemini'nin ürettiği metin yanıtı
+ * @param {string} question Kullanıcının @ai'ye yönelttiği soru/istek
+ * @param {Array} history Son mesajlar: [{ sender: string, content: string }]
+ * @returns {Promise<string>} Gemini'nin ürettiği metin yanıtı
  */
+ 
 export const geminiChat = async (question, history = []) => {
   // Geçmişi okunabilir bir bağlam metnine çevir
   const contextBlock =

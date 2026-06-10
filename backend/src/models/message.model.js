@@ -47,7 +47,7 @@ const Message = sequelize.define(
     },
 
     status: {
-      type: DataTypes.STRING, // TEXT de olabilir
+      type: DataTypes.STRING, 
       allowNull: false,
       defaultValue: "active",
       validate: {
@@ -55,7 +55,7 @@ const Message = sequelize.define(
       },
     },
 
-    /** status === 'removed' iken: moderasyon mu, kullanıcı silmesi mi */
+
     removal_reason: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -82,7 +82,7 @@ const Message = sequelize.define(
     indexes: [
       { fields: ["channel_id", "timestamp"] },
       { fields: ["job_post_id"] },
-      { fields: ["status"] }, // opsiyonel ama iyi
+      { fields: ["status"] }, 
     ],
   }
 );

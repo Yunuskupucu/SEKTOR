@@ -30,7 +30,7 @@ const Channel = sequelize.define(
     },
   },
   {
-    timestamps: false, // Sequelize will not automatically manage createdAt and updatedAt fields
+    timestamps: false, 
     tableName: "channels",
   }
 );

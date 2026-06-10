@@ -3,7 +3,7 @@ import Message from "../models/message.model.js";
 import { Op } from "sequelize";
 import { extractChannelDailySummary } from "../api/geminiModeration.js";
 
-/** Kanal için DB’deki açıklama ve toplam mesaj sayısı */
+
 export const getChannelStats = async (req, res) => {
   const rawId = req.params.channel_id;
   const channelId = Number(rawId);
@@ -52,7 +52,7 @@ export const getChannelStats = async (req, res) => {
 
 const channelTrendCache = new Map();
 
-// Token harcamamak için aynı kanal özetini 24 saat cache'liyoruz.
+
 const CHANNEL_TREND_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
 export const getChannelWeeklyTrends = async (req, res) => {
@@ -69,8 +69,7 @@ export const getChannelWeeklyTrends = async (req, res) => {
   try {
     const now = new Date();
 
-    // Önce channel bilgisi alınmalı.
-    // Çünkü cache response içinde channel.name kullanıyoruz.
+
     const channel = await Channel.findByPk(channelId, {
       attributes: ["id", "name"],
     });

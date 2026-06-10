@@ -9,9 +9,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   logging: false,
 });
 
-/* ===========================
-   MODELLER
-   =========================== */
+
 
 const User = sequelize.define(
   "users",
@@ -22,7 +20,7 @@ const User = sequelize.define(
 
     email: { type: DataTypes.STRING(100), unique: true, allowNull: false },
 
-    // Local hesaplar için zorunlu; OAuth için dummy hash basacağız
+
     password: { type: DataTypes.TEXT, allowNull: false },
 
     profile_picture_url: DataTypes.TEXT,
@@ -46,7 +44,7 @@ const User = sequelize.define(
   },
   {
     timestamps: false,
-    // unique index
+    
     indexes: [
       {
         unique: true,
@@ -110,7 +108,7 @@ const FilterLog = sequelize.define(
 );
 
 
-   /*İLİŞKİLER */
+
 
 
 User.hasMany(Message, { foreignKey: "user_id" });
@@ -128,9 +126,7 @@ FilterLog.belongsTo(Message, { foreignKey: "message_id" });
 User.hasMany(FilterLog, { foreignKey: "user_id" });
 FilterLog.belongsTo(User, { foreignKey: "user_id" });
 
-/*
-   TRIGGER
- */
+
 
 async function createTrigger() {
   await sequelize.query(`
@@ -159,16 +155,14 @@ async function createTrigger() {
   `);
 }
 
-/* 
-   BAĞLANTI 
- */
+
 
 export const connectDb = async () => {
   try {
     await sequelize.authenticate();
     console.log("✅ Database Connected Successfully");
 
-    // Şemayı modele göre güncelle: ENUM + sütunlar + index
+    // Şemayı modele göre güncelle
     await sequelize.sync({ alter: true });
 
     await createTrigger();

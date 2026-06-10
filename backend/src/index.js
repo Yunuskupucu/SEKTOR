@@ -1,5 +1,5 @@
 import { startJobPostExpirationCron } from '../jobPostExpirationCron.js';
-// Günü dolan ilanları expired yapan cron job'u başlat
+
 startJobPostExpirationCron();
 import express from 'express';
 import dotenv from 'dotenv';
@@ -76,7 +76,7 @@ app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.get('/health', (_, res) => res.send('OK'));
 
-// API Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/channels', channelRoutes);
@@ -89,9 +89,9 @@ app.use((req, res, next) => {
   res.setHeader('Expires', '0');
   next();
 });
-// SOCKET.IO
+
 io.on('connection', (socket) => {
-  console.log('🟢 Socket connected:', socket.id);
+  console.log('Socket connected:', socket.id);
 
   socket.on('joinChannel', (channel_id) => {
     const room = String(channel_id);
@@ -102,26 +102,25 @@ io.on('connection', (socket) => {
   socket.on('leaveChannel', (channel_id) => {
     const room = String(channel_id);
     socket.leave(room);
-    console.log(`📴 Left channel: ${room}`);
+    console.log(` Left channel: ${room}`);
   });
 
   socket.on('sendMessage', async (data) => {
-    console.log("📨 BACKEND SOCKET sendMessage geldi:", data);
+    console.log(" BACKEND SOCKET sendMessage geldi:", data);
     const { user_id, channel_id, content } = data;
 
     try {
       const room = String(channel_id);
 
       const fullMessage = await handleSendMessage({ user_id, channel_id, content });
-console.log("🧪 SOCKET FULL MESSAGE:", fullMessage?.toJSON?.() || fullMessage);
+
 
       io.to(room).emit('newMessage', fullMessage);
 
-      console.log('✅ handleSendMessage tamamlandı, status:', fullMessage.status);
-      console.log('🔍 @ai var mı:', /@ai\b/i.test(content));
+
 
       if (/@ai\b/i.test(content) && fullMessage.status !== 'removed') {
-        console.log('🤖 handleAiReply başlıyor...');
+        console.log(' handleAiReply başlıyor...');
         try {
           await handleAiReply({
             channel_id,
@@ -130,37 +129,37 @@ console.log("🧪 SOCKET FULL MESSAGE:", fullMessage?.toJSON?.() || fullMessage)
             req: null,
             historySize: 10,
           });
-          console.log('✅ handleAiReply tamamlandı');
+          console.log('handleAiReply tamamlandı');
         } catch (aiErr) {
-          console.error('❌ handleAiReply içi hata:', aiErr.message, aiErr.stack);
+          console.error(' handleAiReply içi hata:', aiErr.message, aiErr.stack);
         }
       }
     } catch (error) {
-      console.error('❌ Socket mesaj hatası:', error.message, error.stack);
+      console.error(' Socket mesaj hatası:', error.message, error.stack);
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('🔴 Socket disconnected:', socket.id);
+    console.log(' Socket disconnected:', socket.id);
   });
 });
 
-// Socket'i route'lara aktarıyoruz
+
 app.set('io', io);
 
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📎 CORS izinli kökenler: ${allowedOrigins.join(', ')}`);
+  console.log(` Server running on port ${PORT}`);
+  console.log(` CORS izinli kökenler: ${allowedOrigins.join(', ')}`);
 
   connectDb()
     .then(async () => {
-      //  İş İlanları kanalını DB'den bul/oluştur ve cache'e al
+
       const jobChannelId = await getOrCreateJobChannelId();
-      console.log(`📌 Job channel ready (id: ${jobChannelId})`);
+      console.log(` Job channel ready (id: ${jobChannelId})`);
     })
     .catch((err) => {
-      console.error('❌ Startup error (DB or job channel):', err);
+      console.error(' Startup error (DB or job channel):', err);
       process.exit(1);
     });
 });

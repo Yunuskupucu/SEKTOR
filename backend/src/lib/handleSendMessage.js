@@ -3,18 +3,18 @@ import { checkContentModeration } from "../api/geminiModeration.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import FilterLog from "../models/filter_log.model.js";
-console.log("✅ ÇALIŞAN DOSYA: handleSendMessage.js");
+console.log(" ÇALIŞAN DOSYA: handleSendMessage.js");
 
 export const handleSendMessage = async ({ user_id, channel_id, content }) => {
-  console.log("🟡 [handleSendMessage] Moderasyon kontrolü başlıyor...");
+
   const result = await checkContentModeration(content);
-  console.log("📩 [handleSendMessage] Moderasyon sonucu:", result);
+  console.log("[handleSendMessage] Moderasyon sonucu:", result);
 
   const isRemoved = result === "0"; 
-  console.log("🧪 isRemoved:", isRemoved);
+
   const moderatedContent = isRemoved ? "Mesaj kaldırıldı." : content;
 
-  console.log("✏️ [handleSendMessage] Kaydedilecek içerik:", moderatedContent);
+
 
   const newMessage = await Message.create({
     user_id,
@@ -31,9 +31,9 @@ if (isRemoved) {
       flagged_reason: "AI moderasyon: uygunsuz içerik",
     });
 
-    console.log("🧾 FILTER LOG KAYDEDİLDİ:", log.toJSON());
+    console.log("FILTER LOG KAYDEDİLDİ:", log.toJSON());
   } catch (err) {
-    console.error("❌ FILTER LOG HATASI:", err);
+    console.error("FILTER LOG HATASI:", err);
   }
 }
   const fullMessage = await Message.findByPk(newMessage.id, {

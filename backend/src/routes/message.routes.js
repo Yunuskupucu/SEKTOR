@@ -1,4 +1,3 @@
-// routes/message.routes.js
 import express from "express";
 import { body } from "express-validator";
 import {
@@ -13,7 +12,7 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// 1) Dosya ekli mesaj
+
 router.post(
   "/with-attachment",
   (req, res, next) => {
@@ -28,7 +27,7 @@ router.post(
   sendMessageWithAttachment
 );
 
-// 2) Metinli mesaj
+
 router.post(
   "/",
   [
@@ -38,13 +37,13 @@ router.post(
   sendMessage
 );
 
-// 3) Kanal mesajları
+
 router.get("/:channel_id(\\d+)", getMessagesByChannel);
 
-// edit sadece content
+
 router.patch("/:id", protectRoute, editMessage);
 
-// delete: mode=attachment -> sadece ek sil, yoksa mesaj kaldır
+
 router.delete("/:id", protectRoute, deleteMessageOrAttachment);
 
 export default router;

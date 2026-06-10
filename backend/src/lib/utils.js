@@ -1,4 +1,3 @@
-// utils/generateToken.js
 import jwt from 'jsonwebtoken';
 
 export const generateToken = (id, res) => {
@@ -8,10 +7,10 @@ export const generateToken = (id, res) => {
   res.cookie('jwt', token, {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    path: '/',                         // ← logout ile eşleşecek
-    secure: isProd,                    // PROD: true, DEV: false
+    path: '/',                        
+    secure: isProd,                    
     sameSite: isProd ? 'none' : 'lax', // farklı origin’li prod’da 'none' zorunlu
-    // domain: isProd ? '.alanadın.com' : undefined, // gerekiyorsa
+   
   });
 
   return token;

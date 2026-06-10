@@ -10,8 +10,8 @@ const sanitize = (s) =>
 
 export function uploadBufferToCloudinary(fileBuffer, originalName, {
   folder = "sektor/uploads",
-  forceImage = false,     // avatar gibi sadece görsel
-  eager = null,           // eager thumbs istiyorsan
+  forceImage = false,    
+  eager = null,          
 } = {}) {
   const base = sanitize(originalName?.replace(/\.[^.]+$/, "") || "file");
   const public_id = `${base}-${Date.now()}`;

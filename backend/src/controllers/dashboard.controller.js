@@ -28,7 +28,7 @@ export const getPublicGlobalStats = async (req, res) => {
   Channel.count(),
   JobPost.count(),
 
-  // Aktif ilanlar: status active ve süresi dolmamış olanlar
+  // status active ve süresi dolmamış olanlar
   JobPost.count({
     where: {
       status: "active",
@@ -39,7 +39,7 @@ export const getPublicGlobalStats = async (req, res) => {
     },
   }),
 
-  // Pasif ilanlar: passive veya expired olanlar
+ 
   JobPost.count({
     where: {
       status: {
@@ -107,7 +107,7 @@ export const getMessageGlobalStats = async (req, res) => {
         },
       }),
 
-      // 🆕 Moderasyon nedeniyle kaldırılan mesajların sayısı
+      
       Message.count({
         where: {
           status: "removed", 
@@ -134,7 +134,7 @@ export const getMessageGlobalStats = async (req, res) => {
     });
   }
 }; 
-// Kanal bazlı mesaj sayısı
+
 export const getMessageStatsPerChannel = async (req, res) => {
   try {
     const messageCounts = await Message.findAll({
@@ -182,7 +182,7 @@ export const getMessageStatsPerChannel = async (req, res) => {
     });
   }
 };
-  // LLM ile haftalık trend konuları çıkarma
+
 export const getWeeklyTrends = async (req, res) => {
   try {
     const now = new Date();
@@ -240,7 +240,7 @@ console.table(channelMessageCounts);
 console.log("weekly-trends endpoint çalıştı");
 console.log("Gemini'ye gönderilen mesaj sayısı:", messages.length);
 
-// Daha detaylı loglama
+
 console.log(
   "[getWeeklyTrends] extractWeeklyTrends fonksiyonu çağrılıyor. Mesaj örnekleri:",
   messages.slice(0, 2)
@@ -262,7 +262,7 @@ const trends = Array.isArray(rawTrends)
     }))
   : [];
 
-console.log("🟢 TREND (işlenmiş):", trends);
+
 
 const safeTrends =
   trends && trends.length
@@ -293,7 +293,7 @@ return res.json({
   } catch (error) {
     console.error("getWeeklyTrends error:", error.message);
     console.error("getWeeklyTrends error full:", error);
-    // Hata durumunda fallback trend dizisi döndür
+   
     return res.json({
       success: true,
       data: {

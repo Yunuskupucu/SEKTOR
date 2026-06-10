@@ -17,7 +17,7 @@ const withAttachmentUrl = (req, msg) => {
     return { ...j, attachment_url: a };
   }
 
-  // Eski yerel dosyalar için host ekle (ör. /uploads/..)
+
   if (a && a.startsWith("/")) {
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     return { ...j, attachment_url: `${baseUrl}${a}` };
@@ -30,7 +30,7 @@ const withAttachmentUrl = (req, msg) => {
 export const getMessagesByChannel = async (req, res) => {
   const { channel_id } = req.params;
 
-  // küçük bir istek-id'si, log takibi için
+
   const rid = Math.random().toString(36).slice(2, 8).toUpperCase();
 
   const limitRaw = parseInt(req.query.limit, 10);
@@ -46,7 +46,7 @@ export const getMessagesByChannel = async (req, res) => {
     `[${rid}] GET /messages/${channel_id} | limit=${limit} | beforeTs=${beforeTsMs} | beforeId=${beforeId}`
   );
 
-  // Geçersiz timestamp yakalama
+
   if (req.query.beforeTs && !Number.isFinite(beforeTsMs)) {
     console.warn(`[${rid}] beforeTs geçersiz:`, req.query.beforeTs);
   }
@@ -68,7 +68,7 @@ export const getMessagesByChannel = async (req, res) => {
       ];
     }
 
-    // Where özet log
+  
     console.log(
       `[${rid}] WHERE özet:`,
       JSON.stringify(
@@ -114,7 +114,7 @@ export const getMessagesByChannel = async (req, res) => {
       ` [${rid}] Sonuç: count=${rows.length} | hasMore=${hasMore} | next=${next ? `${next.beforeTs}/${next.beforeId}` : "null"}`
     );
 
-    // Çok küçük performans ipucu / index uyarısı 
+    // Çok küçük performans / index uyarısı 
     if (rows.length === 0 && beforeTs && !beforeId) {
       console.log(
         ` [${rid}] Performans: (channel_id, timestamp) üzerine index önerilir. (örn: CREATE INDEX idx_msg_ch_ts ON messages(channel_id, timestamp DESC);)`
@@ -132,7 +132,7 @@ export const getMessagesByChannel = async (req, res) => {
 
 
 export const sendMessage = async (req, res) => {
-  console.log("🚀 REST sendMessage endpoint çalıştı", req.body);
+  console.log("REST sendMessage endpoint çalıştı", req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -148,7 +148,7 @@ export const sendMessage = async (req, res) => {
       return res.status(404).json({ message: 'User or Channel not found' });
     }
 
-    // ── Kullanıcı mesajını kaydet (moderasyonlu) ────────────────────────
+
     const fullMessage = await handleSendMessage({ user_id, channel_id, content });
     const payload = withAttachmentUrl(req, fullMessage);
 
@@ -157,11 +157,10 @@ io.to(String(channel_id)).emit("newMessage", payload);
 
     res.status(201).json(payload);
 
-    // ── @ai tetikleyici (response gönderdikten SONRA, fire-and-forget) ──
+
     const AI_TRIGGER = /@ai\b/i;
     if (AI_TRIGGER.test(content) && fullMessage.status !== 'removed') {
-      // await beklemiyoruz: kullanıcıya anında 201 dönmüş oldu,
-      // AI yanıtı hazır olunca socket üzerinden gelecek.
+
       handleAiReply({
         channel_id,
         question: content,
@@ -192,18 +191,18 @@ export const sendMessageWithAttachment = async (req, res) => {
       return res.status(404).json({ message: "Kullanıcı veya kanal bulunamadı" });
     }
 
-    // 🔁 Artık disk yok: req.file.buffer → Cloudinary
+
     let attachment = null;
     if (req.file) {
       const result = await uploadBufferToCloudinary(
         req.file.buffer,
         req.file.originalname,
-        { folder: `sektor/channels/${channel_id}` } // klasörleme
+        { folder: `sektor/channels/${channel_id}` } 
       );
-      attachment = result.secure_url; // DB’de sadece URL tutuyoruz
+      attachment = result.secure_url; 
     }
 
-    // Basit oluşturma (handleSendMessage içinde dosya desteği yoksa)
+ 
     const newMessage = await Message.create({
       user_id,
       channel_id,
@@ -222,7 +221,7 @@ export const sendMessageWithAttachment = async (req, res) => {
 
     res.status(201).json(payload);
   } catch (error) {
-    console.error("❌ sendMessageWithAttachment hata:", error);
+    console.error(" sendMessageWithAttachment hata:", error);
     res.status(500).json({ message: "Sunucu hatası", error: error.message });
   }
 };
@@ -265,14 +264,14 @@ export const editMessage = async (req, res) => {
 
     return res.status(200).json(payload);
   } catch (error) {
-    console.error("❌ editMessage hata:", error);
+    console.error(" editMessage hata:", error);
     return res.status(500).json({ message: "Sunucu hatası", error: error.message });
   }
 };
-// MESAJ VEYA EK SİLME
+
 export const deleteMessageOrAttachment = async (req, res) => {
   const { id } = req.params;
-  const mode = (req.query.mode || "").toLowerCase(); // "attachment" | ""
+  const mode = (req.query.mode || "").toLowerCase(); 
   const user_id = req.user?.id;
 
   try {
@@ -298,12 +297,12 @@ export const deleteMessageOrAttachment = async (req, res) => {
       const payload = withAttachmentUrl(req, fullMessage);
 
       const io = req.app.get("io");
-      io.to(String(msg.channel_id)).emit("messageUpdated", payload); // aynı event yeter
+      io.to(String(msg.channel_id)).emit("messageUpdated", payload); 
 
       return res.status(200).json({ success: true, data: payload });
     }
 
-    // 2) soft delete (kullanıcı kendi mesajını sildi)
+
     await msg.update({
       status: "removed",
       content: "Mesaj kaldırıldı.",
@@ -320,7 +319,7 @@ export const deleteMessageOrAttachment = async (req, res) => {
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error("❌ deleteMessageOrAttachment hata:", error);
+    console.error(" deleteMessageOrAttachment hata:", error);
     return res.status(500).json({ message: "Sunucu hatası", error: error.message });
   }
 };

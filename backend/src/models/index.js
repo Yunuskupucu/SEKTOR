@@ -5,7 +5,7 @@ import Message from "./message.model.js";
 import JobPost from "./job_post.model.js";
 import FilterLog from "./filter_log.model.js";
 
-// İlişkileri Tanımla
+
 User.hasMany(Message, { foreignKey: "user_id", onDelete: "CASCADE" });
 Message.belongsTo(User, { foreignKey: "user_id" });
 
@@ -29,7 +29,7 @@ Message.belongsTo(JobPost, { foreignKey: "job_post_id", onDelete: "SET NULL" });
 
 const syncModels = async () => {
   try {
-    await sequelize.sync({ alter: true }); // Veritabanını günceller
+    await sequelize.sync({ alter: true }); 
     console.log("Database & tables synced!");
   } catch (error) {
     console.error("Error syncing database:", error);

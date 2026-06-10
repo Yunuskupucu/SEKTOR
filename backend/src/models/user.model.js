@@ -58,7 +58,7 @@ provider_id: {
     timestamps: false,
 });
 
-// Kullanıcı güncelleme zamanı için hook (trigger yerine geçer)
+
 User.beforeUpdate((user) => {
     user.updated_at = new Date();
 });

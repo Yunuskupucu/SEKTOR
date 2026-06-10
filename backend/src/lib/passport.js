@@ -8,13 +8,12 @@ import User from "../models/user.model.js";
 
 dotenv.config();
 
-/* Zorunlu password alanı için OAuth hesaplarına dummy hash üretimi */
+/* dummy hash  */
 const issueDummyPassword = async () => {
   const rnd = Math.random().toString(36).slice(2) + Date.now().toString(36);
   return bcrypt.hash(rnd, 10);
 };
 
-/* Aynı email varsa onu kullan; yoksa yeni oluştur. provider alanlarını set et. */
 const findOrCreateOAuthUser = async ({
   provider,
   providerId,
@@ -39,8 +38,8 @@ const findOrCreateOAuthUser = async ({
       github: githubUrl || null,
       linkedin: null,
       bio: null,
-      provider,                 // "google" | "github"
-      provider_id: providerId,  // provider'ın verdiği id
+      provider,                 
+      provider_id: providerId,  
     });
   } else {
     const patch = {};
@@ -92,18 +91,18 @@ passport.use(
   )
 );
 
-// Github
+
 passport.use(
   new GitHubStrategy(
     {
-      clientID: process.env.GITHUB_CLIENT_ID,            // GitHub OAuth App
+      clientID: process.env.GITHUB_CLIENT_ID,            
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       callbackURL: `${process.env.BACKEND_URL}${process.env.GITHUB_CALLBACK_PATH}`, // http://localhost:5001/api/auth/github/callback
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // GitHub e-posta private olabilir
+      
         const primaryEmail =
           (profile.emails || []).find((e) => e.primary)?.value ||
           profile.emails?.[0]?.value ||

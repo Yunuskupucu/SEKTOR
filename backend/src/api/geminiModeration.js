@@ -4,13 +4,10 @@ dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-/** * Moderasyon ve trend analizi için en ideal ücretsiz model.
- * Ücretsiz Katman: Günlük 1.000 istek, Dakikada 15 istek.
- */
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 export const checkContentModeration = async (post) => {
-  // Prompt'u daha kesin sonuç verecek şekilde optimize ettik.
+
 const prompt = `
 Sen gelişmiş bir Yapay Zeka içerik moderatörüsün.
 
@@ -64,17 +61,17 @@ YANIT:
 
     console.log(' Model Yanıtı:', output);
 
-    // Sadece "0" içerip içermediğini kontrol etmek daha güvenlidir.
+    
     return output.includes('0') ? '0' : '1';
   } catch (error) {
     console.error(' Gemini API Hatası:', error.message);
-    // Hata durumunda (örneğin limit aşımı) mesajı onaylamak güvenli bir varsayılandır.
+
     return '1';
   }
 };
 
 /**
- * Son 100 mesajdan kanal bazlı trend konuları çıkarır.
+ * Son 100 mesajdan kanal bazlı trend konular
  */
 export const extractWeeklyTrends = async (messages = []) => {
   if (!messages.length) {
@@ -177,7 +174,7 @@ ${combinedText}
 
 
 
-// 24 saatte konuşulan konular
+
 export const extractChannelDailySummary = async (messages = []) => {
   if (!messages.length) {
     return {

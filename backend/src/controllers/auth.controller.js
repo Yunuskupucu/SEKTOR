@@ -131,7 +131,7 @@ export const updateAvatar = async (req, res) => {
       return res.status(400).json({ message: 'Dosya yüklenmedi' });
     }
     if (!file.buffer) {
-      // memoryStorage devreye girmemişse burada yakalanır
+      // memoryStorage devreye girmemişse 
       return res
         .status(400)
         .json({ message: 'Sunucu dosyayı belleğe alamadı (multer memoryStorage gerekli)' });
@@ -191,13 +191,13 @@ export const getProfile = async (req, res) => {
       return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
     }
 
-    // 'createdAt' tarih formatını düzenliyoruz
+    
     const formattedUser = {
       ...user.toJSON(),
-      createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null, // ISO formatında tarihi döndürüyoruz
+      createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null, 
     };
 
-    res.status(200).json(formattedUser); // Düzenlenmiş veriyi döndürüyoruz
+    res.status(200).json(formattedUser); 
   } catch (error) {
     console.error('Error in getProfile controller:', error.message);
     res.status(500).json({
@@ -218,7 +218,7 @@ export const checkAuth = (req, res) => {
     });
   }
 };
-//profil görüntüleme için public
+
 export const getPublicProfileById = async (req, res) => {
   try {
     const { id } = req.params;
