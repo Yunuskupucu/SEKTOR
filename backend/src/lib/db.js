@@ -160,15 +160,15 @@ async function createTrigger() {
 export const connectDb = async () => {
   try {
     await sequelize.authenticate();
-    console.log("✅ Database Connected Successfully");
+    console.log(" Database Connected Successfully");
 
     // Şemayı modele göre güncelle
     await sequelize.sync({ alter: true });
 
     await createTrigger();
-    console.log("✅ Tables and triggers are ready");
+    console.log("Tables and triggers are ready");
   } catch (err) {
-    console.error("❌ Unable to connect or setup DB:", err);
+    console.error(" Unable to connect or setup DB:", err);
   }
 };
 
